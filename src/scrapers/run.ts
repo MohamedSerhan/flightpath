@@ -50,13 +50,18 @@ async function runOne(adapter: SourceAdapter): Promise<void> {
         })
         .onConflictDoUpdate({
           target: [listings.sourceId, listings.externalId],
+          // Once a row has been enriched (we've talked to the source page
+          // directly), trust the enriched fields over what the index-page
+          // adapter ships. Without this, every cron tick resets postedAt
+          // back to "now" for sources that don't expose a real post date,
+          // and the listing looks artificially fresh forever.
           set: {
             title: enriched.title,
             employer: enriched.employer ?? null,
-            location: enriched.location ?? null,
-            state: enriched.state,
+            location: sql`CASE WHEN ${listings.enrichedAt} IS NULL OR ${listings.location} IS NULL THEN ${enriched.location ?? null} ELSE ${listings.location} END`,
+            state: sql`CASE WHEN ${listings.enrichedAt} IS NULL OR ${listings.state} IS NULL THEN ${enriched.state} ELSE ${listings.state} END`,
             description: enriched.description ?? null,
-            postedAt: enriched.postedAt,
+            postedAt: sql`CASE WHEN ${listings.enrichedAt} IS NULL THEN ${enriched.postedAt} ELSE ${listings.postedAt} END`,
             fetchedAt: now,
             jobCategory: enriched.jobCategory,
             hoursRequired: enriched.hoursRequired,
