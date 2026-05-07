@@ -5,6 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0d1320" />
+    <!-- Site is currently in private testing. Tell well-behaved crawlers
+         (Google, Bing, Bingbot, DuckDuckBot, etc.) to skip indexing.
+         Direct-link visitors still get the page. Pair this meta with
+         /robots.txt and the build-time X-Robots-Tag header is irrelevant
+         since GitHub Pages doesn't allow custom HTTP headers. -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    <meta name="googlebot" content="noindex, nofollow" />
     <title>Flightpath — Fresh CFI & Pilot Jobs</title>
     <meta name="description" content="Fresh CFI and low-time pilot job listings, last 30 days." />
     <link rel="preconnect" href="https://rsms.me" />

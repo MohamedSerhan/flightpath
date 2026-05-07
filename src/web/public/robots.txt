@@ -1,0 +1,31 @@
+# Site is in private testing. Please don't crawl or index.
+# Direct-link visitors are still welcome.
+
+User-agent: *
+Disallow: /
+
+# Belt-and-suspenders: explicitly opt-out the most common AI training
+# crawlers as well, in case they ignore the User-agent: * line.
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
