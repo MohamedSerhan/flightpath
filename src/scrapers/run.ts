@@ -3,6 +3,7 @@ import { db, sqlite } from "../db/client.ts";
 import { listings, sources } from "../db/schema.ts";
 import { adapters } from "./registry.ts";
 import { enrichListing } from "./enrich.ts";
+import { enrichDetailPages } from "./enrich-detail.ts";
 import type { SourceAdapter } from "./types.ts";
 
 function ensureSchema() {
@@ -116,6 +117,13 @@ async function main() {
   const started = Date.now();
   for (const adapter of adapters) {
     await runOne(adapter);
+  }
+  if (process.env.SKIP_DETAIL !== "1") {
+    try {
+      await enrichDetailPages();
+    } catch (err) {
+      console.warn("[detail] enrichment pass failed:", err instanceof Error ? err.message : err);
+    }
   }
   const totalRow = sqlite.query("SELECT COUNT(*) as n FROM listings").get() as { n: number };
   console.log(
