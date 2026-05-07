@@ -45,7 +45,7 @@ listingsRoute.get("/", async (c) => {
   const limit = Math.min(numParam(c.req.query("limit"), 50) ?? 50, 200);
   const offset = numParam(c.req.query("offset"), 0) ?? 0;
 
-  const conditions = [];
+  const conditions = [eq(listings.isClosed, 0)];
 
   if (postedSinceDays && postedSinceDays > 0) {
     const cutoff = Date.now() - postedSinceDays * 86400_000;
@@ -104,14 +104,15 @@ listingsRoute.get("/:id{[0-9]+}", async (c) => {
 
 listingsRoute.get("/stats/summary", async (c) => {
   const cutoff = Date.now() - 30 * 86400_000;
+  const freshFilter = and(eq(listings.isClosed, 0), gte(listings.postedAt, cutoff));
   const fresh = await db
     .select({ n: sql<number>`count(*)` })
     .from(listings)
-    .where(gte(listings.postedAt, cutoff));
+    .where(freshFilter);
   const byCategory = await db
     .select({ category: listings.jobCategory, n: sql<number>`count(*)` })
     .from(listings)
-    .where(gte(listings.postedAt, cutoff))
+    .where(freshFilter)
     .groupBy(listings.jobCategory);
   return c.json({
     fresh30d: Number(fresh[0]?.n ?? 0),

@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS listings (
   job_category TEXT,
   hours_required INTEGER,
   ratings_required TEXT,
-  enriched_at INTEGER
+  enriched_at INTEGER,
+  is_closed INTEGER NOT NULL DEFAULT 0
 );
 -- Idempotent column add for upgrades from older schemas.
 -- ALTER TABLE ... ADD COLUMN IF NOT EXISTS isn't supported in old SQLite;
@@ -46,6 +47,10 @@ const colNames = new Set(cols.map((c) => c.name));
 if (!colNames.has("enriched_at")) {
   sqlite.exec("ALTER TABLE listings ADD COLUMN enriched_at INTEGER");
   console.log("migrate: added enriched_at column");
+}
+if (!colNames.has("is_closed")) {
+  sqlite.exec("ALTER TABLE listings ADD COLUMN is_closed INTEGER NOT NULL DEFAULT 0");
+  console.log("migrate: added is_closed column");
 }
 
 console.log("migrate: schema applied to", process.env.FLIGHTPATH_DB ?? "./flightpath.db");

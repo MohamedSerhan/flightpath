@@ -134,6 +134,7 @@ export async function enrichDetailPages(): Promise<void> {
     .from(listings)
     .where(
       and(
+        eq(listings.isClosed, 0),
         gte(listings.postedAt, cutoff),
         or(isNull(listings.enrichedAt), lt(listings.enrichedAt, reenrichBefore))!,
       ),
@@ -154,7 +155,10 @@ export async function enrichDetailPages(): Promise<void> {
   for (const row of candidates) {
     const result = await fetchDetail(row.url);
     if ("gone" in result) {
-      await db.delete(listings).where(eq(listings.id, row.id));
+      await db
+        .update(listings)
+        .set({ isClosed: 1, enrichedAt: Date.now() })
+        .where(eq(listings.id, row.id));
       gone++;
       await sleep(REQUEST_DELAY_MS);
       continue;
@@ -169,7 +173,10 @@ export async function enrichDetailPages(): Promise<void> {
 
     // 1. Closed-position check on the rendered text.
     if (CLOSED_RE.test(text)) {
-      await db.delete(listings).where(eq(listings.id, row.id));
+      await db
+        .update(listings)
+        .set({ isClosed: 1, enrichedAt: Date.now() })
+        .where(eq(listings.id, row.id));
       closed++;
       await sleep(REQUEST_DELAY_MS);
       continue;

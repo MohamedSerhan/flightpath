@@ -19,6 +19,11 @@ export const listings = sqliteTable(
     hoursRequired: integer("hours_required"),
     ratingsRequired: text("ratings_required"),
     enrichedAt: integer("enriched_at"),
+    /** 1 = detail-enrichment confirmed the role is closed/gone. Filter
+     *  out of all user-facing queries. Scrape upsert never touches this
+     *  column, so once a listing is marked closed it stays closed even
+     *  if the source keeps re-aggregating it. */
+    isClosed: integer("is_closed").notNull().default(0),
   },
   (t) => ({
     sourceUnique: uniqueIndex("listings_source_external_uq").on(t.sourceId, t.externalId),

@@ -17,7 +17,7 @@
 
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
-import { desc, gte } from "drizzle-orm";
+import { and, desc, eq, gte } from "drizzle-orm";
 import { db } from "../db/client.ts";
 import { listings } from "../db/schema.ts";
 
@@ -100,7 +100,7 @@ async function main() {
   const allRows = await db
     .select()
     .from(listings)
-    .where(gte(listings.postedAt, cutoff))
+    .where(and(eq(listings.isClosed, 0), gte(listings.postedAt, cutoff)))
     .orderBy(desc(listings.postedAt))
     .limit(500);
 
