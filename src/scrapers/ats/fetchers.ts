@@ -148,13 +148,14 @@ type WorkableJob = {
 type WorkableResp = { results?: WorkableJob[]; jobs?: WorkableJob[] };
 
 async function fetchWorkable(src: AtsSource): Promise<RawListing[]> {
+  // Use the GET widget endpoint, not the POST API. The POST endpoint sits
+  // behind Cloudflare rate-limiting (returns 1015 to clients without a
+  // browser fingerprint); the widget endpoint is stable and unauthenticated.
+  // See research/04-ats-map.md for the verification.
   const url =
-    src.apiOverride ??
-    `https://apply.workable.com/api/v3/accounts/${src.slug}/jobs`;
+    src.apiOverride ?? `https://apply.workable.com/api/v1/widget/accounts/${src.slug}`;
   const res = await fetch(url, {
-    method: "POST",
-    headers: { Accept: "application/json", "User-Agent": UA, "Content-Type": "application/json" },
-    body: JSON.stringify({ query: "", department: [], location: [] }),
+    headers: { Accept: "application/json", "User-Agent": UA },
   });
   if (res.status === 404) throw new Error("404");
   if (!res.ok) throw new Error(`HTTP ${res.status}`);

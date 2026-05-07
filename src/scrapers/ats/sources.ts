@@ -1,13 +1,14 @@
 /**
  * Curated list of flight-school / aviation-employer ATS slugs.
  *
- * Add new schools here — the rest of the system picks them up automatically.
- * If a slug 404s in production, the adapter logs the failure under
- * `sources` table and moves on to the next.
+ * Every entry below was verified live on 2026-05-07 — see
+ * research/04-ats-map.md for the audit trail. The CFI hiring market is
+ * dominated by Workday / iCIMS / AirlineApps / proprietary forms, so
+ * the verified-public-JSON list is short.
  *
- * pilotOnly: when true, the title must match a pilot/CFI/instructor regex
- * before the listing is kept. When false, every job comes through and
- * downstream classification handles category routing.
+ * pilotOnly: when true, the title must match a pilot/CFI/instructor
+ * regex before the listing is kept. Set false for employers where
+ * we want all roles (e.g. maintenance instructors as adjacent persona).
  */
 
 export type AtsKind =
@@ -31,46 +32,22 @@ export type AtsSource = {
 };
 
 export const ATS_SOURCES: AtsSource[] = [
-  // Breezy
+  // ATP Flight School — largest US CFI employer. Public JSON returns ~18 jobs
+  // (mostly maintenance / training-support); CFI postings are filtered out
+  // and need a separate HTML scrape (see adapters/atp.ts).
   { kind: "breezy", slug: "atp-flight-school", name: "ATP Flight School", pilotOnly: true },
 
-  // Greenhouse — seeded with airlines / regional carriers known to host pilot pipeline jobs
-  { kind: "greenhouse", slug: "republicairways", name: "Republic Airways", pilotOnly: true },
-  { kind: "greenhouse", slug: "skywestairlines", name: "SkyWest Airlines", pilotOnly: true },
-  { kind: "greenhouse", slug: "endeavorair", name: "Endeavor Air", pilotOnly: true },
-  { kind: "greenhouse", slug: "envoyair", name: "Envoy Air", pilotOnly: true },
-  { kind: "greenhouse", slug: "piedmontairlines", name: "Piedmont Airlines", pilotOnly: true },
-  { kind: "greenhouse", slug: "psaairlines", name: "PSA Airlines", pilotOnly: true },
-  { kind: "greenhouse", slug: "horizonair", name: "Horizon Air", pilotOnly: true },
-  { kind: "greenhouse", slug: "mesaairlines", name: "Mesa Airlines", pilotOnly: true },
-  { kind: "greenhouse", slug: "capeair", name: "Cape Air", pilotOnly: true },
-  { kind: "greenhouse", slug: "alaskaair", name: "Alaska Airlines", pilotOnly: true },
-  { kind: "greenhouse", slug: "jetblue", name: "JetBlue", pilotOnly: true },
-  { kind: "greenhouse", slug: "spirit", name: "Spirit Airlines", pilotOnly: true },
-  { kind: "greenhouse", slug: "hillsboroaero", name: "Hillsboro Aero Academy", pilotOnly: true },
-  { kind: "greenhouse", slug: "aeroguard", name: "AeroGuard Flight Training Center", pilotOnly: true },
-  { kind: "greenhouse", slug: "epicflightacademy", name: "Epic Flight Academy", pilotOnly: true },
-  { kind: "greenhouse", slug: "spartancollege", name: "Spartan College of Aeronautics", pilotOnly: true },
-  { kind: "greenhouse", slug: "flightsafetyinternational", name: "FlightSafety International", pilotOnly: true },
-  { kind: "greenhouse", slug: "flightsafety", name: "FlightSafety International", pilotOnly: true },
+  // Breeze Airways — A220 Flight Instructor + Embark Pilot Program (CFI feeder).
+  { kind: "greenhouse", slug: "breezeairways", name: "Breeze Airways", pilotOnly: true },
 
-  // Lever
-  { kind: "lever", slug: "embry-riddle", name: "Embry-Riddle Aeronautical University", pilotOnly: true },
-  { kind: "lever", slug: "republicairways", name: "Republic Airways (Lever)", pilotOnly: true },
-  { kind: "lever", slug: "skyborne", name: "Skyborne Airline Academy", pilotOnly: true },
+  // WSU Tech (Wichita State Tech) — has historically posted "Adjunct Faculty,
+  // Certified Flight Instructor". Currently inactive, but the slug is verified
+  // and will repopulate.
+  { kind: "workable", slug: "wsutech", name: "WSU Tech", pilotOnly: true },
 
-  // Workable
-  { kind: "workable", slug: "atp-flight-school", name: "ATP Flight School (Workable)", pilotOnly: true },
-  { kind: "workable", slug: "epic-flight-academy", name: "Epic Flight Academy (Workable)", pilotOnly: true },
-  { kind: "workable", slug: "coast-flight-training", name: "Coast Flight Training", pilotOnly: true },
-  { kind: "workable", slug: "aeroguard", name: "AeroGuard (Workable)", pilotOnly: true },
-
-  // Ashby
-  { kind: "ashby", slug: "lift-academy", name: "Republic LIFT Academy", pilotOnly: true },
-
-  // Recruitee + SmartRecruiters seeds (commonly used by aviation cos)
-  { kind: "smartrecruiters", slug: "PiedmontAirlines", name: "Piedmont (SmartRecruiters)", pilotOnly: true },
-  { kind: "smartrecruiters", slug: "Skywest", name: "SkyWest (SmartRecruiters)", pilotOnly: true },
+  // Florida Flyers Flight Academy — Breezy account verified, currently empty.
+  // Worth polling because flight-instructor postings rotate.
+  { kind: "breezy", slug: "florida-flyers-flight-academy-inc", name: "Florida Flyers Flight Academy", pilotOnly: true },
 ];
 
 export const PILOT_TITLE_RE =
