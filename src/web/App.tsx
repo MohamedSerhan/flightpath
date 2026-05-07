@@ -19,6 +19,9 @@ import {
   Settings,
   Sun,
   Moon,
+  BookOpen,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 import { applyTheme, readTheme, writeTheme, type Theme } from "./theme.ts";
 import { fetchListings, fetchSources, fetchSummary } from "./api.ts";
@@ -44,6 +47,13 @@ import {
 } from "./outreach.ts";
 import { matchScore, type MatchResult, type MatchTier } from "./match.ts";
 import { readViewed, viewedKey, writeViewed, type ViewedMap } from "./views.ts";
+import {
+  PREP_BANK,
+  SECTION_LABELS,
+  SECTION_ORDER,
+  type PrepQuestion,
+  type PrepSection,
+} from "./prep.ts";
 
 /**
  * Filter state ↔ URL hash sync.
@@ -186,7 +196,7 @@ function presetMatches(preset: ListingFilter, current: ListingFilter): boolean {
   return keys.every((k) => (preset[k] ?? undefined) === (current[k] ?? undefined));
 }
 
-type View = "browse" | "pipeline";
+type View = "browse" | "pipeline" | "prep";
 type SortMode = "match" | "date";
 
 const SORT_STORAGE_KEY = "flightpath:sortMode";
@@ -347,6 +357,8 @@ export function App() {
           onDraftFollowUp={(listing) => setOutreachFor({ listing, mode: "follow-up" })}
         />
       )}
+
+      {view === "prep" && <PrepView />}
 
       {view === "browse" && (
       <main className="mx-auto max-w-3xl px-4 pb-24">
@@ -576,6 +588,17 @@ function Header({
           </div>
         </button>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => onSetView(view === "prep" ? "browse" : "prep")}
+            className={`inline-flex items-center justify-center rounded-lg border px-2 py-1.5 text-sm font-medium transition ${
+              view === "prep"
+                ? "border-sky-500 bg-sky-500 text-white"
+                : "border-ink-200 bg-white text-ink-800 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-ink-500"
+            }`}
+            title="Interview & oral prep"
+          >
+            <BookOpen className="h-4 w-4" />
+          </button>
           <button
             onClick={() => onSetView(view === "pipeline" ? "browse" : "pipeline")}
             className={`relative inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
@@ -1867,6 +1890,157 @@ function CompareModal({
         </div>
       </div>
     </div>
+  );
+}
+
+function PrepView() {
+  const [search, setSearch] = useState("");
+  const [openSections, setOpenSections] = useState<Set<PrepSection>>(
+    () => new Set(["foi", "regulations"]),
+  );
+  const [openQuestion, setOpenQuestion] = useState<string | null>(null);
+
+  function toggleSection(s: PrepSection) {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(s)) next.delete(s);
+      else next.add(s);
+      return next;
+    });
+  }
+
+  const filtered = useMemo(() => {
+    const needle = search.toLowerCase().trim();
+    if (!needle) return PREP_BANK;
+    return PREP_BANK.filter(
+      (q) =>
+        q.q.toLowerCase().includes(needle) ||
+        q.hits.some((h) => h.toLowerCase().includes(needle)) ||
+        SECTION_LABELS[q.section].toLowerCase().includes(needle),
+    );
+  }, [search]);
+
+  const grouped = useMemo(() => {
+    const m: Record<PrepSection, PrepQuestion[]> = {
+      foi: [],
+      regulations: [],
+      weather: [],
+      aerodynamics: [],
+      performance: [],
+      systems: [],
+      decision: [],
+      behavioral: [],
+      logistics: [],
+    };
+    for (const q of filtered) m[q.section].push(q);
+    return m;
+  }, [filtered]);
+
+  return (
+    <main className="mx-auto max-w-3xl px-4 pb-24">
+      <div className="mt-4 mb-3">
+        <h2 className="text-lg font-semibold text-ink-900 dark:text-ink-50">
+          Interview & oral prep
+        </h2>
+        <p className="mt-1 text-xs text-ink-400">
+          Common ground a CFI candidate gets quizzed on — flight school
+          hires, Part 91/135 panels, regional screen calls. {PREP_BANK.length}{" "}
+          questions across {SECTION_ORDER.length} sections. Tap a question to
+          see what interviewers are looking for.
+        </p>
+      </div>
+      <label className="relative block">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search prep…"
+          className="w-full rounded-xl border border-ink-200 bg-white py-3 pl-10 pr-4 text-sm text-ink-900 placeholder:text-ink-400 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-50 dark:placeholder:text-ink-500"
+        />
+      </label>
+
+      <div className="mt-6 space-y-3">
+        {SECTION_ORDER.map((section) => {
+          const items = grouped[section];
+          if (items.length === 0) return null;
+          const isOpen = !!search || openSections.has(section);
+          return (
+            <section
+              key={section}
+              className="rounded-2xl border border-ink-100 bg-white shadow-sm dark:bg-ink-800 dark:border-ink-800"
+            >
+              <button
+                onClick={() => !search && toggleSection(section)}
+                className="flex w-full items-center justify-between px-4 py-3 text-left"
+              >
+                <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">
+                  {SECTION_LABELS[section]}
+                  <span className="ml-2 text-xs font-normal text-ink-400">
+                    {items.length}
+                  </span>
+                </h3>
+                {!search &&
+                  (isOpen ? (
+                    <ChevronDown className="h-4 w-4 text-ink-400" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-ink-400" />
+                  ))}
+              </button>
+              {isOpen && (
+                <ul className="border-t border-ink-100 dark:border-ink-700">
+                  {items.map((q, i) => {
+                    const key = `${section}-${i}`;
+                    const isQOpen = openQuestion === key;
+                    return (
+                      <li
+                        key={key}
+                        className="border-b border-ink-100 last:border-b-0 dark:border-ink-700"
+                      >
+                        <button
+                          onClick={() => setOpenQuestion(isQOpen ? null : key)}
+                          className="flex w-full items-start justify-between gap-3 px-4 py-3 text-left hover:bg-ink-50 dark:hover:bg-ink-700"
+                        >
+                          <span className="text-sm font-medium text-ink-800 dark:text-ink-100">
+                            {q.q}
+                          </span>
+                          {isQOpen ? (
+                            <ChevronDown className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" />
+                          ) : (
+                            <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" />
+                          )}
+                        </button>
+                        {isQOpen && (
+                          <div className="bg-ink-50 px-4 py-3 dark:bg-ink-900/50">
+                            <ul className="space-y-1.5 text-sm leading-relaxed text-ink-700 dark:text-ink-200">
+                              {q.hits.map((h, j) => (
+                                <li key={j} className="flex gap-2">
+                                  <span className="select-none text-sky-500">•</span>
+                                  <span>{h}</span>
+                                </li>
+                              ))}
+                            </ul>
+                            {q.ref && (
+                              <div className="mt-3 text-xs italic text-ink-400">
+                                Reference: {q.ref}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </section>
+          );
+        })}
+        {filtered.length === 0 && (
+          <div className="rounded-2xl border border-dashed border-ink-200 bg-white p-8 text-center dark:bg-ink-800 dark:border-ink-800">
+            <p className="text-sm text-ink-400">No questions match that search.</p>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
 
