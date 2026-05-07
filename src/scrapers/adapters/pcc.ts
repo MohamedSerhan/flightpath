@@ -37,6 +37,7 @@ type PccJob = {
   AircraftType?: string | null;
   Company?: string | null;
   Region?: string | null;
+  RegionAbbreviation?: string | null;
   JobUrl?: string | null;
   PremiumListing?: boolean;
 };
@@ -125,6 +126,13 @@ export const pccAdapter: SourceAdapter = {
           if (!j.JobId || !j.JobUrl) continue;
           if (seen.has(j.JobId)) continue;
           seen.add(j.JobId);
+          // PCC tags every listing with a region. We seed only the USA
+          // userRegion, but PCC sometimes serves international postings
+          // anyway — drop anything that isn't explicitly USA so we don't
+          // pollute the catalog with Yellowknife / Toronto / Frankfurt
+          // jobs the sibling can't take.
+          const region = (j.RegionAbbreviation ?? j.Region ?? "").toUpperCase();
+          if (region && region !== "USA" && region !== "US") continue;
           const title = buildTitle(j);
           if (!PILOT_TITLE_RE.test(title) && !PILOT_TITLE_RE.test(j.Position ?? "")) continue;
           out.push({
