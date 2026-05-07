@@ -1,6 +1,9 @@
 import type { RawListing, SourceAdapter } from "../types.ts";
 
-const PILOT_JOBS_URL = "https://www.jsfirm.com/pilot+jobs";
+const PAGES = [
+  "https://www.jsfirm.com/pilot+jobs",
+  "https://www.jsfirm.com/helicopter+pilot+jobs",
+];
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
@@ -83,7 +86,20 @@ export const jsfirmAdapter: SourceAdapter = {
   id: "jsfirm",
   name: "JSfirm",
   async fetch(): Promise<RawListing[]> {
-    const html = await fetchPage(PILOT_JOBS_URL);
-    return parseListings(html);
+    const seen = new Set<string>();
+    const out: RawListing[] = [];
+    for (const url of PAGES) {
+      try {
+        const html = await fetchPage(url);
+        for (const item of parseListings(html)) {
+          if (seen.has(item.externalId)) continue;
+          seen.add(item.externalId);
+          out.push(item);
+        }
+      } catch (err) {
+        console.warn(`[jsfirm] ${url} failed: ${err instanceof Error ? err.message : err}`);
+      }
+    }
+    return out;
   },
 };

@@ -1,9 +1,15 @@
 import type { RawListing, SourceAdapter } from "../types.ts";
 
-const SEARCH_TERMS = ["flight instructor", "pilot instructor", "aviation instructor"];
-const BASE = "https://data.usajobs.gov/api/Search";
+/**
+ * USAJobs requires registering for a free Authorization-Key at
+ * https://developer.usajobs.gov/apirequest/. Set USAJOBS_AUTH_KEY and
+ * USAJOBS_USER_AGENT (your email, per their docs) in the environment
+ * to enable this source. Without those env vars, the adapter is a no-op
+ * so a fresh checkout still scrapes successfully.
+ */
 
-const UA = "Flightpath/0.1 (https://github.com/flightpath; aggregator of public CFI listings)";
+const SEARCH_TERMS = ["flight instructor", "pilot instructor", "aviation instructor", "pilot"];
+const BASE = "https://data.usajobs.gov/api/Search";
 
 type UsaJobItem = {
   MatchedObjectId: string;
@@ -25,12 +31,13 @@ type UsaJobResponse = {
   };
 };
 
-async function fetchTerm(term: string): Promise<RawListing[]> {
+async function fetchTerm(term: string, authKey: string, ua: string): Promise<RawListing[]> {
   const url = `${BASE}?Keyword=${encodeURIComponent(term)}&ResultsPerPage=50`;
   const res = await fetch(url, {
     headers: {
-      "User-Agent": UA,
-      "Host": "data.usajobs.gov",
+      "User-Agent": ua,
+      Host: "data.usajobs.gov",
+      "Authorization-Key": authKey,
       Accept: "application/json",
     },
   });
@@ -43,7 +50,9 @@ async function fetchTerm(term: string): Promise<RawListing[]> {
       const title = d.PositionTitle?.trim();
       const url = d.PositionURI?.trim();
       if (!title || !url) return null;
-      const usOnly = (d.PositionLocation ?? []).some((l) => (l.CountryCode ?? "").toUpperCase() === "US");
+      const usOnly = (d.PositionLocation ?? []).some(
+        (l) => (l.CountryCode ?? "").toUpperCase() === "US",
+      );
       if (d.PositionLocation && d.PositionLocation.length > 0 && !usOnly) return null;
       const location =
         d.PositionLocationDisplay?.trim() ||
@@ -67,18 +76,24 @@ export const usaJobsAdapter: SourceAdapter = {
   id: "usajobs",
   name: "USAJobs (Federal)",
   async fetch(): Promise<RawListing[]> {
+    const authKey = process.env.USAJOBS_AUTH_KEY;
+    const ua = process.env.USAJOBS_USER_AGENT;
+    if (!authKey || !ua) {
+      console.log("[usajobs] skipped (set USAJOBS_AUTH_KEY and USAJOBS_USER_AGENT to enable)");
+      return [];
+    }
     const seen = new Set<string>();
     const out: RawListing[] = [];
     for (const term of SEARCH_TERMS) {
       try {
-        const items = await fetchTerm(term);
+        const items = await fetchTerm(term, authKey, ua);
         for (const item of items) {
           if (seen.has(item.externalId)) continue;
           seen.add(item.externalId);
           out.push(item);
         }
       } catch (err) {
-        console.warn(`[usajobs] term "${term}" failed:`, err instanceof Error ? err.message : err);
+        console.warn(`[usajobs] "${term}" failed:`, err instanceof Error ? err.message : err);
       }
     }
     return out;
