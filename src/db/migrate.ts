@@ -16,8 +16,12 @@ CREATE TABLE IF NOT EXISTS listings (
   fetched_at INTEGER NOT NULL,
   job_category TEXT,
   hours_required INTEGER,
-  ratings_required TEXT
+  ratings_required TEXT,
+  enriched_at INTEGER
 );
+-- Idempotent column add for upgrades from older schemas.
+-- ALTER TABLE ... ADD COLUMN IF NOT EXISTS isn't supported in old SQLite;
+-- we use a PRAGMA-based check in the migration script instead.
 CREATE UNIQUE INDEX IF NOT EXISTS listings_source_external_uq ON listings(source_id, external_id);
 CREATE INDEX IF NOT EXISTS listings_posted_idx ON listings(posted_at);
 CREATE INDEX IF NOT EXISTS listings_category_idx ON listings(job_category);
@@ -34,4 +38,14 @@ CREATE TABLE IF NOT EXISTS sources (
 `;
 
 sqlite.exec(DDL);
+
+// Backfill: add enriched_at to pre-existing tables that were created before
+// the column was introduced.
+const cols = sqlite.query("PRAGMA table_info(listings)").all() as Array<{ name: string }>;
+const colNames = new Set(cols.map((c) => c.name));
+if (!colNames.has("enriched_at")) {
+  sqlite.exec("ALTER TABLE listings ADD COLUMN enriched_at INTEGER");
+  console.log("migrate: added enriched_at column");
+}
+
 console.log("migrate: schema applied to", process.env.FLIGHTPATH_DB ?? "./flightpath.db");

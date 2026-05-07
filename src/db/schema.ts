@@ -18,6 +18,7 @@ export const listings = sqliteTable(
     jobCategory: text("job_category"),
     hoursRequired: integer("hours_required"),
     ratingsRequired: text("ratings_required"),
+    enrichedAt: integer("enriched_at"),
   },
   (t) => ({
     sourceUnique: uniqueIndex("listings_source_external_uq").on(t.sourceId, t.externalId),
