@@ -300,6 +300,7 @@ export function App() {
 
       {view === "browse" && (
       <main className="mx-auto max-w-3xl px-4 pb-24">
+        <HoursToAtpBanner profile={profile} onEditProfile={() => setShowProfile(true)} />
         <SearchBar value={filter.q ?? ""} onChange={(v) => update("q", v || undefined)} />
 
         <div className="mt-3 -mx-4 overflow-x-auto px-4 pb-1">
@@ -839,6 +840,88 @@ function Label({ children }: { children: React.ReactNode }) {
   return <div className="text-xs font-semibold uppercase tracking-wider text-ink-400">{children}</div>;
 }
 
+/** Tiny progress banner on the browse view: how close the user is to
+ *  the FAA ATP minimum of 1,500 hours, and (if they've set a monthly
+ *  pace) when they'll get there at the current rate. Quiet and
+ *  motivational — nothing if they haven't set total time, since we
+ *  don't want to assume. */
+function HoursToAtpBanner({
+  profile,
+  onEditProfile,
+}: {
+  profile: ApplicantProfile;
+  onEditProfile: () => void;
+}) {
+  const ATP = 1500;
+  const tt = profile.totalTime;
+  if (typeof tt !== "number" || tt < 0) {
+    return (
+      <button
+        onClick={onEditProfile}
+        className="mt-4 block w-full rounded-2xl border border-dashed border-ink-200 bg-white px-4 py-3 text-left text-xs text-ink-400 hover:border-ink-400 dark:border-ink-800 dark:bg-ink-800 dark:text-ink-200"
+      >
+        Set your total time in your profile to see how close you are to the 1,500-hour ATP minimum.
+      </button>
+    );
+  }
+  const remaining = Math.max(0, ATP - tt);
+  const pct = Math.min(100, Math.round((tt / ATP) * 100));
+  const reached = tt >= ATP;
+  const monthly = profile.monthlyHours ?? 0;
+  const months = !reached && monthly > 0 ? Math.ceil(remaining / monthly) : null;
+  const eta =
+    months !== null
+      ? new Date(Date.now() + months * 30 * 86400_000).toLocaleDateString(undefined, {
+          month: "short",
+          year: "numeric",
+        })
+      : null;
+
+  return (
+    <button
+      onClick={onEditProfile}
+      title="Click to edit your profile"
+      className="mt-4 block w-full rounded-2xl border border-ink-100 bg-white p-4 text-left shadow-sm hover:border-sky-500 dark:bg-ink-800 dark:border-ink-800"
+    >
+      <div className="flex items-baseline justify-between gap-2">
+        <div className="text-sm font-semibold text-ink-900 dark:text-ink-50">
+          {reached ? (
+            <>You've hit the 1,500-hour ATP minimum 🎉</>
+          ) : (
+            <>
+              {tt.toLocaleString()} <span className="text-ink-400">/</span>{" "}
+              {ATP.toLocaleString()} hrs
+              <span className="ml-2 text-xs font-normal text-ink-400">
+                ({remaining.toLocaleString()} to ATP)
+              </span>
+            </>
+          )}
+        </div>
+        <div className="text-xs font-medium tabular-nums text-ink-400">{pct}%</div>
+      </div>
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-ink-100 dark:bg-ink-700">
+        <div
+          className={`h-full rounded-full transition-all ${
+            reached ? "bg-emerald-500" : pct >= 75 ? "bg-sky-500" : pct >= 40 ? "bg-amber-400" : "bg-rose-400"
+          }`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      {!reached && (
+        <div className="mt-2 text-xs text-ink-400">
+          {eta ? (
+            <>
+              At {monthly} hrs/mo you'll reach ATP in {months} months ({eta})
+            </>
+          ) : (
+            <>Add monthly hours in profile to see a projected ATP date</>
+          )}
+        </div>
+      )}
+    </button>
+  );
+}
+
 function SortToggle({
   mode,
   onChange,
@@ -1349,6 +1432,19 @@ function ProfileModal({
                 inputMode="numeric"
                 className={fieldClass}
                 placeholder="e.g. 320"
+              />
+            </Field>
+            <Field label="Monthly hours pace">
+              <input
+                value={draft.monthlyHours?.toString() ?? ""}
+                onChange={(e) => {
+                  const v = e.target.value.trim();
+                  update("monthlyHours", v ? Number(v) : undefined);
+                }}
+                type="number"
+                inputMode="numeric"
+                className={fieldClass}
+                placeholder="e.g. 40"
               />
             </Field>
             <Field label="Willing to relocate">

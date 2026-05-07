@@ -20,6 +20,9 @@ export type ApplicantProfile = {
   phone?: string;
   baseLocation?: string;
   totalTime?: number;
+  /** How many flight hours the pilot is logging per month right now.
+   *  Used by the hours-to-ATP banner to project a runway date. Optional. */
+  monthlyHours?: number;
   hasInstrument?: boolean;
   hasMultiEngine?: boolean;
   hasCfii?: boolean;
