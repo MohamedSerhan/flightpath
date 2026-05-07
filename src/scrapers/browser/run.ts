@@ -11,7 +11,8 @@
 
 import { runBrowserAdapters } from "./runner.ts";
 import { aeroCrewNewsAdapter } from "./adapters/aerocrewnews.ts";
+import { indeedAdapter } from "./adapters/indeed.ts";
 
-const adapters = [aeroCrewNewsAdapter];
+const adapters = [aeroCrewNewsAdapter, indeedAdapter];
 
 await runBrowserAdapters(adapters);
