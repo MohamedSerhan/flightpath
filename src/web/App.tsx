@@ -468,7 +468,7 @@ function Header({
             }`}
           >
             <Briefcase className="h-4 w-4" />
-            <span className="hidden sm:inline">Pipeline</span>
+            <span className="hidden sm:inline">Logbook</span>
             {pipelineCount > 0 && (
               <span
                 className={`rounded-full px-1.5 text-[10px] font-bold ${
@@ -597,7 +597,7 @@ function PipelineView({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `flightpath-pipeline-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `flightpath-logbook-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -612,7 +612,7 @@ function PipelineView({
         <div className="text-sm text-ink-600 dark:text-ink-200">
           {total === 0
             ? "No applications tracked yet — tap the icons on a listing to save / mark applied."
-            : `${total} listings in your pipeline`}
+            : `${total} ${total === 1 ? "entry" : "entries"} in your logbook`}
         </div>
         {total > 0 && (
           <div className="flex gap-2">
@@ -625,7 +625,7 @@ function PipelineView({
             </button>
             <button
               onClick={() => {
-                if (confirm("Clear all pipeline entries? This cannot be undone.")) onClearAll();
+                if (confirm("Clear all logbook entries? This cannot be undone.")) onClearAll();
               }}
               className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 hover:border-rose-400 dark:bg-ink-800 dark:text-rose-200 dark:border-rose-800 dark:hover:border-rose-600"
             >
@@ -662,7 +662,7 @@ function PipelineView({
                           onSetStatus(listing, null)
                         }
                         className="rounded p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:bg-ink-700 dark:text-ink-50 dark:hover:bg-ink-700 dark:hover:text-ink-100"
-                        title="Remove from pipeline"
+                        title="Remove from logbook"
                       >
                         <X className="h-4 w-4" />
                       </button>
