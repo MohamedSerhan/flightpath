@@ -15,7 +15,12 @@ function decodeHtmlEntities(s: string): string {
 
 function stripHtml(s: string | null | undefined): string | null {
   if (!s) return null;
-  return decodeHtmlEntities(s.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim() || null;
+  // Decode entities BEFORE stripping tags. Greenhouse and several other
+  // ATSes ship double-encoded content (e.g. `&lt;div&gt;...&lt;/div&gt;`),
+  // so we have to convert encoded tags into real tags first; otherwise
+  // the regex strip leaves them as literal text.
+  const decoded = decodeHtmlEntities(s);
+  return decoded.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || null;
 }
 
 function safeDate(s: string | undefined | null): number {
