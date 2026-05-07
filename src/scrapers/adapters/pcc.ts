@@ -65,27 +65,36 @@ function buildTitle(j: PccJob): string {
   return position;
 }
 
+const PAGE_TIMEOUT_MS = 25_000;
+
 async function fetchPage(offset: number, userRegion: number): Promise<PccResp> {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      Accept: "application/json",
-      "User-Agent": UA,
-      Referer: "https://pilotcareercenter.com/USA",
-      "X-Requested-With": "XMLHttpRequest",
-    },
-    body: JSON.stringify({
-      regions: [],
-      categories: [],
-      positions: [],
-      types: [],
-      offset,
-      userRegion,
-    }),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return (await res.json()) as PccResp;
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), PAGE_TIMEOUT_MS);
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Accept: "application/json",
+        "User-Agent": UA,
+        Referer: "https://pilotcareercenter.com/USA",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      body: JSON.stringify({
+        regions: [],
+        categories: [],
+        positions: [],
+        types: [],
+        offset,
+        userRegion,
+      }),
+      signal: ac.signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as PccResp;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export const pccAdapter: SourceAdapter = {
@@ -95,10 +104,21 @@ export const pccAdapter: SourceAdapter = {
     const out: RawListing[] = [];
     const seen = new Set<number>();
 
+    // Pagination resilience: if a single page errors (timeout, 5xx) we keep
+    // the listings we already got and stop pagination cleanly. Without this,
+    // one bad request mid-run loses the whole scrape.
     for (const region of USER_REGIONS) {
       let offset = 0;
       for (let page = 0; page < MAX_PAGES; page++) {
-        const resp = await fetchPage(offset, region.id);
+        let resp: PccResp;
+        try {
+          resp = await fetchPage(offset, region.id);
+        } catch (err) {
+          console.warn(
+            `[pcc] page offset=${offset} failed (${err instanceof Error ? err.message : err}); keeping ${out.length} listings collected so far`,
+          );
+          break;
+        }
         const items = resp.m_Item2 ?? [];
         if (items.length === 0) break;
         for (const j of items) {

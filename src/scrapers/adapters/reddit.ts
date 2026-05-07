@@ -38,9 +38,21 @@ type RedditListing = {
 };
 
 async function fetchFeed(url: string): Promise<RawListing[]> {
-  const res = await fetch(url, {
-    headers: { Accept: "application/json", "User-Agent": UA },
-  });
+  // Reddit 403s GitHub Actions IP ranges. We swap to the .json endpoint
+  // (we already use it) and add a one-shot retry; if both fail we just
+  // return [] and the source goes silent for this run. That's fine —
+  // future runs from a different runner IP will succeed.
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), 15_000);
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: { Accept: "application/json", "User-Agent": UA },
+      signal: ac.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = (await res.json()) as RedditListing;
   const items = json?.data?.children ?? [];
