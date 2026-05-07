@@ -39,6 +39,15 @@ the previous run. Both channels are independent and gated by repo secrets.
 **Filter** *(optional repo variable, not secret)*:
 - `ALERT_FILTER` = `cfi` (default — only CFI/CFII/MEI), `all` (every pilot listing), or a comma-separated category list (`cfi,cfii,mei,part135`).
 
+## Optional: Adzuna aggregator
+
+Adzuna's free tier (1000 calls/month) returns aviation listings via their search API. Set these repo secrets to enable:
+
+  ADZUNA_APP_ID    app id from developer.adzuna.com
+  ADZUNA_APP_KEY   app key from same page
+
+Sign up free at https://developer.adzuna.com/admin/access_details.
+
 ## Free 24/7 hosting on GitHub Pages
 
 The `.github/workflows/scrape-and-deploy.yml` workflow scrapes every 4 hours, builds a static bundle, and publishes it to GitHub Pages. No backend server, no hosting fees.

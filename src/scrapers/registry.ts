@@ -10,6 +10,7 @@ import { findAPilotAdapter } from "./adapters/findapilot.ts";
 import { aopaJdnAdapter } from "./adapters/aopa-jdn.ts";
 import { redditAdapter } from "./adapters/reddit.ts";
 import { usaJobsAdapter } from "./adapters/usajobs.ts";
+import { adzunaAdapter } from "./adapters/adzuna.ts";
 
 export const adapters: SourceAdapter[] = [
   jsfirmAdapter,
@@ -23,4 +24,5 @@ export const adapters: SourceAdapter[] = [
   aopaJdnAdapter,
   redditAdapter,
   usaJobsAdapter,
+  adzunaAdapter,
 ];
