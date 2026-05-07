@@ -15,6 +15,30 @@ bun run dev          # API on :3001, web on :5173
 
 Open http://localhost:5173. Filters live in the URL hash, so any view is bookmarkable and shareable.
 
+## Push alerts (Telegram + email, free)
+
+The cron runs every 4 hours; alerts go out for new pilot listings since
+the previous run. Both channels are independent and gated by repo secrets.
+
+**Telegram (recommended — instant, no domain needed):**
+
+1. Talk to [@BotFather](https://t.me/BotFather) on Telegram, run `/newbot`, copy the token it gives you.
+2. Send any message to your new bot, then visit `https://api.telegram.org/bot<TOKEN>/getUpdates` and copy `result[0].message.chat.id`.
+3. Repo → **Settings → Secrets and variables → Actions → New secret**:
+   - `TELEGRAM_BOT_TOKEN` = the token from BotFather
+   - `TELEGRAM_CHAT_ID` = your chat id
+
+**Email via [Resend](https://resend.com) (free 3000/month):**
+
+1. Sign up at resend.com, create an API key.
+2. Repo secrets:
+   - `RESEND_API_KEY` = the api key
+   - `ALERT_EMAIL_TO` = where to send (comma-separated for multiple)
+   - `ALERT_EMAIL_FROM` *(optional)* = `Your Name <you@verified-domain.com>` if you've verified a domain in Resend; otherwise leave unset and it ships from `onboarding@resend.dev`
+
+**Filter** *(optional repo variable, not secret)*:
+- `ALERT_FILTER` = `cfi` (default — only CFI/CFII/MEI), `all` (every pilot listing), or a comma-separated category list (`cfi,cfii,mei,part135`).
+
 ## Free 24/7 hosting on GitHub Pages
 
 The `.github/workflows/scrape-and-deploy.yml` workflow scrapes every 4 hours, builds a static bundle, and publishes it to GitHub Pages. No backend server, no hosting fees.

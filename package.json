@@ -13,6 +13,7 @@
     "scrape": "bun src/scrapers/run.ts",
     "scrape:browser": "bun src/scrapers/browser/run.ts",
     "scrape:all": "bun run scrape && bun run scrape:browser",
+    "alert": "bun src/scrapers/alert.ts",
     "db:migrate": "bun src/db/migrate.ts",
     "db:seed": "bun src/scrapers/run.ts",
     "preview": "vite preview"
