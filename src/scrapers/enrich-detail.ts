@@ -31,8 +31,10 @@ import { db } from "../db/client.ts";
 import { listings } from "../db/schema.ts";
 import { extractHoursRequired, extractRatings } from "./enrich.ts";
 
-const MAX_PER_RUN = 200;
-const REQUEST_DELAY_MS = 250;
+// CI runner capacity is generous; the bottleneck is source-server politeness.
+// 500 fetches × 250ms = ~2 min steady-state, plus actual response latency.
+const MAX_PER_RUN = 500;
+const REQUEST_DELAY_MS = 200;
 const FRESHNESS_DAYS = 30;
 const REENRICH_AFTER_DAYS = 7;
 
