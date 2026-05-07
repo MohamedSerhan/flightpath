@@ -207,6 +207,8 @@ export function App() {
   const [showProfile, setShowProfile] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => readTheme());
   const [sortMode, setSortMode] = useState<SortMode>(() => readSortMode());
+  const [compareKeys, setCompareKeys] = useState<Set<string>>(() => new Set());
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => {
     writeApplicantProfile(profile);
@@ -237,6 +239,16 @@ export function App() {
 
   function statusOf(listing: Listing): PipelineStatus | null {
     return pipeline[entryKey(listing.sourceId, listing.externalId)]?.status ?? null;
+  }
+
+  function toggleCompare(listing: Listing) {
+    const key = entryKey(listing.sourceId, listing.externalId);
+    setCompareKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else if (next.size < 4) next.add(key); // cap at 4 columns for layout
+      return next;
+    });
   }
 
   const listingsQ = useQuery({
@@ -381,6 +393,8 @@ export function App() {
                         listing={listing}
                         match={match}
                         status={statusOf(listing)}
+                        compareSelected={compareKeys.has(entryKey(listing.sourceId, listing.externalId))}
+                        onToggleCompare={() => toggleCompare(listing)}
                         onOpen={() => setActive(listing)}
                         onSetStatus={(s) => setListingStatus(listing, s)}
                       />
@@ -447,6 +461,23 @@ export function App() {
             setShowProfile(false);
           }}
           onClose={() => setShowProfile(false)}
+        />
+      )}
+
+      {compareKeys.size > 0 && view === "browse" && (
+        <CompareBar
+          count={compareKeys.size}
+          onCompare={() => setShowCompare(true)}
+          onClear={() => setCompareKeys(new Set())}
+        />
+      )}
+
+      {showCompare && (
+        <CompareModal
+          keys={compareKeys}
+          listings={listingsQ.data?.items ?? []}
+          profile={profile}
+          onClose={() => setShowCompare(false)}
         />
       )}
     </div>
@@ -1028,14 +1059,18 @@ function ListingCard({
   listing,
   match,
   status,
+  compareSelected,
   onOpen,
   onSetStatus,
+  onToggleCompare,
 }: {
   listing: Listing;
   match: MatchResult;
   status: PipelineStatus | null;
+  compareSelected: boolean;
   onOpen: () => void;
   onSetStatus: (s: PipelineStatus | null) => void;
+  onToggleCompare: () => void;
 }) {
   const sourceLabel = SOURCE_LABELS[listing.sourceId] ?? listing.sourceId;
   const tail = !listing.location ? urlTail(listing.url) : "";
@@ -1118,8 +1153,22 @@ function ListingCard({
               }}
             />
           ))}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleCompare();
+            }}
+            title={compareSelected ? "Remove from compare" : "Add to compare"}
+            className={`ml-auto inline-flex items-center justify-center rounded-md p-1.5 text-[10px] font-bold ring-1 transition ${
+              compareSelected
+                ? "bg-sky-500 text-white ring-sky-500"
+                : "bg-white text-ink-400 ring-ink-100 hover:text-ink-800 dark:bg-ink-800 dark:ring-ink-700"
+            }`}
+          >
+            ⇄
+          </button>
           {status && (
-            <span className={`ml-auto rounded px-2 py-0.5 text-[10px] font-medium ring-1 ${STATUS_TONES[status]}`}>
+            <span className={`rounded px-2 py-0.5 text-[10px] font-medium ring-1 ${STATUS_TONES[status]}`}>
               {STATUS_LABELS[status]}
             </span>
           )}
@@ -1582,6 +1631,154 @@ function CheckboxField({
       />
       <span>{label}</span>
     </label>
+  );
+}
+
+function CompareBar({
+  count,
+  onCompare,
+  onClear,
+}: {
+  count: number;
+  onCompare: () => void;
+  onClear: () => void;
+}) {
+  return (
+    <div className="safe-bottom fixed inset-x-0 bottom-0 z-20 bg-white/95 px-4 py-3 shadow-[0_-1px_8px_rgba(0,0,0,0.12)] backdrop-blur dark:bg-ink-900/95">
+      <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
+        <div className="text-sm text-ink-700 dark:text-ink-100">
+          <span className="font-semibold">{count}</span> selected for compare
+          {count >= 4 && <span className="ml-2 text-xs text-ink-400">(max)</span>}
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={onClear}
+            className="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:border-ink-400 dark:bg-ink-800 dark:border-ink-800 dark:text-ink-200"
+          >
+            Clear
+          </button>
+          <button
+            onClick={onCompare}
+            disabled={count < 2}
+            className="rounded-lg bg-sky-500 px-4 py-1.5 text-xs font-semibold text-white hover:bg-sky-600 disabled:cursor-not-allowed disabled:bg-ink-200 disabled:text-ink-400 dark:disabled:bg-ink-700 dark:disabled:text-ink-400"
+          >
+            Compare {count}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CompareModal({
+  keys,
+  listings,
+  profile,
+  onClose,
+}: {
+  keys: Set<string>;
+  listings: Listing[];
+  profile: ApplicantProfile;
+  onClose: () => void;
+}) {
+  const selected = listings.filter((l) => keys.has(entryKey(l.sourceId, l.externalId)));
+  const rows: Array<{ label: string; render: (l: Listing) => React.ReactNode }> = [
+    { label: "Match", render: (l) => `${matchScore(l, profile).score}/100` },
+    { label: "Employer", render: (l) => l.employer ?? "—" },
+    { label: "Location", render: (l) => l.location ?? "—" },
+    { label: "Posted", render: (l) => formatAgo(l.postedAt) },
+    {
+      label: "Min hours",
+      render: (l) => (l.hoursRequired ? `${l.hoursRequired.toLocaleString()}` : "—"),
+    },
+    {
+      label: "Ratings",
+      render: (l) => (l.ratingsRequired?.length ? l.ratingsRequired.join(", ") : "—"),
+    },
+    {
+      label: "Category",
+      render: (l) =>
+        l.jobCategory ? (CATEGORY_LABELS[l.jobCategory] ?? l.jobCategory) : "—",
+    },
+    {
+      label: "Source",
+      render: (l) => SOURCE_LABELS[l.sourceId] ?? l.sourceId,
+    },
+    {
+      label: "Apply",
+      render: (l) => (
+        <a
+          href={l.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sky-600 underline hover:no-underline dark:text-sky-300"
+        >
+          Open posting →
+        </a>
+      ),
+    },
+  ];
+
+  return (
+    <div
+      className="fixed inset-0 z-30 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4 dark:bg-black/60"
+      onClick={onClose}
+    >
+      <div
+        className="safe-bottom flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-2xl dark:bg-ink-800"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between border-b border-ink-100 p-4 dark:border-ink-800">
+          <h2 className="text-lg font-semibold text-ink-900 dark:text-ink-50">
+            Compare {selected.length} listings
+          </h2>
+          <button
+            onClick={onClose}
+            className="rounded-full p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:hover:bg-ink-700"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-auto p-4">
+          <table className="w-full border-separate border-spacing-0 text-sm">
+            <thead>
+              <tr>
+                <th className="sticky left-0 z-10 bg-white px-2 py-2 text-left text-xs font-semibold uppercase tracking-wider text-ink-400 dark:bg-ink-800">
+                  Field
+                </th>
+                {selected.map((l) => (
+                  <th
+                    key={l.id}
+                    className="px-3 py-2 text-left align-top font-semibold text-ink-900 dark:text-ink-50"
+                  >
+                    <div className="truncate" title={l.title}>
+                      {l.title}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.label} className="border-t border-ink-100 dark:border-ink-700">
+                  <td className="sticky left-0 z-10 bg-white px-2 py-2 align-top text-xs font-medium text-ink-400 dark:bg-ink-800">
+                    {r.label}
+                  </td>
+                  {selected.map((l) => (
+                    <td
+                      key={l.id}
+                      className="px-3 py-2 align-top text-ink-800 dark:text-ink-100"
+                    >
+                      {r.render(l)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }
 
