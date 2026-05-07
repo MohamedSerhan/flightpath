@@ -102,6 +102,40 @@ const US_STATES = [
   "WI","WY","DC",
 ];
 
+/** One-tap filter presets aimed at the low-time CFI persona. */
+const PRESETS: Array<{ id: string; label: string; filter: ListingFilter }> = [
+  {
+    id: "cfi-any",
+    label: "All CFI roles",
+    filter: { category: "cfi", postedSinceDays: 30, limit: 50 },
+  },
+  {
+    id: "low-time",
+    label: "Low-time CFI (<500 hr)",
+    filter: { category: "cfi", maxHoursRequired: 500, postedSinceDays: 30, limit: 50 },
+  },
+  {
+    id: "pre-atp",
+    label: "Pre-ATP (<1500 hr)",
+    filter: { maxHoursRequired: 1500, postedSinceDays: 30, limit: 50 },
+  },
+  {
+    id: "fresh-week",
+    label: "Posted this week",
+    filter: { postedSinceDays: 7, limit: 50 },
+  },
+  {
+    id: "all-fresh",
+    label: "All fresh listings",
+    filter: { postedSinceDays: 30, limit: 50 },
+  },
+];
+
+function presetMatches(preset: ListingFilter, current: ListingFilter): boolean {
+  const keys: Array<keyof ListingFilter> = ["category", "maxHoursRequired", "postedSinceDays", "state", "source", "q"];
+  return keys.every((k) => (preset[k] ?? undefined) === (current[k] ?? undefined));
+}
+
 export function App() {
   const [filter, setFilter] = useState<ListingFilter>(() => readFilterFromUrl());
   const [showFilters, setShowFilters] = useState(false);
@@ -156,6 +190,27 @@ export function App() {
       <main className="mx-auto max-w-3xl px-4 pb-24">
         <SearchBar value={filter.q ?? ""} onChange={(v) => update("q", v || undefined)} />
 
+        <div className="mt-3 -mx-4 overflow-x-auto px-4 pb-1">
+          <div className="flex gap-2 whitespace-nowrap">
+            {PRESETS.map((p) => {
+              const active = presetMatches(p.filter, filter);
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setFilter(p.filter)}
+                  className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                    active
+                      ? "border-sky-500 bg-sky-500 text-white"
+                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-400"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {filterChips.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {filterChips.map((chip) => (
@@ -201,6 +256,28 @@ export function App() {
           )}
         </div>
       </main>
+
+      <footer className="safe-bottom mx-auto mt-12 max-w-3xl px-4 pb-6 text-center text-xs text-ink-400">
+        Get notified of new CFI roles via RSS:{" "}
+        <a
+          href={`${import.meta.env.BASE_URL ?? "/"}feed-cfi.xml`}
+          className="font-medium text-sky-600 hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          CFI / CFII / MEI feed
+        </a>
+        {" · "}
+        <a
+          href={`${import.meta.env.BASE_URL ?? "/"}feed.xml`}
+          className="font-medium text-sky-600 hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          all listings
+        </a>
+        <div className="mt-1">Drop the URL into Feedly, Inoreader, or any RSS-to-email service.</div>
+      </footer>
 
       {active && <ListingDetail listing={active} onClose={() => setActive(null)} />}
     </div>
