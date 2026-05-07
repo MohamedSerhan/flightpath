@@ -40,6 +40,7 @@ import {
   readApplicantProfile,
   writeApplicantProfile,
   type ApplicantProfile,
+  type OutreachMode,
 } from "./outreach.ts";
 import { matchScore, type MatchResult, type MatchTier } from "./match.ts";
 
@@ -201,7 +202,7 @@ export function App() {
   const [active, setActive] = useState<Listing | null>(null);
   const [view, setView] = useState<View>("browse");
   const [pipeline, setPipelineMap] = useState<PipelineMap>(() => readPipeline());
-  const [outreachFor, setOutreachFor] = useState<Listing | null>(null);
+  const [outreachFor, setOutreachFor] = useState<{ listing: Listing; mode: OutreachMode } | null>(null);
   const [profile, setProfile] = useState<ApplicantProfile>(() => readApplicantProfile());
   const [showProfile, setShowProfile] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => readTheme());
@@ -295,6 +296,7 @@ export function App() {
           onOpen={setActive}
           onSetStatus={setListingStatus}
           onClearAll={() => setPipelineMap({})}
+          onDraftFollowUp={(listing) => setOutreachFor({ listing, mode: "follow-up" })}
         />
       )}
 
@@ -420,13 +422,14 @@ export function App() {
           status={statusOf(active)}
           onClose={() => setActive(null)}
           onSetStatus={(s) => setListingStatus(active, s)}
-          onDraftOutreach={() => setOutreachFor(active)}
+          onDraftOutreach={() => setOutreachFor({ listing: active, mode: "initial" })}
         />
       )}
 
       {outreachFor && (
         <OutreachModal
-          listing={outreachFor}
+          listing={outreachFor.listing}
+          mode={outreachFor.mode}
           profile={profile}
           onClose={() => setOutreachFor(null)}
           onEditProfile={() => {
@@ -580,18 +583,25 @@ function StatusButton({
   );
 }
 
+/** "Applied N days ago, no movement" → time to nudge them. 7 calendar
+ *  days is the standard pilot-recruiter SLA in industry — earlier feels
+ *  pushy, later they've forgotten you. */
+const FOLLOW_UP_AFTER_DAYS = 7;
+
 function PipelineView({
   pipeline,
   listings,
   onOpen,
   onSetStatus,
   onClearAll,
+  onDraftFollowUp,
 }: {
   pipeline: PipelineMap;
   listings: Listing[];
   onOpen: (l: Listing) => void;
   onSetStatus: (l: Listing, s: PipelineStatus | null) => void;
   onClearAll: () => void;
+  onDraftFollowUp: (l: Listing) => void;
 }) {
   // listings comes from current filter — but pipeline lookup is by sourceId
   // + externalId, which is stable. We resolve from in-memory listings first
@@ -677,36 +687,56 @@ function PipelineView({
               {STATUS_LABELS[status]} · {items.length}
             </h3>
             <ul className="space-y-2">
-              {items.map(({ key, listing }) => (
-                <li key={key} className="rounded-2xl border border-ink-100 bg-white p-3 shadow-sm dark:bg-ink-800 dark:border-ink-800">
-                  {listing ? (
-                    <div className="flex items-start justify-between gap-3">
-                      <button onClick={() => onOpen(listing)} className="min-w-0 flex-1 text-left">
-                        <div className="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">
-                          {listing.title}
+              {items.map(({ key, listing, entry }) => {
+                const daysSince = Math.floor((Date.now() - entry.updatedAt) / 86400_000);
+                const dueForFollowUp =
+                  status === "applied" && listing && daysSince >= FOLLOW_UP_AFTER_DAYS;
+                return (
+                  <li key={key} className="rounded-2xl border border-ink-100 bg-white p-3 shadow-sm dark:bg-ink-800 dark:border-ink-800">
+                    {listing ? (
+                      <div className="flex items-start justify-between gap-3">
+                        <button onClick={() => onOpen(listing)} className="min-w-0 flex-1 text-left">
+                          <div className="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">
+                            {listing.title}
+                          </div>
+                          <div className="truncate text-xs text-ink-400">
+                            {listing.employer}
+                            {listing.location ? ` · ${listing.location}` : ""}
+                          </div>
+                          {dueForFollowUp && (
+                            <div className="mt-1 text-[11px] text-amber-700 dark:text-amber-200">
+                              Applied {daysSince} days ago — time to follow up?
+                            </div>
+                          )}
+                        </button>
+                        <div className="flex shrink-0 items-center gap-1">
+                          {dueForFollowUp && (
+                            <button
+                              onClick={() => onDraftFollowUp(listing)}
+                              className="inline-flex items-center gap-1 rounded-lg bg-amber-500 px-2 py-1 text-[11px] font-semibold text-white hover:bg-amber-600"
+                              title="Draft a follow-up email"
+                            >
+                              <Mail className="h-3 w-3" />
+                              Follow up
+                            </button>
+                          )}
+                          <button
+                            onClick={() => onSetStatus(listing, null)}
+                            className="rounded p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:bg-ink-700 dark:text-ink-50 dark:hover:bg-ink-700 dark:hover:text-ink-100"
+                            title="Remove from logbook"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
                         </div>
-                        <div className="truncate text-xs text-ink-400">
-                          {listing.employer}
-                          {listing.location ? ` · ${listing.location}` : ""}
-                        </div>
-                      </button>
-                      <button
-                        onClick={() =>
-                          onSetStatus(listing, null)
-                        }
-                        className="rounded p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:bg-ink-700 dark:text-ink-50 dark:hover:bg-ink-700 dark:hover:text-ink-100"
-                        title="Remove from logbook"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="text-xs italic text-ink-400">
-                      Listing dropped out of the 30-day window — apply state retained ({key}).
-                    </div>
-                  )}
-                </li>
-              ))}
+                      </div>
+                    ) : (
+                      <div className="text-xs italic text-ink-400">
+                        Listing dropped out of the 30-day window — apply state retained ({key}).
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </section>
         );
@@ -1211,16 +1241,18 @@ function ListingDetail({
 
 function OutreachModal({
   listing,
+  mode,
   profile,
   onClose,
   onEditProfile,
 }: {
   listing: Listing;
+  mode: OutreachMode;
   profile: ApplicantProfile;
   onClose: () => void;
   onEditProfile: () => void;
 }) {
-  const initial = useMemo(() => buildOutreach(listing, profile), [listing, profile]);
+  const initial = useMemo(() => buildOutreach(listing, profile, mode), [listing, profile, mode]);
   const [subject, setSubject] = useState(initial.subject);
   const [body, setBody] = useState(initial.body);
   const [copied, setCopied] = useState<"none" | "subject" | "body">("none");
@@ -1257,7 +1289,9 @@ function OutreachModal({
       >
         <div className="flex items-start justify-between border-b border-ink-100 p-4 dark:border-ink-800">
           <div className="min-w-0 flex-1 pr-4">
-            <h2 className="text-lg font-semibold text-ink-900 dark:text-ink-50">Draft outreach</h2>
+            <h2 className="text-lg font-semibold text-ink-900 dark:text-ink-50">
+              {mode === "follow-up" ? "Draft follow-up" : "Draft outreach"}
+            </h2>
             <p className="mt-0.5 truncate text-xs text-ink-400">
               {listing.title} · {listing.employer ?? "—"}
             </p>

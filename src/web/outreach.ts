@@ -98,7 +98,18 @@ export type OutreachOutput = {
   body: string;
 };
 
-export function buildOutreach(listing: Listing, p: ApplicantProfile): OutreachOutput {
+export type OutreachMode = "initial" | "follow-up";
+
+export function buildOutreach(
+  listing: Listing,
+  p: ApplicantProfile,
+  mode: OutreachMode = "initial",
+): OutreachOutput {
+  if (mode === "follow-up") return buildFollowUp(listing, p);
+  return buildInitial(listing, p);
+}
+
+function buildInitial(listing: Listing, p: ApplicantProfile): OutreachOutput {
   const employerType = classifyEmployer(listing);
   const employerName = listing.employer ?? "your team";
   const ratings = ratingsLine(p);
@@ -180,5 +191,27 @@ ${signature(p)}`,
 
   const body = `${intro ? intro + "\n\n" : ""}${templates[employerType]}`;
 
+  return { subject, body };
+}
+
+function buildFollowUp(listing: Listing, p: ApplicantProfile): OutreachOutput {
+  const employerName = listing.employer ?? "your team";
+  const subject = `Following up — ${listing.title}${p.name ? ` (${p.name})` : ""}`;
+  const intro = header(p);
+
+  // Single template — follow-ups don't need the per-employer-type
+  // tailoring of the initial outreach. Keep it short, polite, action-
+  // oriented; ask for a status, offer to provide more info.
+  const template = `Hello ${employerName.split(" ")[0]} hiring team,
+
+I'm following up on my application for the ${listing.title} role. I wanted to check in and confirm my continued interest in the position.
+
+If a status update or next-step timeline is available, I'd appreciate hearing it. I'm also happy to provide any additional information — references, logbook summary, or a brief introductory call — that would help your evaluation.
+
+Thank you for your time.
+
+${signature(p)}`;
+
+  const body = `${intro ? intro + "\n\n" : ""}${template}`;
   return { subject, body };
 }
