@@ -1,0 +1,81 @@
+name: Scrape and deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  schedule:
+    # Every 4 hours. Adjust if the source rate limits start biting.
+    - cron: "17 */4 * * *"
+  workflow_dispatch: {}
+
+# We deploy at most one Pages build at a time. Newer runs cancel
+# stale ones to avoid racing the cache restore.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      # Project pages live at <user>.github.io/<repo>/. The repo's runtime
+      # name is github.event.repository.name; we prefix with / and trail with /.
+      VITE_BASE: /${{ github.event.repository.name }}/
+      # Optional. Set these as repo secrets to enable USAJobs.
+      USAJOBS_AUTH_KEY: ${{ secrets.USAJOBS_AUTH_KEY }}
+      USAJOBS_USER_AGENT: ${{ secrets.USAJOBS_USER_AGENT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile || bun install
+
+      # Cache the SQLite DB so each run resumes from the last one's state.
+      # The cache is keyed by date so it rotates daily — picks up the most
+      # recent restore-keys match if today's key doesn't exist yet.
+      - name: Restore listings DB cache
+        id: cache-db
+        uses: actions/cache@v4
+        with:
+          path: flightpath.db
+          key: flightpath-db-${{ github.run_id }}
+          restore-keys: |
+            flightpath-db-
+
+      - name: Run migrations
+        run: bun run db:migrate
+
+      - name: Scrape sources
+        run: bun run scrape
+
+      - name: Build static site (with embedded data bundle)
+        run: bun run build:static
+
+      - name: Save listings DB cache
+        uses: actions/cache/save@v4
+        with:
+          path: flightpath.db
+          key: flightpath-db-${{ github.run_id }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/web
+
+  deploy:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

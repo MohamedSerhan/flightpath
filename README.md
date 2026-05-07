@@ -4,49 +4,83 @@ Fresh CFI and low-time pilot job listings, aggregated from sources that don't su
 
 Built for the 200–1500 hour CFI cohort that the major aggregators have abandoned. Defaults to listings from the **last 30 days**.
 
-## Quick start
+## Quick start (local)
 
 ```bash
-bun install          # install deps
-bun run db:migrate   # create the SQLite database
-bun run scrape       # pull fresh listings from all adapters
-bun run dev          # start API (:3001) and web (:5173) together
+bun install
+bun run db:migrate
+bun run scrape       # pull fresh listings
+bun run dev          # API on :3001, web on :5173
 ```
 
-Open http://localhost:5173.
+Open http://localhost:5173. Filters live in the URL hash, so any view is bookmarkable and shareable.
+
+## Free 24/7 hosting on GitHub Pages
+
+The `.github/workflows/scrape-and-deploy.yml` workflow scrapes every 4 hours, builds a static bundle, and publishes it to GitHub Pages. No backend server, no hosting fees.
+
+**One-time setup:**
+
+1. Push this repo to GitHub.
+2. **Settings → Pages → Source → "GitHub Actions"** (not "Deploy from a branch").
+3. **Settings → Actions → General → Workflow permissions → "Read and write permissions"** so the workflow can publish.
+4. Optional: **Settings → Secrets and variables → Actions → New repository secret**:
+   - `USAJOBS_AUTH_KEY` and `USAJOBS_USER_AGENT` to enable federal job listings (free key at https://developer.usajobs.gov/apirequest/).
+
+The first run takes ~3 minutes. Subsequent runs are incremental: SQLite state is cached between runs, so listings accumulate over time. The site lives at:
+
+```
+https://<your-username>.github.io/<repo-name>/
+```
+
+The workflow auto-detects the repo name and configures the Vite base path. If you use a custom domain, override `VITE_BASE` in the workflow.
+
+To trigger a run on demand: **Actions → Scrape and deploy → Run workflow**.
 
 ## Architecture
 
 ```
 src/
-  server/      Hono API on Bun (port 3001)
-  web/         Vite + React + Tailwind UI (port 5173)
-  scrapers/    Per-source adapters → normalized Listing
-  db/          Drizzle ORM + bun:sqlite
-  shared/      Types shared between server, scrapers, and web
+  server/           Hono API on Bun (port 3001)            ← dev / self-hosted only
+  web/              Vite + React + Tailwind UI (port 5173)
+  scrapers/
+    adapters/       Per-source: jsfirm, ats, reddit, usajobs
+    ats/            Generic ATS layer (Greenhouse / Lever / Ashby /
+                    Workable / Breezy / Recruitee / SmartRecruiters)
+    enrich.ts       State, category, hours, ratings extraction
+    enrich-detail.ts Re-fetches original postings for missing fields
+    run.ts          Orchestrator: scrape → enrich → upsert → enrich-detail
+    export.ts       DB → static JSON for GitHub Pages
+  db/               Drizzle schema, bun:sqlite client
+  shared/           Types shared between server, scrapers, and web
 ```
 
-### Adding a new source
+### Two data modes
 
-Create `src/scrapers/adapters/<name>.ts` exporting a `SourceAdapter`:
+| Mode | When | Source |
+|---|---|---|
+| **Live API** | `bun run dev` | Hono server on :3001, SQLite-backed |
+| **Static** | `bun run build:static` (GitHub Pages) | `dist/web/data/listings.json` filtered in-browser |
+
+The frontend selects mode at build time via `VITE_STATIC_DATA=1`.
+
+### Adding a new ATS-backed employer
+
+Most flight schools and airlines use Greenhouse / Lever / Ashby / Workable / Breezy. Adding one is a single line in `src/scrapers/ats/sources.ts`:
 
 ```ts
-import type { SourceAdapter } from "../types.ts";
-
-export const myAdapter: SourceAdapter = {
-  id: "my-source",
-  name: "My Source",
-  async fetch() {
-    // return RawListing[]
-  },
-};
+{ kind: "greenhouse", slug: "<their-slug>", name: "Their Name", pilotOnly: true },
 ```
 
-Register it in `src/scrapers/registry.ts`. The shared dedup/normalization layer handles the rest.
+To find the slug, look at their careers page URL — it'll usually be `boards.greenhouse.io/<slug>`, `jobs.lever.co/<slug>`, `jobs.ashbyhq.com/<slug>`, `apply.workable.com/<slug>`, or `<slug>.breezy.hr`.
+
+### Adding a totally new source
+
+Create `src/scrapers/adapters/<name>.ts` exporting a `SourceAdapter` (id, name, async fetch → RawListing[]). Register it in `src/scrapers/registry.ts`. The shared dedup, enrichment, and storage layers handle the rest.
 
 ## Status
 
-v0.1 — JSfirm RSS only. Roadmap in `research/00-synthesis.md`.
+v0.1 — JSfirm + ATS aggregator (Greenhouse/Lever/Ashby/Workable/Breezy/Recruitee/SmartRecruiters) + Reddit r/flying [Hiring] + USAJobs (opt-in). Detail-page enrichment fills in hours and pay. Roadmap and research in `research/00-synthesis.md`.
 
 ## Research
 
@@ -54,3 +88,4 @@ v0.1 — JSfirm RSS only. Roadmap in `research/00-synthesis.md`.
 - [Pilot pain points](research/01-pain-points.md)
 - [Data sources](research/02-data-sources.md)
 - [Competitive scan](research/03-competitive-scan.md)
+- [ATS map](research/04-ats-map.md) *(generated by background agent)*
