@@ -1,8 +1,77 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Plane, MapPin, Clock, Search, Filter, ExternalLink, X } from "lucide-react";
 import { fetchListings, fetchSources, fetchSummary } from "./api.ts";
 import type { JobCategory, Listing, ListingFilter } from "../shared/types.ts";
+
+/**
+ * Filter state ↔ URL hash sync.
+ *
+ * The hash carries every filter the user has set so the URL is bookmarkable
+ * and shareable ("send your sibling this link of CFI roles in TX with ≤500
+ * hours required"). On first load we restore from the hash; on every change
+ * we push back into it. localStorage holds the most recent filter as a
+ * fallback for users who land on the bare URL.
+ */
+const STORAGE_KEY = "flightpath:lastFilter";
+
+function readFilterFromUrl(): ListingFilter {
+  const hash = typeof window !== "undefined" ? window.location.hash.replace(/^#/, "") : "";
+  if (hash) {
+    const usp = new URLSearchParams(hash);
+    return parseFilter(usp);
+  }
+  if (typeof localStorage !== "undefined") {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        return { postedSinceDays: 30, limit: 50, ...JSON.parse(saved) };
+      } catch {
+        /* fall through */
+      }
+    }
+  }
+  return { postedSinceDays: 30, limit: 50 };
+}
+
+function parseFilter(usp: URLSearchParams): ListingFilter {
+  const num = (k: string) => {
+    const v = usp.get(k);
+    if (v == null) return undefined;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : undefined;
+  };
+  return {
+    q: usp.get("q") ?? undefined,
+    category: (usp.get("category") as JobCategory) ?? undefined,
+    state: usp.get("state") ?? undefined,
+    source: usp.get("source") ?? undefined,
+    postedSinceDays: num("postedSinceDays") ?? 30,
+    maxHoursRequired: num("maxHoursRequired"),
+    limit: num("limit") ?? 50,
+    offset: num("offset") ?? 0,
+  };
+}
+
+function writeFilterToUrl(f: ListingFilter): void {
+  if (typeof window === "undefined") return;
+  const usp = new URLSearchParams();
+  for (const [k, v] of Object.entries(f)) {
+    if (v === undefined || v === null || v === "") continue;
+    if ((k === "postedSinceDays" && v === 30) || (k === "limit" && v === 50) || (k === "offset" && v === 0)) continue;
+    usp.set(k, String(v));
+  }
+  const hash = usp.toString();
+  const target = hash ? `#${hash}` : "";
+  if (window.location.hash !== target) {
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${target}`);
+  }
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(f));
+  } catch {
+    /* ignore quota errors */
+  }
+}
 
 const CATEGORY_LABELS: Record<JobCategory, string> = {
   cfi: "CFI",
@@ -34,12 +103,13 @@ const US_STATES = [
 ];
 
 export function App() {
-  const [filter, setFilter] = useState<ListingFilter>({
-    postedSinceDays: 30,
-    limit: 50,
-  });
+  const [filter, setFilter] = useState<ListingFilter>(() => readFilterFromUrl());
   const [showFilters, setShowFilters] = useState(false);
   const [active, setActive] = useState<Listing | null>(null);
+
+  useEffect(() => {
+    writeFilterToUrl(filter);
+  }, [filter]);
 
   const listingsQ = useQuery({
     queryKey: ["listings", filter],
