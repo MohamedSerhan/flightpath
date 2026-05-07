@@ -12,6 +12,7 @@ import { redditAdapter } from "./adapters/reddit.ts";
 import { usaJobsAdapter } from "./adapters/usajobs.ts";
 import { adzunaAdapter } from "./adapters/adzuna.ts";
 import { millionairAdapter } from "./adapters/millionair.ts";
+import { avJobsAdapter } from "./adapters/avjobs.ts";
 
 export const adapters: SourceAdapter[] = [
   jsfirmAdapter,
@@ -27,4 +28,5 @@ export const adapters: SourceAdapter[] = [
   usaJobsAdapter,
   adzunaAdapter,
   millionairAdapter,
+  avJobsAdapter,
 ];
