@@ -72,6 +72,7 @@ function stripTags(s: string): string {
   return s
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, " ")
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/p>/gi, "\n")
     .replace(/<[^>]+>/g, " ")
@@ -83,6 +84,62 @@ function stripTags(s: string): string {
     .replace(/&#39;/g, "'")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+/** Pull the cleanest description we can find. Layered, in priority order:
+ *
+ *   1. JSON-LD JobPosting `description` — schema.org format used by ATP,
+ *      Greenhouse, Workday, ApplicantPro, FlightSafety, and most modern
+ *      ATSes. Already an HTML fragment scoped to the role; strip tags and
+ *      we're done.
+ *   2. og:description / meta description — used by older sites and some
+ *      WordPress careers pages. Short but clean.
+ *   3. Last resort: stripped page text, truncated at the first CSS marker.
+ *      Some pages embed inline `<style>` content as raw text in the body
+ *      (e.g. WordPress + normalize.css), so we cut on `/*!`, `@import`,
+ *      `@media`, or a clearly-CSS run of selectors. */
+function extractDescription(html: string, fallbackText: string): string | null {
+  // 1. JSON-LD JobPosting (most reliable).
+  const ldMatches = Array.from(
+    html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi),
+  );
+  for (const m of ldMatches) {
+    try {
+      const obj = JSON.parse(m[1]);
+      const candidates = Array.isArray(obj) ? obj : [obj];
+      for (const c of candidates) {
+        if ((c["@type"] === "JobPosting" || (Array.isArray(c["@type"]) && c["@type"].includes("JobPosting"))) && typeof c.description === "string") {
+          const cleaned = stripTags(c.description).trim();
+          if (cleaned.length > 50) return cleaned.slice(0, 4000);
+        }
+      }
+    } catch {
+      /* malformed JSON-LD — skip */
+    }
+  }
+
+  // 2. og:description / description meta. Run through stripTags to
+  //    decode HTML entities (&amp;, &#39;, &quot;, etc.) embedded in
+  //    attribute values; the regex doesn't decode those automatically.
+  const og = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{60,})["']/i);
+  if (og) return stripTags(og[1]).slice(0, 4000);
+  const desc = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{60,})["']/i);
+  if (desc) return stripTags(desc[1]).slice(0, 4000);
+
+  // 3. Stripped page text, cut at any CSS marker. The cut points stop the
+  //    scraper from leaking normalize.css and similar inline stylesheets
+  //    that some templates render outside <style> tags.
+  const cssCutAt = (() => {
+    const markers = [/\/\*!/, /@import\b/, /@media\b/, /\bhtml\s*\{[^}]+font/i];
+    let earliest = fallbackText.length;
+    for (const re of markers) {
+      const m = fallbackText.search(re);
+      if (m >= 0 && m < earliest) earliest = m;
+    }
+    return earliest;
+  })();
+  const trimmed = fallbackText.slice(0, cssCutAt).trim();
+  return trimmed.length > 0 ? trimmed.slice(0, 4000) : null;
 }
 
 const PAY_RE =
@@ -308,8 +365,14 @@ export async function enrichDetailPages(): Promise<void> {
     const ratings = extractRatings(fullText);
     const pay = extractPay(text);
     const existingDesc = (row.description ?? "").trim();
+    // Prefer a clean source-extracted description (JSON-LD / og / cut-at-CSS)
+    // over the raw stripped page text. Falls back to existing description if
+    // the new extraction comes up empty.
+    const cleanNew = extractDescription(html, text);
     const newDesc =
-      existingDesc.length > 200 ? existingDesc : text.slice(0, 4000);
+      existingDesc.length > 200
+        ? existingDesc
+        : (cleanNew ?? text.slice(0, 4000));
     const descWithPay = pay && !newDesc.includes(pay) ? `${pay}\n\n${newDesc}` : newDesc;
 
     const setValues: Record<string, number | string | null> = {
