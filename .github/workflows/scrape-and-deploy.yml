@@ -1,12 +1,36 @@
 name: Scrape and deploy to GitHub Pages
 
+# Triggers split intentionally:
+#
+#   push       → fast deploy of code changes only. Restores the latest
+#                cached SQLite, skips the slow scrape steps, builds the
+#                UI bundle and ships. Typically lands in ~60–90s.
+#
+#   schedule   → every 4 hours, full scrape + browser pass + alerts +
+#                build + deploy. The slow path that keeps the data
+#                fresh. Saves SQLite back to cache for the next run.
+#
+#   workflow_dispatch → manual; respects the FORCE_SCRAPE input so you
+#                can either fast-deploy or full-scrape on demand.
+#
+# The scrape can't really be "decoupled" from the deploy because the
+# data is baked into the static bundle (Vite reads dist/web/data/*.json
+# at build time). What we CAN do is skip the scrape entirely on push
+# events, since pushes are about code changes. Net result: dev iteration
+# is fast, scheduled data refreshes are unchanged.
+
 on:
   push:
     branches: [main, master]
   schedule:
     # Every 4 hours. Adjust if the source rate limits start biting.
     - cron: "17 */4 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_scrape:
+        description: "Run the full scrape (default: yes)"
+        type: boolean
+        default: true
 
 # We deploy at most one Pages build at a time. Newer runs cancel
 # stale ones to avoid racing the cache restore.
@@ -44,6 +68,10 @@ jobs:
       ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
       ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
       ALERT_FILTER: ${{ vars.ALERT_FILTER }}
+      # `true` for cron + manual-with-flag, `false` for code pushes.
+      DO_SCRAPE: >-
+        ${{ github.event_name == 'schedule'
+          || (github.event_name == 'workflow_dispatch' && inputs.force_scrape == true) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -51,12 +79,14 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install deps
+      - name: Install deps (cached)
+        # bun's lockfile-respecting install is fast (sub-second when
+        # the global cache is hit). The fallback handles fork edge cases.
         run: bun install --frozen-lockfile || bun install
 
-      # Cache the SQLite DB so each run resumes from the last one's state.
-      # The cache is keyed by date so it rotates daily — picks up the most
-      # recent restore-keys match if today's key doesn't exist yet.
+      # SQLite cache. Read on every run so the static export has data;
+      # written back only when we scraped, so push deploys don't churn
+      # the cache key.
       - name: Restore listings DB cache
         id: cache-db
         uses: actions/cache@v4
@@ -70,22 +100,24 @@ jobs:
         run: bun run db:migrate
 
       - name: Scrape HTTP sources
+        if: ${{ env.DO_SCRAPE == 'true' }}
         run: bun run scrape
 
-      # Browser-only sources (sites that block plain curl or render via JS).
-      # Chromium is ~150MB and adds ~30s to each run — happy trade for the
-      # extra coverage. If this step fails we still ship the HTTP scrape.
+      # Chromium install + browser scrape only when we're actually
+      # scraping. Saves ~45s on push deploys.
       - name: Install Chromium for Playwright
+        if: ${{ env.DO_SCRAPE == 'true' }}
         run: bunx playwright install --with-deps chromium
 
       - name: Scrape browser sources
+        if: ${{ env.DO_SCRAPE == 'true' }}
         run: bun run scrape:browser
         continue-on-error: true
 
-      # Push-alert digest — runs after both scrape passes so it sees the
-      # full set of new listings, but before build so its state lands in
-      # the cached SQLite. No-op when alert channels aren't configured.
+      # Alerts only after a real scrape — push deploys don't add new
+      # listings, so there's nothing to alert on.
       - name: Send alerts
+        if: ${{ env.DO_SCRAPE == 'true' }}
         run: bun run alert
         continue-on-error: true
 
@@ -99,7 +131,10 @@ jobs:
         if: ${{ env.CUSTOM_DOMAIN != '' }}
         run: echo "$CUSTOM_DOMAIN" > dist/web/CNAME
 
+      # Save the cache only when we scraped — push deploys don't change
+      # the data and shouldn't bump the cache key.
       - name: Save listings DB cache
+        if: ${{ env.DO_SCRAPE == 'true' }}
         uses: actions/cache/save@v4
         with:
           path: flightpath.db
