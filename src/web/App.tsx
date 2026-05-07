@@ -1018,7 +1018,6 @@ const SOURCE_LABELS: Record<string, string> = {
   workday: "Workday",
   "atp-cfi": "ATP",
   skywest: "SkyWest",
-  climbto350: "Climbto350",
   pcc: "PCC",
   findapilot: "FindAPilot",
   reddit: "Reddit",

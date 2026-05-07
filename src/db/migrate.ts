@@ -53,4 +53,22 @@ if (!colNames.has("is_closed")) {
   console.log("migrate: added is_closed column");
 }
 
+// Retroactively hide listings from sources we've removed. Idempotent —
+// re-running marks already-closed rows is_closed = 1 again, which is a no-op
+// in practice. Reads the list straight from the registry so dropping a
+// source is a one-line edit there.
+const { REMOVED_SOURCE_IDS } = await import("../scrapers/registry.ts");
+if (REMOVED_SOURCE_IDS.length > 0) {
+  const placeholders = REMOVED_SOURCE_IDS.map(() => "?").join(",");
+  const stmt = sqlite.prepare(
+    `UPDATE listings SET is_closed = 1 WHERE is_closed = 0 AND source_id IN (${placeholders})`,
+  );
+  const result = stmt.run(...REMOVED_SOURCE_IDS);
+  if (result.changes > 0) {
+    console.log(
+      `migrate: hid ${result.changes} listing(s) from removed sources [${REMOVED_SOURCE_IDS.join(", ")}]`,
+    );
+  }
+}
+
 console.log("migrate: schema applied to", process.env.FLIGHTPATH_DB ?? "./flightpath.db");
