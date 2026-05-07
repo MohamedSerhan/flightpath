@@ -328,7 +328,7 @@ export function App() {
                   className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
                     active
                       ? "border-sky-500 bg-sky-500 text-white"
-                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-400"
+                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:border-ink-500"
                   }`}
                 >
                   {p.label}
@@ -531,7 +531,7 @@ function Header({
             className={`relative inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
               view === "pipeline"
                 ? "border-sky-500 bg-sky-500 text-white"
-                : "border-ink-200 bg-white text-ink-800 hover:border-ink-400"
+                : "border-ink-200 bg-white text-ink-800 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-ink-500"
             }`}
           >
             <Briefcase className="h-4 w-4" />
@@ -552,7 +552,7 @@ function Header({
               className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
                 showFilters
                   ? "border-sky-500 bg-sky-500 text-white"
-                  : "border-ink-200 bg-white text-ink-800 hover:border-ink-400"
+                  : "border-ink-200 bg-white text-ink-800 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-ink-500"
               }`}
             >
               <Filter className="h-4 w-4" />
@@ -606,7 +606,9 @@ function StatusButton({
       onClick={onClick}
       title={STATUS_LABELS[status]}
       className={`inline-flex items-center justify-center rounded-md p-1.5 ring-1 transition ${
-        active ? tone : "bg-white text-ink-400 ring-ink-100 hover:text-ink-800"
+        active
+          ? tone
+          : "bg-white text-ink-400 ring-ink-100 hover:text-ink-800 dark:bg-ink-800 dark:ring-ink-700 dark:hover:text-ink-100"
       }`}
     >
       <Icon className={dim} />
@@ -785,7 +787,7 @@ function SearchBar({ value, onChange }: { value: string; onChange: (v: string) =
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Search title, employer, location…"
-          className="w-full rounded-xl border border-ink-200 bg-white py-3 pl-10 pr-4 text-sm shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
+          className="w-full rounded-xl border border-ink-200 bg-white py-3 pl-10 pr-4 text-sm text-ink-900 placeholder:text-ink-400 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-50 dark:placeholder:text-ink-500"
         />
       </label>
     </div>
@@ -819,7 +821,7 @@ function FilterPanel({
                   className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
                     selected
                       ? "border-sky-500 bg-sky-500 text-white"
-                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-400"
+                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:border-ink-500"
                   }`}
                 >
                   {CATEGORY_LABELS[cat]}
@@ -834,7 +836,7 @@ function FilterPanel({
           <select
             value={filter.state ?? ""}
             onChange={(e) => set("state", e.target.value || undefined)}
-            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
+            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-50"
           >
             <option value="">Any state</option>
             {US_STATES.map((s) => (
@@ -850,7 +852,7 @@ function FilterPanel({
           <select
             value={filter.postedSinceDays ?? 30}
             onChange={(e) => set("postedSinceDays", Number(e.target.value))}
-            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
+            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-50"
           >
             <option value={7}>7 days</option>
             <option value={14}>14 days</option>
@@ -865,7 +867,7 @@ function FilterPanel({
           <select
             value={filter.maxHoursRequired ?? ""}
             onChange={(e) => set("maxHoursRequired", e.target.value ? Number(e.target.value) : undefined)}
-            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
+            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-50"
           >
             <option value="">No limit</option>
             <option value={250}>≤ 250 hrs</option>
@@ -1162,7 +1164,7 @@ function ListingCard({
             className={`ml-auto inline-flex items-center justify-center rounded-md p-1.5 text-[10px] font-bold ring-1 transition ${
               compareSelected
                 ? "bg-sky-500 text-white ring-sky-500"
-                : "bg-white text-ink-400 ring-ink-100 hover:text-ink-800 dark:bg-ink-800 dark:ring-ink-700"
+                : "bg-white text-ink-400 ring-ink-100 hover:text-ink-800 dark:bg-ink-800 dark:ring-ink-700 dark:hover:text-ink-100"
             }`}
           >
             ⇄
@@ -1371,7 +1373,7 @@ function OutreachModal({
             <input
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="flex-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
+              className="flex-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-ink-500"
             />
             <button
               onClick={() => copy(subject, "subject")}
@@ -1390,7 +1392,7 @@ function OutreachModal({
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={18}
-              className="w-full rounded-lg border border-ink-200 bg-white p-3 font-sans text-sm leading-relaxed focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
+              className="w-full rounded-lg border border-ink-200 bg-white p-3 font-sans text-sm leading-relaxed text-ink-900 placeholder:text-ink-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-ink-500"
             />
             <div className="mt-2 flex flex-wrap gap-2">
               <button
@@ -1601,7 +1603,7 @@ function ProfileModal({
 }
 
 const fieldClass =
-  "mt-1 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30";
+  "mt-1 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-50 dark:placeholder:text-ink-500";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
