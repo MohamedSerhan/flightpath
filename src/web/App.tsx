@@ -43,6 +43,7 @@ import {
   type OutreachMode,
 } from "./outreach.ts";
 import { matchScore, type MatchResult, type MatchTier } from "./match.ts";
+import { readViewed, viewedKey, writeViewed, type ViewedMap } from "./views.ts";
 
 /**
  * Filter state ↔ URL hash sync.
@@ -189,11 +190,17 @@ type View = "browse" | "pipeline";
 type SortMode = "match" | "date";
 
 const SORT_STORAGE_KEY = "flightpath:sortMode";
+const HIDE_VIEWED_STORAGE_KEY = "flightpath:hideViewed";
 
 function readSortMode(): SortMode {
   if (typeof localStorage === "undefined") return "match";
   const v = localStorage.getItem(SORT_STORAGE_KEY);
   return v === "date" || v === "match" ? v : "match";
+}
+
+function readHideViewed(): boolean {
+  if (typeof localStorage === "undefined") return false;
+  return localStorage.getItem(HIDE_VIEWED_STORAGE_KEY) === "1";
 }
 
 export function App() {
@@ -207,6 +214,8 @@ export function App() {
   const [showProfile, setShowProfile] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => readTheme());
   const [sortMode, setSortMode] = useState<SortMode>(() => readSortMode());
+  const [hideViewed, setHideViewed] = useState<boolean>(() => readHideViewed());
+  const [viewed, setViewedMap] = useState<ViewedMap>(() => readViewed());
   const [compareKeys, setCompareKeys] = useState<Set<string>>(() => new Set());
   const [showCompare, setShowCompare] = useState(false);
 
@@ -219,6 +228,33 @@ export function App() {
       localStorage.setItem(SORT_STORAGE_KEY, sortMode);
     }
   }, [sortMode]);
+
+  useEffect(() => {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(HIDE_VIEWED_STORAGE_KEY, hideViewed ? "1" : "0");
+    }
+  }, [hideViewed]);
+
+  useEffect(() => {
+    writeViewed(viewed);
+  }, [viewed]);
+
+  function markViewed(listing: Listing) {
+    setViewedMap((prev) => {
+      const k = viewedKey(listing.sourceId, listing.externalId);
+      if (prev[k]) return prev; // already marked
+      return { ...prev, [k]: Date.now() };
+    });
+  }
+
+  function isViewed(listing: Listing): boolean {
+    return !!viewed[viewedKey(listing.sourceId, listing.externalId)];
+  }
+
+  function openListing(listing: Listing) {
+    markViewed(listing);
+    setActive(listing);
+  }
 
   useEffect(() => {
     applyTheme(theme);
@@ -305,7 +341,7 @@ export function App() {
         <PipelineView
           pipeline={pipeline}
           listings={listingsQ.data?.items ?? []}
-          onOpen={setActive}
+          onOpen={openListing}
           onSetStatus={setListingStatus}
           onClearAll={() => setPipelineMap({})}
           onDraftFollowUp={(listing) => setOutreachFor({ listing, mode: "follow-up" })}
@@ -366,8 +402,11 @@ export function App() {
             const scored = listingsQ.data.items.map((l) => ({
               listing: l,
               match: matchScore(l, profile),
+              viewed: isViewed(l),
             }));
-            const sorted = [...scored].sort((a, b) =>
+            const newCount = scored.filter((s) => !s.viewed).length;
+            const filtered = hideViewed ? scored.filter((s) => !s.viewed) : scored;
+            const sorted = [...filtered].sort((a, b) =>
               sortMode === "match"
                 ? b.match.score - a.match.score || b.listing.postedAt - a.listing.postedAt
                 : b.listing.postedAt - a.listing.postedAt,
@@ -377,25 +416,36 @@ export function App() {
                 <div className="mb-3 flex items-center justify-between text-sm text-ink-400">
                   <span>
                     {listingsQ.data.total} {listingsQ.data.total === 1 ? "listing" : "listings"}
+                    {newCount > 0 && newCount < listingsQ.data.total && (
+                      <span className="ml-2 text-xs">· {newCount} new</span>
+                    )}
                   </span>
                   <div className="flex items-center gap-2">
                     {listingsQ.isFetching && <span className="text-xs">refreshing…</span>}
+                    <ViewedToggle hide={hideViewed} onChange={setHideViewed} />
                     <SortToggle mode={sortMode} onChange={setSortMode} />
                   </div>
                 </div>
                 {sorted.length === 0 ? (
-                  <EmptyState />
+                  <EmptyState
+                    message={
+                      hideViewed && listingsQ.data.total > 0
+                        ? "Caught up — every listing in this view has been opened. Toggle 'Hide viewed' off to see them again."
+                        : undefined
+                    }
+                  />
                 ) : (
                   <ul className="space-y-3">
-                    {sorted.map(({ listing, match }) => (
+                    {sorted.map(({ listing, match, viewed: isViewedListing }) => (
                       <ListingCard
                         key={listing.id}
                         listing={listing}
                         match={match}
                         status={statusOf(listing)}
+                        viewed={isViewedListing}
                         compareSelected={compareKeys.has(entryKey(listing.sourceId, listing.externalId))}
                         onToggleCompare={() => toggleCompare(listing)}
-                        onOpen={() => setActive(listing)}
+                        onOpen={() => openListing(listing)}
                         onSetStatus={(s) => setListingStatus(listing, s)}
                       />
                     ))}
@@ -985,6 +1035,28 @@ function HoursToAtpBanner({
   );
 }
 
+function ViewedToggle({
+  hide,
+  onChange,
+}: {
+  hide: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <button
+      onClick={() => onChange(!hide)}
+      title={hide ? "Showing only new listings — click to show all" : "Hide listings you've already opened"}
+      className={`inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 text-[11px] font-medium transition ${
+        hide
+          ? "border-sky-500 bg-sky-500 text-white"
+          : "border-ink-200 bg-white text-ink-600 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:border-ink-500"
+      }`}
+    >
+      {hide ? "New only" : "All"}
+    </button>
+  );
+}
+
 function SortToggle({
   mode,
   onChange,
@@ -1060,6 +1132,7 @@ function ListingCard({
   listing,
   match,
   status,
+  viewed,
   compareSelected,
   onOpen,
   onSetStatus,
@@ -1068,6 +1141,7 @@ function ListingCard({
   listing: Listing;
   match: MatchResult;
   status: PipelineStatus | null;
+  viewed: boolean;
   compareSelected: boolean;
   onOpen: () => void;
   onSetStatus: (s: PipelineStatus | null) => void;
@@ -1079,11 +1153,24 @@ function ListingCard({
     <li>
       <button
         onClick={onOpen}
-        className="block w-full rounded-2xl border border-ink-100 bg-white p-4 text-left shadow-sm transition hover:border-sky-500 hover:shadow-md dark:bg-ink-800 dark:border-ink-800"
+        className={`block w-full rounded-2xl border bg-white p-4 text-left shadow-sm transition hover:border-sky-500 hover:shadow-md dark:bg-ink-800 ${
+          viewed
+            ? "border-ink-100 opacity-60 dark:border-ink-800"
+            : "border-ink-200 dark:border-ink-700"
+        }`}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-base font-semibold text-ink-900 dark:text-ink-50">{listing.title}</h3>
+            <h3 className="truncate text-base font-semibold text-ink-900 dark:text-ink-50">
+              {!viewed && (
+                <span
+                  className="mr-1.5 inline-block h-2 w-2 rounded-full bg-sky-500 align-middle"
+                  title="New — not yet viewed"
+                  aria-label="New"
+                />
+              )}
+              {listing.title}
+            </h3>
             {listing.employer && (
               <div className="mt-0.5 truncate text-sm text-ink-600 dark:text-ink-200">{listing.employer}</div>
             )}
@@ -1797,12 +1884,16 @@ function ListSkeleton() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ message }: { message?: string }) {
   return (
     <div className="rounded-2xl border border-dashed border-ink-200 bg-white p-8 text-center dark:bg-ink-800 dark:border-ink-800">
       <Plane className="mx-auto h-8 w-8 text-ink-400" />
-      <h3 className="mt-3 font-semibold text-ink-900 dark:text-ink-50">No listings match these filters</h3>
-      <p className="mt-1 text-sm text-ink-400">Try widening the date range or clearing a filter.</p>
+      <h3 className="mt-3 font-semibold text-ink-900 dark:text-ink-50">
+        {message ? "All caught up" : "No listings match these filters"}
+      </h3>
+      <p className="mt-1 text-sm text-ink-400">
+        {message ?? "Try widening the date range or clearing a filter."}
+      </p>
     </div>
   );
 }
