@@ -451,7 +451,35 @@ function Label({ children }: { children: React.ReactNode }) {
   return <div className="text-xs font-semibold uppercase tracking-wider text-ink-400">{children}</div>;
 }
 
+const SOURCE_LABELS: Record<string, string> = {
+  jsfirm: "JSfirm",
+  ats: "ATS",
+  workday: "Workday",
+  "atp-cfi": "ATP",
+  skywest: "SkyWest",
+  climbto350: "Climbto350",
+  pcc: "PCC",
+  findapilot: "FindAPilot",
+  reddit: "Reddit",
+  usajobs: "USAJobs",
+  aerocrewnews: "AeroCrewNews",
+};
+
+/** Last segment of a URL path — used as a final-resort visual ID when
+ *  two cards otherwise look identical. */
+function urlTail(url: string): string {
+  try {
+    const u = new URL(url);
+    const parts = u.pathname.split("/").filter(Boolean);
+    return parts[parts.length - 1] ?? u.hostname;
+  } catch {
+    return "";
+  }
+}
+
 function ListingCard({ listing, onOpen }: { listing: Listing; onOpen: () => void }) {
+  const sourceLabel = SOURCE_LABELS[listing.sourceId] ?? listing.sourceId;
+  const tail = !listing.location ? urlTail(listing.url) : "";
   return (
     <li>
       <button
@@ -473,12 +501,19 @@ function ListingCard({ listing, onOpen }: { listing: Listing; onOpen: () => void
         </div>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-400">
-          {listing.location && (
+          {listing.location ? (
             <span className="inline-flex items-center gap-1">
               <MapPin className="h-3 w-3" />
               {listing.location}
             </span>
-          )}
+          ) : tail ? (
+            <span
+              className="inline-flex items-center gap-1 truncate font-mono text-[10px] text-ink-400/80"
+              title={listing.url}
+            >
+              #{tail}
+            </span>
+          ) : null}
           <span className="inline-flex items-center gap-1">
             <Clock className="h-3 w-3" />
             {formatAgo(listing.postedAt)}
@@ -488,6 +523,12 @@ function ListingCard({ listing, onOpen }: { listing: Listing; onOpen: () => void
               {listing.hoursRequired.toLocaleString()} hr min
             </span>
           )}
+          <span
+            className="ml-auto rounded bg-ink-50 px-1.5 py-0.5 text-[10px] font-medium text-ink-400 ring-1 ring-ink-100"
+            title={`Source: ${sourceLabel}`}
+          >
+            {sourceLabel}
+          </span>
         </div>
 
         {listing.ratingsRequired && listing.ratingsRequired.length > 0 && (

@@ -70,6 +70,65 @@ function extractPay(description: string): string | null {
   return m ? m[0].trim() : null;
 }
 
+// US state name → 2-letter abbreviation (lower-cased keys for lookup).
+const STATE_NAMES: Record<string, string> = {
+  alabama: "AL", alaska: "AK", arizona: "AZ", arkansas: "AR", california: "CA",
+  colorado: "CO", connecticut: "CT", delaware: "DE", florida: "FL", georgia: "GA",
+  hawaii: "HI", idaho: "ID", illinois: "IL", indiana: "IN", iowa: "IA",
+  kansas: "KS", kentucky: "KY", louisiana: "LA", maine: "ME", maryland: "MD",
+  massachusetts: "MA", michigan: "MI", minnesota: "MN", mississippi: "MS", missouri: "MO",
+  montana: "MT", nebraska: "NE", nevada: "NV", "new hampshire": "NH", "new jersey": "NJ",
+  "new mexico": "NM", "new york": "NY", "north carolina": "NC", "north dakota": "ND", ohio: "OH",
+  oklahoma: "OK", oregon: "OR", pennsylvania: "PA", "rhode island": "RI", "south carolina": "SC",
+  "south dakota": "SD", tennessee: "TN", texas: "TX", utah: "UT", vermont: "VT",
+  virginia: "VA", washington: "WA", "west virginia": "WV", wisconsin: "WI", wyoming: "WY",
+  "district of columbia": "DC",
+};
+
+function abbrevState(s: string): string {
+  return STATE_NAMES[s.toLowerCase().trim()] ?? s.trim();
+}
+
+/** Parse a city/state location from page HTML before tag-stripping.
+ *  Walks several signals in order of reliability. */
+function extractLocation(html: string): string | null {
+  // 1. JSON-LD jobLocation. Two shapes — object or array of Places.
+  //    Used by ATP/Breezy, Greenhouse, FlightSafety, Workday-modern.
+  const ld = html.match(
+    /"jobLocation"[\s\S]{0,800}?"addressLocality"\s*:\s*"([^"]+)"[\s\S]{0,400}?"addressRegion"\s*:\s*"([^"]+)"/i,
+  );
+  if (ld) return `${ld[1].trim()}, ${abbrevState(ld[2])}`;
+
+  // 2. Page <title> patterns. Two delimiters in real-world data:
+  //      "Job Title - City, ST - …"   (FindAPilot)
+  //      "Job Title | City, ST | …"   (FlightSafety, some Workday)
+  const titleEl = html.match(/<title>([^<]+)<\/title>/i);
+  if (titleEl) {
+    const t = titleEl[1].replace(/\s+/g, " ").trim();
+    const dashCity = t.match(/[-|]\s*([A-Z][A-Za-z .']+,\s*[A-Z]{2})\s*[-|]/);
+    if (dashCity) return dashCity[1];
+    const atCity = t.match(/(?:in|at)\s+([A-Z][A-Za-z .']+,\s*[A-Z]{2})\b/);
+    if (atCity) return atCity[1];
+  }
+
+  // 3. OG title fallback.
+  const og = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i);
+  if (og) {
+    const m = og[1].match(/[-|]\s*([A-Z][A-Za-z .']+,\s*[A-Z]{2})\b/);
+    if (m) return m[1];
+  }
+
+  // 4. Last resort: a visible ">City, ST<" anywhere in the body.
+  //    Risky on long pages (could match "see San Francisco, CA office") so
+  //    we only use this if the match appears within the first 30K chars
+  //    of the doc, where the job header usually lives.
+  const head = html.slice(0, 30_000);
+  const visible = head.match(/>\s*([A-Z][A-Za-z .']{2,30},\s*[A-Z]{2})\s*</);
+  if (visible) return visible[1];
+
+  return null;
+}
+
 /** Parse a real post date from page HTML before tag-stripping. */
 function extractPostDate(html: string): number | null {
   // 1. JSON-LD JobPosting (most reliable, used by ATP/Breezy, Greenhouse, etc.)
@@ -130,7 +189,13 @@ export async function enrichDetailPages(): Promise<void> {
   const reenrichBefore = Date.now() - REENRICH_AFTER_DAYS * 86400_000;
 
   const candidates = await db
-    .select({ id: listings.id, url: listings.url, title: listings.title, description: listings.description })
+    .select({
+      id: listings.id,
+      url: listings.url,
+      title: listings.title,
+      description: listings.description,
+      location: listings.location,
+    })
     .from(listings)
     .where(
       and(
@@ -150,6 +215,7 @@ export async function enrichDetailPages(): Promise<void> {
   let closed = 0;
   let gone = 0;
   let dated = 0;
+  let located = 0;
   let updated = 0;
 
   for (const row of candidates) {
@@ -182,8 +248,13 @@ export async function enrichDetailPages(): Promise<void> {
       continue;
     }
 
-    // 2. Real post date if available.
+    // 2. Real post date and location if available.
     const realDate = extractPostDate(html);
+    // Re-enrich location if missing OR if currently set to a non-state-abbreviated
+    // form (Workday's "Las Vegas" without state, etc.). The detail page usually
+    // has more precise data.
+    const currentLocHasState = /,\s*[A-Z]{2}\b/.test(row.location ?? "");
+    const realLocation = !currentLocHasState ? extractLocation(html) : null;
 
     // 3. Other enrichment.
     const fullText = `${row.title}\n${row.description ?? ""}\n${text}`;
@@ -205,6 +276,13 @@ export async function enrichDetailPages(): Promise<void> {
       setValues.postedAt = realDate;
       dated++;
     }
+    if (realLocation) {
+      setValues.location = realLocation;
+      located++;
+      // Re-derive state from the new location so downstream filters work.
+      const stateMatch = realLocation.match(/,\s*([A-Z]{2})\b/);
+      if (stateMatch) setValues.state = stateMatch[1];
+    }
 
     await db.update(listings).set(setValues).where(eq(listings.id, row.id));
     updated++;
@@ -212,7 +290,7 @@ export async function enrichDetailPages(): Promise<void> {
   }
 
   console.log(
-    `[detail] checked ${candidates.length}: ${closed} closed + ${gone} gone (both deleted), ${dated} dated, ${updated} updated`,
+    `[detail] checked ${candidates.length}: ${closed} closed + ${gone} gone, ${dated} dated, ${located} located, ${updated} updated`,
   );
 }
 
