@@ -48,6 +48,8 @@ export const ATS_SOURCES: AtsSource[] = [
   // Florida Flyers Flight Academy — Breezy account verified, currently empty.
   // Worth polling because flight-instructor postings rotate.
   { kind: "breezy", slug: "florida-flyers-flight-academy-inc", name: "Florida Flyers Flight Academy", pilotOnly: true },
+
+  { kind: "greenhouse", slug: "atlasair", name: "Atlas Air", pilotOnly: true },
 ];
 
 export const PILOT_TITLE_RE =
