@@ -1,8 +1,34 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Plane, MapPin, Clock, Search, Filter, ExternalLink, X } from "lucide-react";
+import {
+  Plane,
+  MapPin,
+  Clock,
+  Search,
+  Filter,
+  ExternalLink,
+  X,
+  Bookmark,
+  CheckCircle2,
+  Briefcase,
+  Star,
+  XCircle,
+  Download,
+} from "lucide-react";
 import { fetchListings, fetchSources, fetchSummary } from "./api.ts";
 import type { JobCategory, Listing, ListingFilter } from "../shared/types.ts";
+import {
+  entryKey,
+  exportToCsv,
+  readPipeline,
+  setStatus,
+  STATUS_LABELS,
+  STATUS_ORDER,
+  STATUS_TONES,
+  writePipeline,
+  type PipelineMap,
+  type PipelineStatus,
+} from "./pipeline.ts";
 
 /**
  * Filter state ↔ URL hash sync.
@@ -136,14 +162,30 @@ function presetMatches(preset: ListingFilter, current: ListingFilter): boolean {
   return keys.every((k) => (preset[k] ?? undefined) === (current[k] ?? undefined));
 }
 
+type View = "browse" | "pipeline";
+
 export function App() {
   const [filter, setFilter] = useState<ListingFilter>(() => readFilterFromUrl());
   const [showFilters, setShowFilters] = useState(false);
   const [active, setActive] = useState<Listing | null>(null);
+  const [view, setView] = useState<View>("browse");
+  const [pipeline, setPipelineMap] = useState<PipelineMap>(() => readPipeline());
 
   useEffect(() => {
     writeFilterToUrl(filter);
   }, [filter]);
+
+  useEffect(() => {
+    writePipeline(pipeline);
+  }, [pipeline]);
+
+  function setListingStatus(listing: Listing, status: PipelineStatus | null) {
+    setPipelineMap((prev) => setStatus(prev, entryKey(listing.sourceId, listing.externalId), status));
+  }
+
+  function statusOf(listing: Listing): PipelineStatus | null {
+    return pipeline[entryKey(listing.sourceId, listing.externalId)]?.status ?? null;
+  }
 
   const listingsQ = useQuery({
     queryKey: ["listings", filter],
@@ -178,6 +220,8 @@ export function App() {
     return chips;
   }, [filter]);
 
+  const pipelineCount = Object.keys(pipeline).length;
+
   return (
     <div className="min-h-dvh">
       <Header
@@ -185,8 +229,22 @@ export function App() {
         fresh30d={summaryQ.data?.fresh30d ?? null}
         onToggleFilters={() => setShowFilters((s) => !s)}
         showFilters={showFilters}
+        view={view}
+        onSetView={setView}
+        pipelineCount={pipelineCount}
       />
 
+      {view === "pipeline" && (
+        <PipelineView
+          pipeline={pipeline}
+          listings={listingsQ.data?.items ?? []}
+          onOpen={setActive}
+          onSetStatus={setListingStatus}
+          onClearAll={() => setPipelineMap({})}
+        />
+      )}
+
+      {view === "browse" && (
       <main className="mx-auto max-w-3xl px-4 pb-24">
         <SearchBar value={filter.q ?? ""} onChange={(v) => update("q", v || undefined)} />
 
@@ -248,7 +306,13 @@ export function App() {
               ) : (
                 <ul className="space-y-3">
                   {listingsQ.data.items.map((l) => (
-                    <ListingCard key={l.id} listing={l} onOpen={() => setActive(l)} />
+                    <ListingCard
+                      key={l.id}
+                      listing={l}
+                      status={statusOf(l)}
+                      onOpen={() => setActive(l)}
+                      onSetStatus={(s) => setListingStatus(l, s)}
+                    />
                   ))}
                 </ul>
               )}
@@ -256,6 +320,7 @@ export function App() {
           )}
         </div>
       </main>
+      )}
 
       <footer className="safe-bottom mx-auto mt-12 max-w-3xl px-4 pb-6 text-center text-xs text-ink-400">
         Get notified of new CFI roles via RSS:{" "}
@@ -279,7 +344,14 @@ export function App() {
         <div className="mt-1">Drop the URL into Feedly, Inoreader, or any RSS-to-email service.</div>
       </footer>
 
-      {active && <ListingDetail listing={active} onClose={() => setActive(null)} />}
+      {active && (
+        <ListingDetail
+          listing={active}
+          status={statusOf(active)}
+          onClose={() => setActive(null)}
+          onSetStatus={(s) => setListingStatus(active, s)}
+        />
+      )}
     </div>
   );
 }
@@ -289,40 +361,243 @@ function Header({
   fresh30d,
   onToggleFilters,
   showFilters,
+  view,
+  onSetView,
+  pipelineCount,
 }: {
   lastUpdate: number | null | undefined;
   fresh30d: number | null;
   onToggleFilters: () => void;
   showFilters: boolean;
+  view: View;
+  onSetView: (v: View) => void;
+  pipelineCount: number;
 }) {
   return (
     <header className="safe-top sticky top-0 z-10 border-b border-ink-100 bg-white/80 backdrop-blur">
-      <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2">
+      <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+        <button
+          onClick={() => onSetView("browse")}
+          className="flex items-center gap-2 text-left"
+        >
           <div className="rounded-lg bg-sky-500 p-1.5 text-white">
             <Plane className="h-5 w-5" />
           </div>
-          <div className="leading-tight">
+          <div className="min-w-0 leading-tight">
             <div className="font-semibold text-ink-900">Flightpath</div>
-            <div className="text-xs text-ink-400">
+            <div className="truncate text-xs text-ink-400">
               {fresh30d !== null ? `${fresh30d} fresh in last 30 days` : "Fresh pilot jobs"}
               {lastUpdate ? ` · ${formatAgo(lastUpdate)}` : ""}
             </div>
           </div>
-        </div>
-        <button
-          onClick={onToggleFilters}
-          className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
-            showFilters
-              ? "border-sky-500 bg-sky-500 text-white"
-              : "border-ink-200 bg-white text-ink-800 hover:border-ink-400"
-          }`}
-        >
-          <Filter className="h-4 w-4" />
-          Filters
         </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onSetView(view === "pipeline" ? "browse" : "pipeline")}
+            className={`relative inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
+              view === "pipeline"
+                ? "border-sky-500 bg-sky-500 text-white"
+                : "border-ink-200 bg-white text-ink-800 hover:border-ink-400"
+            }`}
+          >
+            <Briefcase className="h-4 w-4" />
+            <span className="hidden sm:inline">Pipeline</span>
+            {pipelineCount > 0 && (
+              <span
+                className={`rounded-full px-1.5 text-[10px] font-bold ${
+                  view === "pipeline" ? "bg-white text-sky-600" : "bg-sky-500 text-white"
+                }`}
+              >
+                {pipelineCount}
+              </span>
+            )}
+          </button>
+          {view === "browse" && (
+            <button
+              onClick={onToggleFilters}
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
+                showFilters
+                  ? "border-sky-500 bg-sky-500 text-white"
+                  : "border-ink-200 bg-white text-ink-800 hover:border-ink-400"
+              }`}
+            >
+              <Filter className="h-4 w-4" />
+              <span className="hidden sm:inline">Filters</span>
+            </button>
+          )}
+        </div>
       </div>
     </header>
+  );
+}
+
+const STATUS_ICONS: Record<PipelineStatus, typeof Bookmark> = {
+  saved: Bookmark,
+  applied: CheckCircle2,
+  interviewing: Briefcase,
+  offered: Star,
+  rejected: XCircle,
+};
+
+function StatusButton({
+  status,
+  active,
+  onClick,
+  size = "sm",
+}: {
+  status: PipelineStatus;
+  active: boolean;
+  onClick: (e: React.MouseEvent) => void;
+  size?: "sm" | "md";
+}) {
+  const Icon = STATUS_ICONS[status];
+  const tone = STATUS_TONES[status];
+  const dim = size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4";
+  return (
+    <button
+      onClick={onClick}
+      title={STATUS_LABELS[status]}
+      className={`inline-flex items-center justify-center rounded-md p-1.5 ring-1 transition ${
+        active ? tone : "bg-white text-ink-400 ring-ink-100 hover:text-ink-800"
+      }`}
+    >
+      <Icon className={dim} />
+    </button>
+  );
+}
+
+function PipelineView({
+  pipeline,
+  listings,
+  onOpen,
+  onSetStatus,
+  onClearAll,
+}: {
+  pipeline: PipelineMap;
+  listings: Listing[];
+  onOpen: (l: Listing) => void;
+  onSetStatus: (l: Listing, s: PipelineStatus | null) => void;
+  onClearAll: () => void;
+}) {
+  // listings comes from current filter — but pipeline lookup is by sourceId
+  // + externalId, which is stable. We resolve from in-memory listings first
+  // and fall back to a placeholder if a saved listing has aged out of view.
+  const byKey = useMemo(() => {
+    const m = new Map<string, Listing>();
+    for (const l of listings) m.set(entryKey(l.sourceId, l.externalId), l);
+    return m;
+  }, [listings]);
+
+  const grouped = useMemo(() => {
+    const out: Record<PipelineStatus, Array<{ key: string; listing: Listing | null; entry: PipelineMap[string] }>> = {
+      saved: [],
+      applied: [],
+      interviewing: [],
+      offered: [],
+      rejected: [],
+    };
+    for (const [key, entry] of Object.entries(pipeline)) {
+      out[entry.status].push({ key, listing: byKey.get(key) ?? null, entry });
+    }
+    for (const k of STATUS_ORDER) {
+      out[k].sort((a, b) => b.entry.updatedAt - a.entry.updatedAt);
+    }
+    return out;
+  }, [pipeline, byKey]);
+
+  function downloadCsv() {
+    const csv = exportToCsv(pipeline, (key) => {
+      const l = byKey.get(key);
+      return l
+        ? { title: l.title, employer: l.employer, location: l.location, url: l.url }
+        : undefined;
+    });
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `flightpath-pipeline-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  const total = Object.keys(pipeline).length;
+
+  return (
+    <main className="mx-auto max-w-3xl px-4 pb-24">
+      <div className="my-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="text-sm text-ink-600">
+          {total === 0
+            ? "No applications tracked yet — tap the icons on a listing to save / mark applied."
+            : `${total} listings in your pipeline`}
+        </div>
+        {total > 0 && (
+          <div className="flex gap-2">
+            <button
+              onClick={downloadCsv}
+              className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-800 hover:border-ink-400"
+            >
+              <Download className="h-3.5 w-3.5" />
+              Export CSV
+            </button>
+            <button
+              onClick={() => {
+                if (confirm("Clear all pipeline entries? This cannot be undone.")) onClearAll();
+              }}
+              className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 hover:border-rose-400"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
+      </div>
+
+      {STATUS_ORDER.map((status) => {
+        const items = grouped[status];
+        if (items.length === 0) return null;
+        return (
+          <section key={status} className="mb-6">
+            <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-ink-400">
+              {STATUS_LABELS[status]} · {items.length}
+            </h3>
+            <ul className="space-y-2">
+              {items.map(({ key, listing }) => (
+                <li key={key} className="rounded-2xl border border-ink-100 bg-white p-3 shadow-sm">
+                  {listing ? (
+                    <div className="flex items-start justify-between gap-3">
+                      <button onClick={() => onOpen(listing)} className="min-w-0 flex-1 text-left">
+                        <div className="truncate text-sm font-semibold text-ink-900">
+                          {listing.title}
+                        </div>
+                        <div className="truncate text-xs text-ink-400">
+                          {listing.employer}
+                          {listing.location ? ` · ${listing.location}` : ""}
+                        </div>
+                      </button>
+                      <button
+                        onClick={() =>
+                          onSetStatus(listing, null)
+                        }
+                        className="rounded p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-900"
+                        title="Remove from pipeline"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="text-xs italic text-ink-400">
+                      Listing dropped out of the 30-day window — apply state retained ({key}).
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+    </main>
   );
 }
 
@@ -477,7 +752,17 @@ function urlTail(url: string): string {
   }
 }
 
-function ListingCard({ listing, onOpen }: { listing: Listing; onOpen: () => void }) {
+function ListingCard({
+  listing,
+  status,
+  onOpen,
+  onSetStatus,
+}: {
+  listing: Listing;
+  status: PipelineStatus | null;
+  onOpen: () => void;
+  onSetStatus: (s: PipelineStatus | null) => void;
+}) {
   const sourceLabel = SOURCE_LABELS[listing.sourceId] ?? listing.sourceId;
   const tail = !listing.location ? urlTail(listing.url) : "";
   return (
@@ -540,12 +825,44 @@ function ListingCard({ listing, onOpen }: { listing: Listing; onOpen: () => void
             ))}
           </div>
         )}
+
+        <div
+          className="mt-3 flex items-center gap-1.5 border-t border-ink-100 pt-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {STATUS_ORDER.map((s) => (
+            <StatusButton
+              key={s}
+              status={s}
+              active={status === s}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSetStatus(status === s ? null : s);
+              }}
+            />
+          ))}
+          {status && (
+            <span className={`ml-auto rounded px-2 py-0.5 text-[10px] font-medium ring-1 ${STATUS_TONES[status]}`}>
+              {STATUS_LABELS[status]}
+            </span>
+          )}
+        </div>
       </button>
     </li>
   );
 }
 
-function ListingDetail({ listing, onClose }: { listing: Listing; onClose: () => void }) {
+function ListingDetail({
+  listing,
+  status,
+  onClose,
+  onSetStatus,
+}: {
+  listing: Listing;
+  status: PipelineStatus | null;
+  onClose: () => void;
+  onSetStatus: (s: PipelineStatus | null) => void;
+}) {
   return (
     <div className="fixed inset-0 z-20 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
       <div
@@ -603,6 +920,22 @@ function ListingDetail({ listing, onClose }: { listing: Listing; onClose: () => 
         </div>
 
         <div className="border-t border-ink-100 bg-ink-50 p-4">
+          <div className="mb-3 flex flex-wrap items-center justify-center gap-1.5">
+            {STATUS_ORDER.map((s) => (
+              <StatusButton
+                key={s}
+                status={s}
+                active={status === s}
+                onClick={() => onSetStatus(status === s ? null : s)}
+                size="md"
+              />
+            ))}
+            {status && (
+              <span className={`rounded px-2 py-0.5 text-xs font-medium ring-1 ${STATUS_TONES[status]}`}>
+                {STATUS_LABELS[status]}
+              </span>
+            )}
+          </div>
           <a
             href={listing.url}
             target="_blank"
