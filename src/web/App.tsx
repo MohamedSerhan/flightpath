@@ -17,7 +17,10 @@ import {
   Mail,
   Copy,
   Settings,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { applyTheme, readTheme, writeTheme, type Theme } from "./theme.ts";
 import { fetchListings, fetchSources, fetchSummary } from "./api.ts";
 import type { JobCategory, Listing, ListingFilter } from "../shared/types.ts";
 import {
@@ -191,10 +194,16 @@ export function App() {
   const [outreachFor, setOutreachFor] = useState<Listing | null>(null);
   const [profile, setProfile] = useState<ApplicantProfile>(() => readApplicantProfile());
   const [showProfile, setShowProfile] = useState(false);
+  const [theme, setTheme] = useState<Theme>(() => readTheme());
 
   useEffect(() => {
     writeApplicantProfile(profile);
   }, [profile]);
+
+  useEffect(() => {
+    applyTheme(theme);
+    writeTheme(theme);
+  }, [theme]);
 
   useEffect(() => {
     writeFilterToUrl(filter);
@@ -258,6 +267,8 @@ export function App() {
         onSetView={setView}
         pipelineCount={pipelineCount}
         onOpenProfile={() => setShowProfile(true)}
+        theme={theme}
+        onToggleTheme={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
       />
 
       {view === "pipeline" && (
@@ -301,7 +312,7 @@ export function App() {
               <button
                 key={chip.key as string}
                 onClick={() => update(chip.key, undefined as never)}
-                className="inline-flex items-center gap-1 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-600 hover:bg-sky-500/20"
+                className="inline-flex items-center gap-1 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-600 hover:bg-sky-500/20 dark:bg-sky-500/20 dark:text-sky-300"
               >
                 {chip.label}
                 <X className="h-3 w-3" />
@@ -352,7 +363,7 @@ export function App() {
         Get notified of new CFI roles via RSS:{" "}
         <a
           href={`${import.meta.env.BASE_URL ?? "/"}feed-cfi.xml`}
-          className="font-medium text-sky-600 hover:underline"
+          className="font-medium text-sky-600 hover:underline dark:text-sky-300"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -361,7 +372,7 @@ export function App() {
         {" · "}
         <a
           href={`${import.meta.env.BASE_URL ?? "/"}feed.xml`}
-          className="font-medium text-sky-600 hover:underline"
+          className="font-medium text-sky-600 hover:underline dark:text-sky-300"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -415,6 +426,8 @@ function Header({
   onSetView,
   pipelineCount,
   onOpenProfile,
+  theme,
+  onToggleTheme,
 }: {
   lastUpdate: number | null | undefined;
   fresh30d: number | null;
@@ -424,9 +437,11 @@ function Header({
   onSetView: (v: View) => void;
   pipelineCount: number;
   onOpenProfile: () => void;
+  theme: Theme;
+  onToggleTheme: () => void;
 }) {
   return (
-    <header className="safe-top sticky top-0 z-10 border-b border-ink-100 bg-white/80 backdrop-blur">
+    <header className="safe-top sticky top-0 z-10 border-b border-ink-100 bg-white/80 backdrop-blur dark:bg-ink-800 dark:bg-ink-900/80 dark:border-ink-800">
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
         <button
           onClick={() => onSetView("browse")}
@@ -436,7 +451,7 @@ function Header({
             <Plane className="h-5 w-5" />
           </div>
           <div className="min-w-0 leading-tight">
-            <div className="font-semibold text-ink-900">Flightpath</div>
+            <div className="font-semibold text-ink-900 dark:text-ink-50">Flightpath</div>
             <div className="truncate text-xs text-ink-400">
               {fresh30d !== null ? `${fresh30d} fresh in last 30 days` : "Fresh pilot jobs"}
               {lastUpdate ? ` · ${formatAgo(lastUpdate)}` : ""}
@@ -478,8 +493,15 @@ function Header({
             </button>
           )}
           <button
+            onClick={onToggleTheme}
+            className="inline-flex items-center justify-center rounded-lg border border-ink-200 bg-white p-1.5 text-ink-800 hover:border-ink-400 dark:border-ink-800 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-ink-600"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button
             onClick={onOpenProfile}
-            className="inline-flex items-center justify-center rounded-lg border border-ink-200 bg-white p-1.5 text-ink-800 hover:border-ink-400"
+            className="inline-flex items-center justify-center rounded-lg border border-ink-200 bg-white p-1.5 text-ink-800 hover:border-ink-400 dark:border-ink-800 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-ink-600"
             title="Your applicant profile"
           >
             <Settings className="h-4 w-4" />
@@ -587,7 +609,7 @@ function PipelineView({
   return (
     <main className="mx-auto max-w-3xl px-4 pb-24">
       <div className="my-4 flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm text-ink-600">
+        <div className="text-sm text-ink-600 dark:text-ink-200">
           {total === 0
             ? "No applications tracked yet — tap the icons on a listing to save / mark applied."
             : `${total} listings in your pipeline`}
@@ -596,7 +618,7 @@ function PipelineView({
           <div className="flex gap-2">
             <button
               onClick={downloadCsv}
-              className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-800 hover:border-ink-400"
+              className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-800 hover:border-ink-400 dark:bg-ink-800 dark:border-ink-800 dark:text-ink-100 dark:hover:border-ink-600"
             >
               <Download className="h-3.5 w-3.5" />
               Export CSV
@@ -605,7 +627,7 @@ function PipelineView({
               onClick={() => {
                 if (confirm("Clear all pipeline entries? This cannot be undone.")) onClearAll();
               }}
-              className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 hover:border-rose-400"
+              className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 hover:border-rose-400 dark:bg-ink-800 dark:text-rose-200 dark:border-rose-800 dark:hover:border-rose-600"
             >
               Clear all
             </button>
@@ -623,11 +645,11 @@ function PipelineView({
             </h3>
             <ul className="space-y-2">
               {items.map(({ key, listing }) => (
-                <li key={key} className="rounded-2xl border border-ink-100 bg-white p-3 shadow-sm">
+                <li key={key} className="rounded-2xl border border-ink-100 bg-white p-3 shadow-sm dark:bg-ink-800 dark:border-ink-800">
                   {listing ? (
                     <div className="flex items-start justify-between gap-3">
                       <button onClick={() => onOpen(listing)} className="min-w-0 flex-1 text-left">
-                        <div className="truncate text-sm font-semibold text-ink-900">
+                        <div className="truncate text-sm font-semibold text-ink-900 dark:text-ink-50">
                           {listing.title}
                         </div>
                         <div className="truncate text-xs text-ink-400">
@@ -639,7 +661,7 @@ function PipelineView({
                         onClick={() =>
                           onSetStatus(listing, null)
                         }
-                        className="rounded p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-900"
+                        className="rounded p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:bg-ink-700 dark:text-ink-50 dark:hover:bg-ink-700 dark:hover:text-ink-100"
                         title="Remove from pipeline"
                       >
                         <X className="h-4 w-4" />
@@ -669,7 +691,7 @@ function SearchBar({ value, onChange }: { value: string; onChange: (v: string) =
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Search title, employer, location…"
-          className="w-full rounded-xl border border-ink-200 bg-white py-3 pl-10 pr-4 text-sm shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30"
+          className="w-full rounded-xl border border-ink-200 bg-white py-3 pl-10 pr-4 text-sm shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
         />
       </label>
     </div>
@@ -689,7 +711,7 @@ function FilterPanel({
     onChange({ ...filter, [key]: value, offset: 0 });
   }
   return (
-    <div className="mt-4 rounded-2xl border border-ink-200 bg-white p-4 shadow-sm">
+    <div className="mt-4 rounded-2xl border border-ink-200 bg-white p-4 shadow-sm dark:bg-ink-800 dark:border-ink-800">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <Label>Category</Label>
@@ -718,7 +740,7 @@ function FilterPanel({
           <select
             value={filter.state ?? ""}
             onChange={(e) => set("state", e.target.value || undefined)}
-            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
           >
             <option value="">Any state</option>
             {US_STATES.map((s) => (
@@ -734,7 +756,7 @@ function FilterPanel({
           <select
             value={filter.postedSinceDays ?? 30}
             onChange={(e) => set("postedSinceDays", Number(e.target.value))}
-            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
           >
             <option value={7}>7 days</option>
             <option value={14}>14 days</option>
@@ -749,7 +771,7 @@ function FilterPanel({
           <select
             value={filter.maxHoursRequired ?? ""}
             onChange={(e) => set("maxHoursRequired", e.target.value ? Number(e.target.value) : undefined)}
-            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+            className="mt-2 w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
           >
             <option value="">No limit</option>
             <option value={250}>≤ 250 hrs</option>
@@ -766,7 +788,7 @@ function FilterPanel({
       <div className="mt-4 flex justify-between">
         <button
           onClick={() => onChange({ postedSinceDays: 30, limit: filter.limit ?? 50 })}
-          className="text-xs font-medium text-ink-400 hover:text-ink-800"
+          className="text-xs font-medium text-ink-400 hover:text-ink-800 dark:text-ink-100"
         >
           Reset all
         </button>
@@ -828,17 +850,17 @@ function ListingCard({
     <li>
       <button
         onClick={onOpen}
-        className="block w-full rounded-2xl border border-ink-100 bg-white p-4 text-left shadow-sm transition hover:border-sky-500 hover:shadow-md"
+        className="block w-full rounded-2xl border border-ink-100 bg-white p-4 text-left shadow-sm transition hover:border-sky-500 hover:shadow-md dark:bg-ink-800 dark:border-ink-800"
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-base font-semibold text-ink-900">{listing.title}</h3>
+            <h3 className="truncate text-base font-semibold text-ink-900 dark:text-ink-50">{listing.title}</h3>
             {listing.employer && (
-              <div className="mt-0.5 truncate text-sm text-ink-600">{listing.employer}</div>
+              <div className="mt-0.5 truncate text-sm text-ink-600 dark:text-ink-200">{listing.employer}</div>
             )}
           </div>
           {listing.jobCategory && (
-            <span className="shrink-0 rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600">
+            <span className="shrink-0 rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600 dark:bg-ink-700 dark:text-ink-200">
               {CATEGORY_LABELS[listing.jobCategory] ?? listing.jobCategory}
             </span>
           )}
@@ -863,12 +885,12 @@ function ListingCard({
             {formatAgo(listing.postedAt)}
           </span>
           {listing.hoursRequired && (
-            <span className="rounded bg-amber-50 px-1.5 py-0.5 font-medium text-amber-700">
+            <span className="rounded bg-amber-50 px-1.5 py-0.5 font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-200">
               {listing.hoursRequired.toLocaleString()} hr min
             </span>
           )}
           <span
-            className="ml-auto rounded bg-ink-50 px-1.5 py-0.5 text-[10px] font-medium text-ink-400 ring-1 ring-ink-100"
+            className="ml-auto rounded bg-ink-50 px-1.5 py-0.5 text-[10px] font-medium text-ink-400 ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-700"
             title={`Source: ${sourceLabel}`}
           >
             {sourceLabel}
@@ -878,7 +900,7 @@ function ListingCard({
         {listing.ratingsRequired && listing.ratingsRequired.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
             {listing.ratingsRequired.slice(0, 5).map((r) => (
-              <span key={r} className="rounded bg-sky-500/10 px-1.5 py-0.5 text-[10px] font-medium text-sky-600">
+              <span key={r} className="rounded bg-sky-500/10 px-1.5 py-0.5 text-[10px] font-medium text-sky-600 dark:bg-sky-500/20 dark:text-sky-300">
                 {r}
               </span>
             ))}
@@ -886,7 +908,7 @@ function ListingCard({
         )}
 
         <div
-          className="mt-3 flex items-center gap-1.5 border-t border-ink-100 pt-2"
+          className="mt-3 flex items-center gap-1.5 border-t border-ink-100 pt-2 dark:border-ink-800"
           onClick={(e) => e.stopPropagation()}
         >
           {STATUS_ORDER.map((s) => (
@@ -925,26 +947,26 @@ function ListingDetail({
   onDraftOutreach: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-20 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-20 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4 dark:bg-black/60" onClick={onClose}>
       <div
-        className="safe-bottom flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-2xl"
+        className="safe-bottom flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-2xl dark:bg-ink-800"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between border-b border-ink-100 p-4">
+        <div className="flex items-start justify-between border-b border-ink-100 p-4 dark:border-ink-800">
           <div className="min-w-0 flex-1 pr-4">
-            <h2 className="text-lg font-semibold text-ink-900">{listing.title}</h2>
-            {listing.employer && <p className="mt-0.5 text-sm text-ink-600">{listing.employer}</p>}
+            <h2 className="text-lg font-semibold text-ink-900 dark:text-ink-50">{listing.title}</h2>
+            {listing.employer && <p className="mt-0.5 text-sm text-ink-600 dark:text-ink-200">{listing.employer}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-900"
+            className="rounded-full p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:bg-ink-700 dark:text-ink-50 dark:hover:bg-ink-700 dark:hover:text-ink-100"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="overflow-y-auto p-4">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-600">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-600 dark:text-ink-200">
             {listing.location && (
               <span className="inline-flex items-center gap-1">
                 <MapPin className="h-4 w-4" />
@@ -961,12 +983,12 @@ function ListingDetail({
           {(listing.hoursRequired || listing.ratingsRequired?.length) && (
             <div className="mt-3 flex flex-wrap gap-2">
               {listing.hoursRequired && (
-                <span className="rounded bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+                <span className="rounded bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-200">
                   {listing.hoursRequired.toLocaleString()} hour min
                 </span>
               )}
               {listing.ratingsRequired?.map((r) => (
-                <span key={r} className="rounded bg-sky-500/10 px-2 py-0.5 text-xs font-medium text-sky-600">
+                <span key={r} className="rounded bg-sky-500/10 px-2 py-0.5 text-xs font-medium text-sky-600 dark:bg-sky-500/20 dark:text-sky-300">
                   {r}
                 </span>
               ))}
@@ -974,13 +996,13 @@ function ListingDetail({
           )}
 
           {listing.description && (
-            <div className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-ink-800">
+            <div className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-ink-800 dark:text-ink-100">
               {listing.description}
             </div>
           )}
         </div>
 
-        <div className="border-t border-ink-100 bg-ink-50 p-4">
+        <div className="border-t border-ink-100 bg-ink-50 p-4 dark:bg-ink-900 dark:border-ink-800">
           <div className="mb-3 flex flex-wrap items-center justify-center gap-1.5">
             {STATUS_ORDER.map((s) => (
               <StatusButton
@@ -1000,7 +1022,7 @@ function ListingDetail({
           <div className="grid gap-2 sm:grid-cols-2">
             <button
               onClick={onDraftOutreach}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-sky-500 bg-white px-4 py-3 text-sm font-semibold text-sky-600 hover:bg-sky-50"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-sky-500 bg-white px-4 py-3 text-sm font-semibold text-sky-600 hover:bg-sky-50 dark:bg-ink-800 dark:text-sky-300"
             >
               <Mail className="h-4 w-4" />
               Draft outreach
@@ -1060,30 +1082,30 @@ function OutreachModal({
 
   return (
     <div
-      className="fixed inset-0 z-30 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+      className="fixed inset-0 z-30 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4 dark:bg-black/60"
       onClick={onClose}
     >
       <div
-        className="safe-bottom flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-2xl"
+        className="safe-bottom flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-2xl dark:bg-ink-800"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between border-b border-ink-100 p-4">
+        <div className="flex items-start justify-between border-b border-ink-100 p-4 dark:border-ink-800">
           <div className="min-w-0 flex-1 pr-4">
-            <h2 className="text-lg font-semibold text-ink-900">Draft outreach</h2>
+            <h2 className="text-lg font-semibold text-ink-900 dark:text-ink-50">Draft outreach</h2>
             <p className="mt-0.5 truncate text-xs text-ink-400">
               {listing.title} · {listing.employer ?? "—"}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-900"
+            className="rounded-full p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:bg-ink-700 dark:text-ink-50 dark:hover:bg-ink-700 dark:hover:text-ink-100"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {profileEmpty && (
-          <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
+          <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800">
             Tip: fill in your{" "}
             <button onClick={onEditProfile} className="font-semibold underline hover:no-underline">
               applicant profile
@@ -1100,11 +1122,11 @@ function OutreachModal({
             <input
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="flex-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+              className="flex-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
             />
             <button
               onClick={() => copy(subject, "subject")}
-              className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-xs font-medium text-ink-700 hover:border-ink-400"
+              className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-xs font-medium text-ink-700 hover:border-ink-400 dark:bg-ink-800 dark:border-ink-800 dark:hover:border-ink-600 dark:text-ink-200"
             >
               <Copy className="h-3.5 w-3.5" />
               {copied === "subject" ? "Copied" : "Copy"}
@@ -1119,12 +1141,12 @@ function OutreachModal({
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={18}
-              className="w-full rounded-lg border border-ink-200 bg-white p-3 font-sans text-sm leading-relaxed focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+              className="w-full rounded-lg border border-ink-200 bg-white p-3 font-sans text-sm leading-relaxed focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/30 dark:bg-ink-800 dark:border-ink-800"
             />
             <div className="mt-2 flex flex-wrap gap-2">
               <button
                 onClick={() => copy(body, "body")}
-                className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:border-ink-400"
+                className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:border-ink-400 dark:bg-ink-800 dark:border-ink-800 dark:hover:border-ink-600 dark:text-ink-200"
               >
                 <Copy className="h-3.5 w-3.5" />
                 {copied === "body" ? "Copied" : "Copy body"}
@@ -1133,7 +1155,7 @@ function OutreachModal({
                 onClick={() => {
                   copy(`${subject}\n\n${body}`, "body");
                 }}
-                className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:border-ink-400"
+                className="inline-flex items-center gap-1 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:border-ink-400 dark:bg-ink-800 dark:border-ink-800 dark:hover:border-ink-600 dark:text-ink-200"
               >
                 <Copy className="h-3.5 w-3.5" />
                 Copy subject + body
@@ -1176,18 +1198,18 @@ function ProfileModal({
 
   return (
     <div
-      className="fixed inset-0 z-40 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+      className="fixed inset-0 z-40 flex items-end justify-center bg-ink-900/40 p-0 backdrop-blur-sm sm:items-center sm:p-4 dark:bg-black/60"
       onClick={onClose}
     >
       <div
-        className="safe-bottom flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-2xl"
+        className="safe-bottom flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-2xl dark:bg-ink-800"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between border-b border-ink-100 p-4">
-          <h2 className="text-lg font-semibold text-ink-900">Applicant profile</h2>
+        <div className="flex items-start justify-between border-b border-ink-100 p-4 dark:border-ink-800">
+          <h2 className="text-lg font-semibold text-ink-900 dark:text-ink-50">Applicant profile</h2>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-900"
+            className="rounded-full p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-900 dark:bg-ink-700 dark:text-ink-50 dark:hover:bg-ink-700 dark:hover:text-ink-100"
           >
             <X className="h-5 w-5" />
           </button>
@@ -1258,7 +1280,7 @@ function ProfileModal({
             </Field>
           </div>
 
-          <div className="rounded-lg border border-ink-100 bg-ink-50 p-3">
+          <div className="rounded-lg border border-ink-100 bg-ink-50 p-3 dark:bg-ink-900 dark:border-ink-800">
             <div className="text-xs font-semibold uppercase tracking-wider text-ink-400">
               Ratings (CFI is assumed)
             </div>
@@ -1297,10 +1319,10 @@ function ProfileModal({
           </Field>
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-ink-100 bg-ink-50 p-4">
+        <div className="flex justify-end gap-2 border-t border-ink-100 bg-ink-50 p-4 dark:bg-ink-900 dark:border-ink-800">
           <button
             onClick={onClose}
-            className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-800 hover:border-ink-400"
+            className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-800 hover:border-ink-400 dark:bg-ink-800 dark:border-ink-800 dark:text-ink-100 dark:hover:border-ink-600"
           >
             Cancel
           </button>
@@ -1354,10 +1376,10 @@ function ListSkeleton() {
   return (
     <ul className="space-y-3">
       {Array.from({ length: 5 }).map((_, i) => (
-        <li key={i} className="rounded-2xl border border-ink-100 bg-white p-4 shadow-sm">
-          <div className="h-4 w-2/3 animate-pulse rounded bg-ink-100" />
-          <div className="mt-2 h-3 w-1/3 animate-pulse rounded bg-ink-100" />
-          <div className="mt-3 h-3 w-1/2 animate-pulse rounded bg-ink-100" />
+        <li key={i} className="rounded-2xl border border-ink-100 bg-white p-4 shadow-sm dark:bg-ink-800 dark:border-ink-800">
+          <div className="h-4 w-2/3 animate-pulse rounded bg-ink-100 dark:bg-ink-700" />
+          <div className="mt-2 h-3 w-1/3 animate-pulse rounded bg-ink-100 dark:bg-ink-700" />
+          <div className="mt-3 h-3 w-1/2 animate-pulse rounded bg-ink-100 dark:bg-ink-700" />
         </li>
       ))}
     </ul>
@@ -1366,9 +1388,9 @@ function ListSkeleton() {
 
 function EmptyState() {
   return (
-    <div className="rounded-2xl border border-dashed border-ink-200 bg-white p-8 text-center">
+    <div className="rounded-2xl border border-dashed border-ink-200 bg-white p-8 text-center dark:bg-ink-800 dark:border-ink-800">
       <Plane className="mx-auto h-8 w-8 text-ink-400" />
-      <h3 className="mt-3 font-semibold text-ink-900">No listings match these filters</h3>
+      <h3 className="mt-3 font-semibold text-ink-900 dark:text-ink-50">No listings match these filters</h3>
       <p className="mt-1 text-sm text-ink-400">Try widening the date range or clearing a filter.</p>
     </div>
   );

@@ -12,6 +12,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Smooth color transitions when toggling themes (excluding shadows for perf) */
+html.dark { color-scheme: dark; }
+body, .theme-fade { transition: background-color 200ms ease, color 200ms ease; }
+
 /* iOS safe area for the bottom of the screen */
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 .safe-top { padding-top: env(safe-area-inset-top); }
