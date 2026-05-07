@@ -25,7 +25,12 @@ jobs:
     env:
       # Project pages live at <user>.github.io/<repo>/. The repo's runtime
       # name is github.event.repository.name; we prefix with / and trail with /.
-      VITE_BASE: /${{ github.event.repository.name }}/
+      # Custom-domain override: set repo variable CUSTOM_DOMAIN
+      # (Settings → Secrets and variables → Actions → Variables) to e.g.
+      # "flightpath.is-a.dev" — when set, the site is served from the root
+      # of that domain instead of the github.io subpath.
+      VITE_BASE: ${{ vars.CUSTOM_DOMAIN && '/' || format('/{0}/', github.event.repository.name) }}
+      CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
       # Optional. Set these as repo secrets to enable USAJobs.
       USAJOBS_AUTH_KEY: ${{ secrets.USAJOBS_AUTH_KEY }}
       USAJOBS_USER_AGENT: ${{ secrets.USAJOBS_USER_AGENT }}
@@ -86,6 +91,13 @@ jobs:
 
       - name: Build static site (with embedded data bundle)
         run: bun run build:static
+
+      # GitHub Pages reads CNAME from the deployed artifact root and routes
+      # the custom domain to it. Only ship the file when CUSTOM_DOMAIN is
+      # set; otherwise the github.io subpath stays the canonical URL.
+      - name: Write CNAME for custom domain
+        if: ${{ env.CUSTOM_DOMAIN != '' }}
+        run: echo "$CUSTOM_DOMAIN" > dist/web/CNAME
 
       - name: Save listings DB cache
         uses: actions/cache/save@v4
