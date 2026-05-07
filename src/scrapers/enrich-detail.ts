@@ -47,6 +47,27 @@ const UA =
 const CLOSED_RE =
   /(this\s+position\s+(has\s+been\s+)?closed|no\s+longer\s+(?:accepting\s+(?:applications|new\s+applicants)|available|hiring|open|active)|this\s+job\s+(has\s+)?expired|position\s+(has\s+)?been\s+filled|posting\s+(has\s+)?(?:expired|closed)|this\s+opportunity\s+is\s+no\s+longer|application\s+window\s+(?:has\s+)?closed|hiring\s+for\s+this\s+role\s+(has\s+)?ended)/i;
 
+// Aggregators (notably PCC) sometimes ship listings whose `JobUrl` is just
+// the employer's generic careers landing page rather than a per-job link.
+// Clicking through dumps the user on a "Careers — Apply Now" homepage with
+// no specific role to evaluate. Detect by URL shape: a hostname plus a
+// single path segment matching well-known landing slugs, with no further
+// path. These are unactionable; mark them closed.
+const GENERIC_LANDING_SLUG_RE =
+  /^(career|careers|job|jobs|employment|hiring|opportunities|positions|join-us|join-our-team|work-with-us|work-for-us|apply|apply-now|recruitment|recruiting|hr|human-resources)$/i;
+
+function isGenericLandingUrl(url: string): boolean {
+  try {
+    const u = new URL(url);
+    const segments = u.pathname.split("/").filter(Boolean);
+    if (segments.length === 0) return true; // bare hostname, e.g. https://example.com/
+    if (segments.length === 1) return GENERIC_LANDING_SLUG_RE.test(segments[0]);
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 function stripTags(s: string): string {
   return s
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
@@ -226,11 +247,24 @@ export async function enrichDetailPages(): Promise<void> {
   console.log(`[detail] checking ${candidates.length} listings for closure / real post date…`);
   let closed = 0;
   let gone = 0;
+  let landing = 0;
   let dated = 0;
   let located = 0;
   let updated = 0;
 
   for (const row of candidates) {
+    // Cheap URL-shape pre-check: if the URL is a generic careers landing
+    // page (no per-job segment), the listing is unactionable. Skip the
+    // detail fetch entirely.
+    if (isGenericLandingUrl(row.url)) {
+      await db
+        .update(listings)
+        .set({ isClosed: 1, enrichedAt: Date.now() })
+        .where(eq(listings.id, row.id));
+      landing++;
+      continue;
+    }
+
     const result = await fetchDetail(row.url);
     if ("gone" in result) {
       await db
@@ -302,7 +336,7 @@ export async function enrichDetailPages(): Promise<void> {
   }
 
   console.log(
-    `[detail] checked ${candidates.length}: ${closed} closed + ${gone} gone, ${dated} dated, ${located} located, ${updated} updated`,
+    `[detail] checked ${candidates.length}: ${closed} closed + ${gone} gone + ${landing} landing-only, ${dated} dated, ${located} located, ${updated} updated`,
   );
 }
 
