@@ -190,12 +190,11 @@ export async function enrichDetailPages(): Promise<void> {
   const cutoff = Date.now() - FRESHNESS_DAYS * 86400_000;
   const reenrichBefore = Date.now() - REENRICH_AFTER_DAYS * 86400_000;
 
-  // One-day grace before re-attempting a previously-enriched-but-still-
-  // missing-location row. Stops us from hammering URLs that genuinely
-  // can't yield location (Coast Flight's generic careers page) every
-  // single cron tick, while still catching the common case where a prior
-  // enrichment pass used older extraction logic.
-  const retryMissingLocBefore = Date.now() - 86400_000;
+  // 1-hour grace before re-attempting a missing-location row. The cron
+  // runs every 4 hours, so each tick retries (3+ retries per day) — fast
+  // enough that newly-deployed extraction logic flushes the backlog the
+  // same day, slow enough that we're not hammering any one source.
+  const retryMissingLocBefore = Date.now() - 3600_000;
 
   const candidates = await db
     .select({
