@@ -41,6 +41,7 @@ import {
   writeApplicantProfile,
   type ApplicantProfile,
 } from "./outreach.ts";
+import { matchScore, type MatchResult, type MatchTier } from "./match.ts";
 
 /**
  * Filter state ↔ URL hash sync.
@@ -184,6 +185,15 @@ function presetMatches(preset: ListingFilter, current: ListingFilter): boolean {
 }
 
 type View = "browse" | "pipeline";
+type SortMode = "match" | "date";
+
+const SORT_STORAGE_KEY = "flightpath:sortMode";
+
+function readSortMode(): SortMode {
+  if (typeof localStorage === "undefined") return "match";
+  const v = localStorage.getItem(SORT_STORAGE_KEY);
+  return v === "date" || v === "match" ? v : "match";
+}
 
 export function App() {
   const [filter, setFilter] = useState<ListingFilter>(() => readFilterFromUrl());
@@ -195,10 +205,17 @@ export function App() {
   const [profile, setProfile] = useState<ApplicantProfile>(() => readApplicantProfile());
   const [showProfile, setShowProfile] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => readTheme());
+  const [sortMode, setSortMode] = useState<SortMode>(() => readSortMode());
 
   useEffect(() => {
     writeApplicantProfile(profile);
   }, [profile]);
+
+  useEffect(() => {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(SORT_STORAGE_KEY, sortMode);
+    }
+  }, [sortMode]);
 
   useEffect(() => {
     applyTheme(theme);
@@ -330,31 +347,46 @@ export function App() {
           {listingsQ.error && (
             <ErrorBox message={(listingsQ.error as Error).message} onRetry={() => listingsQ.refetch()} />
           )}
-          {listingsQ.data && (
-            <>
-              <div className="mb-3 flex items-center justify-between text-sm text-ink-400">
-                <span>
-                  {listingsQ.data.total} {listingsQ.data.total === 1 ? "listing" : "listings"}
-                </span>
-                {listingsQ.isFetching && <span className="text-xs">refreshing…</span>}
-              </div>
-              {listingsQ.data.items.length === 0 ? (
-                <EmptyState />
-              ) : (
-                <ul className="space-y-3">
-                  {listingsQ.data.items.map((l) => (
-                    <ListingCard
-                      key={l.id}
-                      listing={l}
-                      status={statusOf(l)}
-                      onOpen={() => setActive(l)}
-                      onSetStatus={(s) => setListingStatus(l, s)}
-                    />
-                  ))}
-                </ul>
-              )}
-            </>
-          )}
+          {listingsQ.data && (() => {
+            const scored = listingsQ.data.items.map((l) => ({
+              listing: l,
+              match: matchScore(l, profile),
+            }));
+            const sorted = [...scored].sort((a, b) =>
+              sortMode === "match"
+                ? b.match.score - a.match.score || b.listing.postedAt - a.listing.postedAt
+                : b.listing.postedAt - a.listing.postedAt,
+            );
+            return (
+              <>
+                <div className="mb-3 flex items-center justify-between text-sm text-ink-400">
+                  <span>
+                    {listingsQ.data.total} {listingsQ.data.total === 1 ? "listing" : "listings"}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {listingsQ.isFetching && <span className="text-xs">refreshing…</span>}
+                    <SortToggle mode={sortMode} onChange={setSortMode} />
+                  </div>
+                </div>
+                {sorted.length === 0 ? (
+                  <EmptyState />
+                ) : (
+                  <ul className="space-y-3">
+                    {sorted.map(({ listing, match }) => (
+                      <ListingCard
+                        key={listing.id}
+                        listing={listing}
+                        match={match}
+                        status={statusOf(listing)}
+                        onOpen={() => setActive(listing)}
+                        onSetStatus={(s) => setListingStatus(listing, s)}
+                      />
+                    ))}
+                  </ul>
+                )}
+              </>
+            );
+          })()}
         </div>
       </main>
       )}
@@ -807,6 +839,33 @@ function Label({ children }: { children: React.ReactNode }) {
   return <div className="text-xs font-semibold uppercase tracking-wider text-ink-400">{children}</div>;
 }
 
+function SortToggle({
+  mode,
+  onChange,
+}: {
+  mode: SortMode;
+  onChange: (m: SortMode) => void;
+}) {
+  return (
+    <div className="inline-flex overflow-hidden rounded-lg border border-ink-200 dark:border-ink-800">
+      {(["match", "date"] as const).map((m) => (
+        <button
+          key={m}
+          onClick={() => onChange(m)}
+          className={`px-2 py-0.5 text-[11px] font-medium transition ${
+            mode === m
+              ? "bg-sky-500 text-white"
+              : "bg-white text-ink-600 hover:bg-ink-50 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
+          }`}
+          title={m === "match" ? "Sort by match score" : "Sort by post date"}
+        >
+          {m === "match" ? "Match" : "Newest"}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 const SOURCE_LABELS: Record<string, string> = {
   jsfirm: "JSfirm",
   ats: "ATS",
@@ -833,13 +892,34 @@ function urlTail(url: string): string {
   }
 }
 
+const MATCH_TONES: Record<MatchTier, { ring: string; text: string; bg: string }> = {
+  high: { ring: "ring-emerald-400/60", text: "text-emerald-700 dark:text-emerald-300", bg: "bg-emerald-50 dark:bg-emerald-900/30" },
+  mid: { ring: "ring-amber-400/60", text: "text-amber-700 dark:text-amber-200", bg: "bg-amber-50 dark:bg-amber-900/30" },
+  low: { ring: "ring-rose-300/60", text: "text-rose-600 dark:text-rose-300", bg: "bg-rose-50 dark:bg-rose-900/30" },
+};
+
+function MatchBadge({ match }: { match: MatchResult }) {
+  const tone = MATCH_TONES[match.tier];
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 ${tone.bg} ${tone.text} ${tone.ring}`}
+      title={`Match score ${match.score}/100 — ${match.reason}`}
+    >
+      <span className="tabular-nums">{match.score}</span>
+      <span className="opacity-70">match</span>
+    </span>
+  );
+}
+
 function ListingCard({
   listing,
+  match,
   status,
   onOpen,
   onSetStatus,
 }: {
   listing: Listing;
+  match: MatchResult;
   status: PipelineStatus | null;
   onOpen: () => void;
   onSetStatus: (s: PipelineStatus | null) => void;
@@ -859,11 +939,14 @@ function ListingCard({
               <div className="mt-0.5 truncate text-sm text-ink-600 dark:text-ink-200">{listing.employer}</div>
             )}
           </div>
-          {listing.jobCategory && (
-            <span className="shrink-0 rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600 dark:bg-ink-700 dark:text-ink-200">
-              {CATEGORY_LABELS[listing.jobCategory] ?? listing.jobCategory}
-            </span>
-          )}
+          <div className="flex shrink-0 items-center gap-1.5">
+            <MatchBadge match={match} />
+            {listing.jobCategory && (
+              <span className="rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600 dark:bg-ink-700 dark:text-ink-200">
+                {CATEGORY_LABELS[listing.jobCategory] ?? listing.jobCategory}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-400">
