@@ -7,6 +7,7 @@ import { skywestAdapter } from "./adapters/skywest.ts";
 import { climbto350Adapter } from "./adapters/climbto350.ts";
 import { pccAdapter } from "./adapters/pcc.ts";
 import { findAPilotAdapter } from "./adapters/findapilot.ts";
+import { aopaJdnAdapter } from "./adapters/aopa-jdn.ts";
 import { redditAdapter } from "./adapters/reddit.ts";
 import { usaJobsAdapter } from "./adapters/usajobs.ts";
 
@@ -19,6 +20,7 @@ export const adapters: SourceAdapter[] = [
   climbto350Adapter,
   pccAdapter,
   findAPilotAdapter,
+  aopaJdnAdapter,
   redditAdapter,
   usaJobsAdapter,
 ];
