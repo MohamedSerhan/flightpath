@@ -1,6 +1,7 @@
 import type { SourceAdapter } from "./types.ts";
 import { jsfirmAdapter } from "./adapters/jsfirm.ts";
 import { atsAdapter } from "./adapters/ats.ts";
+import { workdayAdapter } from "./adapters/workday.ts";
 import { atpCfiAdapter } from "./adapters/atp-cfi.ts";
 import { redditAdapter } from "./adapters/reddit.ts";
 import { usaJobsAdapter } from "./adapters/usajobs.ts";
@@ -8,6 +9,7 @@ import { usaJobsAdapter } from "./adapters/usajobs.ts";
 export const adapters: SourceAdapter[] = [
   jsfirmAdapter,
   atsAdapter,
+  workdayAdapter,
   atpCfiAdapter,
   redditAdapter,
   usaJobsAdapter,
