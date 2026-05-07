@@ -54,8 +54,18 @@ jobs:
       - name: Run migrations
         run: bun run db:migrate
 
-      - name: Scrape sources
+      - name: Scrape HTTP sources
         run: bun run scrape
+
+      # Browser-only sources (sites that block plain curl or render via JS).
+      # Chromium is ~150MB and adds ~30s to each run — happy trade for the
+      # extra coverage. If this step fails we still ship the HTTP scrape.
+      - name: Install Chromium for Playwright
+        run: bunx playwright install --with-deps chromium
+
+      - name: Scrape browser sources
+        run: bun run scrape:browser
+        continue-on-error: true
 
       - name: Build static site (with embedded data bundle)
         run: bun run build:static

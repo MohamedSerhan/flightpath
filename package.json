@@ -11,6 +11,8 @@
     "build:static": "VITE_STATIC_DATA=1 vite build && bun src/scrapers/export.ts && bun src/scrapers/export-rss.ts",
     "export": "bun src/scrapers/export.ts && bun src/scrapers/export-rss.ts",
     "scrape": "bun src/scrapers/run.ts",
+    "scrape:browser": "bun src/scrapers/browser/run.ts",
+    "scrape:all": "bun run scrape && bun run scrape:browser",
     "db:migrate": "bun src/db/migrate.ts",
     "db:seed": "bun src/scrapers/run.ts",
     "preview": "vite preview"
@@ -29,12 +31,13 @@
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.3",
-    "typescript": "^5.7.2",
-    "tailwindcss": "^3.4.17",
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
+    "concurrently": "^9.1.0",
     "drizzle-kit": "^0.28.1",
-    "concurrently": "^9.1.0"
+    "playwright": "^1.59.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3"
   }
 }

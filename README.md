@@ -37,6 +37,25 @@ The workflow auto-detects the repo name and configures the Vite base path. If yo
 
 To trigger a run on demand: **Actions → Scrape and deploy → Run workflow**.
 
+## Browser-based scraping (Playwright)
+
+Some sites (AeroCrewNews, future Cloudflare-protected pages, JS-rendered SPAs) need a real browser. `bun run scrape:browser` launches a headless Chromium via Playwright and runs the adapters in `src/scrapers/browser/adapters/`.
+
+```bash
+# one-time
+bunx playwright install --with-deps chromium
+
+# run
+bun run scrape:browser
+
+# or both HTTP and browser passes
+bun run scrape:all
+```
+
+The CI workflow installs Chromium and runs the browser pass automatically.
+
+**Windows local-dev caveat:** Bun + Playwright + Chromium hits a pipe-protocol stall on Windows ([known Bun issue](https://github.com/oven-sh/bun/issues)). Two workarounds locally: `set PLAYWRIGHT_BROWSER=firefox` (after `bunx playwright install firefox`), or just run browser scrapes in CI only — Linux runners are unaffected.
+
 ## Architecture
 
 ```
