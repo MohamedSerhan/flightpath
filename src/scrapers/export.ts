@@ -14,6 +14,7 @@ import { and, desc, eq, gte } from "drizzle-orm";
 import { db } from "../db/client.ts";
 import { listings, sources } from "../db/schema.ts";
 import type { Listing } from "../shared/types.ts";
+import { classifyCategory, isNonUS } from "./enrich.ts";
 
 function rowToListing(r: typeof listings.$inferSelect): Listing {
   let ratings: string[] | null = null;
@@ -25,6 +26,11 @@ function rowToListing(r: typeof listings.$inferSelect): Listing {
       ratings = null;
     }
   }
+  // Re-classify at export time so updates to the classifier apply
+  // immediately to cached rows — no DB migration / re-scrape needed.
+  // Cached SQLite often has stale jobCategory values from earlier scrapes
+  // that pre-date the current rules.
+  const jobCategory = classifyCategory(r.title, r.description, r.employer) as Listing["jobCategory"];
   return {
     id: r.id,
     sourceId: r.sourceId,
@@ -38,7 +44,7 @@ function rowToListing(r: typeof listings.$inferSelect): Listing {
     description: r.description,
     postedAt: r.postedAt,
     fetchedAt: r.fetchedAt,
-    jobCategory: r.jobCategory as Listing["jobCategory"],
+    jobCategory,
     hoursRequired: r.hoursRequired,
     ratingsRequired: ratings,
   };
@@ -59,12 +65,20 @@ async function main() {
     .orderBy(desc(listings.postedAt));
   const sourceRows = await db.select().from(sources);
 
+  // Drop non-US listings at export time — the sibling is US-based and
+  // not pursuing international postings. CAE Seoul/Dubai/Montpellier and
+  // Air Canada / Bristow Falklands rows historically slip through.
+  const usRows = rows.filter((r) => !isNonUS(r.location));
+
   const bundle = {
     generatedAt: Date.now(),
-    count: rows.length,
-    listings: rows.map(rowToListing),
+    count: usRows.length,
+    listings: usRows.map(rowToListing),
     sources: sourceRows,
   };
+  if (rows.length !== usRows.length) {
+    console.log(`export: dropped ${rows.length - usRows.length} non-US listings`);
+  }
 
   const outFile = join(dataDir, "listings.json");
   await Bun.write(outFile, JSON.stringify(bundle));
