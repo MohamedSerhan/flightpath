@@ -103,16 +103,9 @@ jobs:
         if: ${{ env.DO_SCRAPE == 'true' }}
         run: bun run scrape
 
-      # Chromium install + browser scrape only when we're actually
-      # scraping. Saves ~45s on push deploys.
-      - name: Install Chromium for Playwright
-        if: ${{ env.DO_SCRAPE == 'true' }}
-        run: bunx playwright install --with-deps chromium
-
-      - name: Scrape browser sources
-        if: ${{ env.DO_SCRAPE == 'true' }}
-        run: bun run scrape:browser
-        continue-on-error: true
+      # Browser-pass + Chromium install were dropped 2026-05 — every
+      # remaining source works over plain HTTP / curl. Saves ~45s and
+      # removes the only flaky step from the pipeline.
 
       # Alerts only after a real scrape — push deploys don't add new
       # listings, so there's nothing to alert on.

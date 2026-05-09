@@ -50,6 +50,38 @@ export const ATS_SOURCES: AtsSource[] = [
   { kind: "breezy", slug: "florida-flyers-flight-academy-inc", name: "Florida Flyers Flight Academy", pilotOnly: true },
 
   { kind: "greenhouse", slug: "atlasair", name: "Atlas Air", pilotOnly: true },
+
+  // Verified live 2026-05-09 — aerospace startups + defense primes that
+  // expose public Greenhouse / Lever boards. Volume per board is highly
+  // variable (BETA: ~160 with a real CFI posting; Anduril: ~1900 with
+  // Sr. Test Pilot roles; Shield AI: 290 with Standardization Pilot).
+  // Even when zero pilot roles match today, the slug stays here so a
+  // posting next week gets caught automatically.
+
+  // BETA Technologies — eVTOL maker. Has a "Part Time Fixed Wing CFI"
+  // posting; their flight ops team hires CFIs to support certification.
+  { kind: "greenhouse", slug: "betatechnologiesinc", name: "BETA Technologies", pilotOnly: true },
+
+  // Anduril — defense autonomy. Test pilots for autonomous platforms.
+  { kind: "greenhouse", slug: "andurilindustries", name: "Anduril Industries", pilotOnly: true },
+
+  // Stratolaunch — hypersonic test platform. Test pilot roles.
+  { kind: "greenhouse", slug: "stratolaunch", name: "Stratolaunch", pilotOnly: true },
+
+  // SpaceX, Rocket Lab, Planet Labs — large boards with no current
+  // pilot listings, but rotates. Cheap to keep polling.
+  { kind: "greenhouse", slug: "spacex", name: "SpaceX", pilotOnly: true },
+  { kind: "greenhouse", slug: "rocketlab", name: "Rocket Lab", pilotOnly: true },
+  { kind: "greenhouse", slug: "planetlabs", name: "Planet Labs", pilotOnly: true },
+
+  // Shield AI — autonomy company; "Standardization Pilot" roles.
+  { kind: "lever", slug: "shieldai", name: "Shield AI", pilotOnly: true },
+
+  // Merlin Labs — autonomy retrofit; "Experimental Test Pilot" roles.
+  { kind: "lever", slug: "merlinlabs", name: "Merlin Labs", pilotOnly: true },
+
+  // Pivotal Aero — eVTOL. Flight test + flight training manager roles.
+  { kind: "lever", slug: "pivotal", name: "Pivotal Aero", pilotOnly: true },
 ];
 
 export const PILOT_TITLE_RE =

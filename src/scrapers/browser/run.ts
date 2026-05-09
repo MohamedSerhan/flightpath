@@ -1,20 +1,17 @@
 /**
  * Browser-scrape entry point.
  *
- * Runs only the Playwright-backed adapters. Decoupled from the regular
- * `bun run scrape` so a developer without the Chromium binary still
- * gets a working scrape.
+ * Currently empty — every browser-only adapter we maintained turned
+ * out to be either dead (AeroCrewNews removed their /category/job-listings/
+ * URL), captcha-blocked (Indeed), or convertible to plain HTTP (NBAA).
  *
- * In CI: `npx playwright install --with-deps chromium` then
- * `bun run scrape:browser`.
+ * Kept around as a stub so the CI workflow's `bun run scrape:browser`
+ * step doesn't error and so a future Playwright adapter has somewhere
+ * obvious to land. When/if a new browser adapter is added:
+ *
+ *   import { runBrowserAdapters } from "./runner.ts";
+ *   import { fooAdapter } from "./adapters/foo.ts";
+ *   await runBrowserAdapters([fooAdapter]);
  */
 
-import { runBrowserAdapters } from "./runner.ts";
-import { aeroCrewNewsAdapter } from "./adapters/aerocrewnews.ts";
-import { indeedAdapter } from "./adapters/indeed.ts";
-import { nbaaAdapter } from "./adapters/nbaa.ts";
-import { atlanticAviationAdapter } from "./adapters/atlantic-aviation.ts";
-
-const adapters = [aeroCrewNewsAdapter, indeedAdapter, nbaaAdapter, atlanticAviationAdapter];
-
-await runBrowserAdapters(adapters);
+console.log("[browser] no browser adapters registered — skipping");

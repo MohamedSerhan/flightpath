@@ -91,6 +91,36 @@ const WORKDAY_SOURCES: WorkdaySource[] = [
     name: "Florida Institute of Technology",
     searchTerms: ["flight instructor", "aeronautical", "pilot", "aviation"],
   },
+  // Verified live 2026-05-09. Defense / aerospace contractors expose
+  // genuine instructor-pilot, test-pilot, and corporate-jet pilot roles.
+  {
+    tenant: "leidos",
+    region: "wd5",
+    board: "External",
+    name: "Leidos",
+    searchTerms: ["instructor pilot", "test pilot", "pilot", "lakota", "blackhawk"],
+  },
+  {
+    tenant: "snc",
+    region: "wd1",
+    board: "SNC_External_Career_Site",
+    name: "Sierra Nevada Corporation",
+    searchTerms: ["pilot", "instructor"],
+  },
+  {
+    tenant: "bah",
+    region: "wd1",
+    board: "BAH_Jobs",
+    name: "Booz Allen Hamilton",
+    searchTerms: ["pilot", "uas", "flight test"],
+  },
+  {
+    tenant: "caci",
+    region: "wd1",
+    board: "External",
+    name: "CACI",
+    searchTerms: ["pilot", "uas", "trainer"],
+  },
 ];
 
 const PILOT_TITLE_RE =
@@ -186,7 +216,7 @@ async function fetchSearch(src: WorkdaySource, term: string): Promise<RawListing
 
 export const workdayAdapter: SourceAdapter = {
   id: "workday",
-  name: "Workday CXS (Embry-Riddle, CAE, Bristow, Boeing, PHI, Northrop Grumman, RTX, Florida Tech)",
+  name: "Workday CXS (Embry-Riddle, CAE, Bristow, Boeing, PHI, Northrop Grumman, RTX, Florida Tech, Leidos, SNC, Booz Allen, CACI)",
   async fetch(): Promise<RawListing[]> {
     const out: RawListing[] = [];
     const seen = new Set<string>();
