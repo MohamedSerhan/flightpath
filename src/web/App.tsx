@@ -470,6 +470,8 @@ export function App() {
       </main>
       )}
 
+      <DirectCarrierLinks />
+
       <footer className="safe-bottom mx-auto mt-12 max-w-3xl px-4 pb-6 text-center text-xs text-ink-400">
         Get notified of new CFI roles via RSS:{" "}
         <a
@@ -981,6 +983,55 @@ function Label({ children }: { children: React.ReactNode }) {
  *  pace) when they'll get there at the current rate. Quiet and
  *  motivational — nothing if they haven't set total time, since we
  *  don't want to assume. */
+/**
+ * Major US carriers whose career portals are bot-protected (Akamai /
+ * Phenom-cookie / SuccessFactors / Taleo) and can't be scraped via
+ * free public APIs. We surface them as direct links so the sibling
+ * doesn't miss a major channel — these are the ~10 sites worth
+ * bookmarking and checking weekly.
+ */
+const DIRECT_CARRIERS: Array<{ name: string; url: string; note?: string }> = [
+  { name: "United Airlines", url: "https://careers.united.com/" },
+  { name: "Delta Air Lines", url: "https://careers.delta.com/" },
+  { name: "Southwest Airlines", url: "https://careers.southwestair.com/" },
+  { name: "American Airlines", url: "https://jobs.aa.com/" },
+  { name: "Hawaiian Airlines", url: "https://careers.hawaiianairlines.com/" },
+  { name: "JetBlue", url: "https://careers.jetblue.com/" },
+  { name: "Frontier Airlines", url: "https://www.flyfrontier.com/about-us/careers/" },
+  { name: "Spirit Airlines", url: "https://careers.spirit.com/" },
+  { name: "FedEx Express (pilots)", url: "https://careers.fedex.com/" },
+  { name: "UPS Airlines", url: "https://www.jobs-ups.com/" },
+];
+
+function DirectCarrierLinks() {
+  return (
+    <section className="mx-auto mt-10 max-w-3xl rounded-xl border border-ink-200 bg-ink-50/50 p-4 text-sm dark:border-ink-700 dark:bg-ink-800/50">
+      <h2 className="font-medium text-ink-900 dark:text-ink-100">
+        Major carriers we can&rsquo;t auto-scrape
+      </h2>
+      <p className="mt-1 text-xs text-ink-500 dark:text-ink-400">
+        These hide their listings behind login walls or bot-protected
+        ATSes (Phenom, Akamai, Taleo). Bookmark and check directly:
+      </p>
+      <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-3">
+        {DIRECT_CARRIERS.map((c) => (
+          <li key={c.url}>
+            <a
+              href={c.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sky-600 hover:underline dark:text-sky-300"
+            >
+              {c.name}
+              <ExternalLink className="ml-1 inline-block h-3 w-3 opacity-60" aria-hidden="true" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function HoursToAtpBanner({
   profile,
   onEditProfile,
