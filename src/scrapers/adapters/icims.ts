@@ -55,6 +55,22 @@ const TENANTS: IcimsTenant[] = [
     hostOverride: "careers-jobyaviation.icims.com",
     keywords: ["pilot", "flight instructor", "flight test", "cfi"],
   },
+  // Envoy Air — American Eagle regional. Has Ground School Instructor,
+  // Sim Instructor, Manager Flight Ops + Pilot Cadet Program postings.
+  {
+    id: "envoyair",
+    name: "Envoy Air",
+    hostOverride: "careers-envoyair.icims.com",
+    keywords: ["pilot", "instructor", "flight"],
+  },
+  // PSA Airlines — American Eagle regional. Pilot Cadet, Manager of
+  // Flight Standards, Ground Instructor.
+  {
+    id: "psaairlines",
+    name: "PSA Airlines",
+    hostOverride: "careers-psaairlines.icims.com",
+    keywords: ["pilot", "instructor", "flight"],
+  },
 ];
 
 const UA = "Mozilla/5.0 Chrome/120";
@@ -140,7 +156,7 @@ async function fetchTenant(t: IcimsTenant): Promise<RawListing[]> {
 
 export const icimsAdapter: SourceAdapter = {
   id: "icims",
-  name: "iCIMS (Endeavor Air, Joby Aviation)",
+  name: "iCIMS (Endeavor, Joby, Envoy, PSA)",
   async fetch(): Promise<RawListing[]> {
     const all: RawListing[] = [];
     for (const t of TENANTS) {

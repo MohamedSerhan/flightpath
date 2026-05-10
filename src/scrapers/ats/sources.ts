@@ -82,6 +82,10 @@ export const ATS_SOURCES: AtsSource[] = [
 
   // Pivotal Aero — eVTOL. Flight test + flight training manager roles.
   { kind: "lever", slug: "pivotal", name: "Pivotal Aero", pilotOnly: true },
+
+  // Allegiant Air — ULCC carrier. Public Lever board (verified 2026-05-09).
+  // Most postings are corporate but pilot roles do post here periodically.
+  { kind: "lever", slug: "allegiantair", name: "Allegiant Air", pilotOnly: true },
 ];
 
 export const PILOT_TITLE_RE =
