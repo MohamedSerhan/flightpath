@@ -79,11 +79,23 @@ function stripTags(s: string): string {
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
     .replace(/&rsquo;/g, "'")
     .replace(/&lsquo;/g, "'")
     .replace(/&ldquo;/g, '"')
-    .replace(/&rdquo;/g, '"');
+    .replace(/&rdquo;/g, '"')
+    .replace(/&copy;/g, "(c)")
+    .replace(/&trade;/g, "(tm)")
+    .replace(/&reg;/g, "(R)")
+    .replace(/&hellip;/g, "...")
+    .replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–")
+    // Numeric character refs — handle both decimal (`&#039;`) and hex
+    // (`&#x27;`). Greenhouse + WordPress sites sometimes emit these
+    // even after the API has supposedly returned plain text. Includes
+    // wide-char dashes like &#8211; (en-dash) and &#8217; (right single
+    // quote) which are extremely common in copy-edited job descriptions.
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)));
   return decoded
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")

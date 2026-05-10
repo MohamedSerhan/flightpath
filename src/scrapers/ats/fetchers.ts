@@ -10,7 +10,21 @@ function decodeHtmlEntities(s: string): string {
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+    .replace(/&rsquo;/g, "'")
+    .replace(/&lsquo;/g, "'")
+    .replace(/&ldquo;/g, '"')
+    .replace(/&rdquo;/g, '"')
+    .replace(/&copy;/g, "(c)")
+    .replace(/&trade;/g, "(tm)")
+    .replace(/&reg;/g, "(R)")
+    .replace(/&hellip;/g, "...")
+    .replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–")
+    // Numeric character refs — common in WordPress / Greenhouse output
+    // (e.g. &#039; for apostrophe, &#8211; for en-dash). Apply LAST so
+    // we don't accidentally double-decode literal `&` chars.
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)));
 }
 
 function stripHtml(s: string | null | undefined): string | null {
