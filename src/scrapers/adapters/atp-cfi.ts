@@ -80,7 +80,14 @@ async function discoverPostUrls(): Promise<string[]> {
 function extractPostingMeta(
   url: string,
   html: string,
-): { id: string; title: string; description: string | null; location: string | null; postedAt: number } | null {
+): {
+  id: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  postedAt: number;
+  postedAtAccurate: boolean;
+} | null {
   const idMatch = url.match(/\/p\/([a-f0-9]+)/);
   const id = idMatch?.[1];
   if (!id) return null;
@@ -99,8 +106,16 @@ function extractPostingMeta(
   // to "now" for newly-discovered postings. The detail-enrichment pass can
   // refine if it finds a date in the page body.
   const dateMatch = html.match(/"datePosted":"([^"]+)"/);
-  const postedAt = dateMatch ? Date.parse(dateMatch[1]) : Date.now();
-  return { id, title, description, location, postedAt: Number.isFinite(postedAt) ? postedAt : Date.now() };
+  const parsed = dateMatch ? Date.parse(dateMatch[1]) : NaN;
+  const haveRealDate = Number.isFinite(parsed);
+  return {
+    id,
+    title,
+    description,
+    location,
+    postedAt: haveRealDate ? parsed : Date.now(),
+    postedAtAccurate: haveRealDate,
+  };
 }
 
 export const atpCfiAdapter: SourceAdapter = {
@@ -135,6 +150,7 @@ export const atpCfiAdapter: SourceAdapter = {
           employer: "ATP Flight School",
           location: meta.location,
           postedAt: meta.postedAt,
+          postedAtAccurate: meta.postedAtAccurate,
         });
         await new Promise((r) => setTimeout(r, REQUEST_DELAY_MS));
       }

@@ -1662,10 +1662,18 @@ function ListingCard({
               #{tail}
             </span>
           ) : null}
-          <span className="inline-flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            {formatAgo(listing.postedAt)}
-          </span>
+          {(() => {
+            const lbl = postedLabel(listing);
+            return (
+              <span
+                className="inline-flex items-center gap-1"
+                title={lbl.tooltip}
+              >
+                <Clock className="h-3 w-3" />
+                {lbl.prefix === "Indexed" ? `Indexed ${lbl.text}` : lbl.text}
+              </span>
+            );
+          })()}
           {listing.hoursRequired && (
             <span className="rounded bg-amber-50 px-1.5 py-0.5 font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-200">
               {listing.hoursRequired.toLocaleString()} hr min
@@ -1769,10 +1777,18 @@ function ListingDetail({
                 {listing.location}
               </span>
             )}
-            <span className="inline-flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              Posted {formatAgo(listing.postedAt)}
-            </span>
+            {(() => {
+              const lbl = postedLabel(listing);
+              return (
+                <span className="inline-flex items-center gap-1" title={lbl.tooltip}>
+                  <Clock className="h-4 w-4" />
+                  {lbl.prefix} {lbl.text}
+                  {lbl.prefix === "Indexed" && (
+                    <span className="text-xs text-ink-400">(source date unknown)</span>
+                  )}
+                </span>
+              );
+            })()}
             <span className="text-ink-400">via {listing.sourceId}</span>
           </div>
 
@@ -2237,7 +2253,13 @@ function CompareModal({
     { label: "Match", render: (l) => `${matchScore(l, profile).score}/100` },
     { label: "Employer", render: (l) => l.employer ?? "—" },
     { label: "Location", render: (l) => l.location ?? "—" },
-    { label: "Posted", render: (l) => formatAgo(l.postedAt) },
+    {
+      label: "Posted",
+      render: (l) => {
+        const lbl = postedLabel(l);
+        return lbl.prefix === "Indexed" ? `Indexed ${lbl.text}` : lbl.text;
+      },
+    },
     {
       label: "Min hours",
       render: (l) => (l.hoursRequired ? `${l.hoursRequired.toLocaleString()}` : "—"),
@@ -2537,4 +2559,34 @@ function formatAgo(ts: number): string {
   if (diff < day) return `${Math.floor(diff / hour)} hr ago`;
   if (diff < 30 * day) return `${Math.floor(diff / day)} days ago`;
   return new Date(ts).toLocaleDateString();
+}
+
+/**
+ * Label for a listing's date with the prefix the user expects.
+ *
+ * When `postedAtAccurate` is false, the source didn't expose a real post
+ * date — we used "first time we saw it" instead. Saying "Posted 2 days
+ * ago" in that case would be a lie; sibling reported being misled into
+ * thinking stale jobs were fresh. "Indexed N days ago" makes the
+ * provenance honest.
+ */
+function postedLabel(listing: { postedAt: number; postedAtAccurate?: boolean }): {
+  text: string;
+  prefix: string;
+  tooltip?: string;
+} {
+  const ago = formatAgo(listing.postedAt);
+  // Treat undefined as accurate so cached older static bundles (loaded
+  // before this field shipped) keep rendering "Posted N days ago"
+  // rather than every row flipping to "Indexed" during the deploy window.
+  const accurate = listing.postedAtAccurate !== false;
+  if (accurate) {
+    return { text: ago, prefix: "Posted" };
+  }
+  return {
+    text: ago,
+    prefix: "Indexed",
+    tooltip:
+      "Source doesn't expose a post date — this is when Flightpath first saw the listing. The actual posting may be older.",
+  };
 }

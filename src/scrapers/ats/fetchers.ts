@@ -37,10 +37,26 @@ function stripHtml(s: string | null | undefined): string | null {
   return decoded.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || null;
 }
 
-function safeDate(s: string | undefined | null): number {
-  if (!s) return Date.now();
+/** Parse a source-provided date string and report whether the parse was
+ *  real (vs. a Date.now() fallback). Adapters surface this as
+ *  `postedAtAccurate` so the UI can switch "Posted" → "Indexed" copy
+ *  when our date is just our first-seen timestamp.
+ *
+ *  Returns the RawListing date fields directly so callers can spread
+ *  it into the listing object without rename boilerplate. */
+function parseDate(
+  s: string | number | undefined | null,
+): { postedAt: number; postedAtAccurate: boolean } {
+  if (s == null || s === "") return { postedAt: Date.now(), postedAtAccurate: false };
+  if (typeof s === "number") {
+    return Number.isFinite(s)
+      ? { postedAt: s, postedAtAccurate: true }
+      : { postedAt: Date.now(), postedAtAccurate: false };
+  }
   const t = Date.parse(s);
-  return Number.isFinite(t) ? t : Date.now();
+  return Number.isFinite(t)
+    ? { postedAt: t, postedAtAccurate: true }
+    : { postedAt: Date.now(), postedAtAccurate: false };
 }
 
 async function jsonFetch(url: string): Promise<unknown> {
@@ -81,7 +97,7 @@ async function fetchGreenhouse(src: AtsSource): Promise<RawListing[]> {
         description: stripHtml(j.content),
         employer: j.company_name?.trim() || src.name,
         location: j.location?.name?.trim() || null,
-        postedAt: safeDate(j.updated_at),
+        ...parseDate(j.updated_at),
       }),
     );
 }
@@ -112,7 +128,7 @@ async function fetchLever(src: AtsSource): Promise<RawListing[]> {
         description: j.descriptionPlain?.trim() || stripHtml(j.description),
         employer: src.name,
         location: j.categories?.location?.trim() || null,
-        postedAt: typeof j.createdAt === "number" ? j.createdAt : Date.now(),
+        ...parseDate(j.createdAt ?? null),
       }),
     );
 }
@@ -146,7 +162,7 @@ async function fetchAshby(src: AtsSource): Promise<RawListing[]> {
         description: j.descriptionPlain?.trim() || stripHtml(j.descriptionHtml),
         employer: src.name,
         location: j.locationName?.trim() || null,
-        postedAt: safeDate(j.publishedDate),
+        ...parseDate(j.publishedDate),
       }),
     );
 }
@@ -201,7 +217,7 @@ async function fetchWorkable(src: AtsSource): Promise<RawListing[]> {
         description: stripHtml(j.description),
         employer: src.name,
         location: loc || null,
-        postedAt: safeDate(j.published_on ?? j.created_at),
+        ...parseDate(j.published_on ?? j.created_at),
       };
     })
     .filter((x): x is RawListing => x !== null);
@@ -235,7 +251,7 @@ async function fetchRecruitee(src: AtsSource): Promise<RawListing[]> {
         description: stripHtml(j.description),
         employer: src.name,
         location: [j.city, j.state, j.country].filter(Boolean).join(", ") || null,
-        postedAt: safeDate(j.published_at ?? j.created_at),
+        ...parseDate(j.published_at ?? j.created_at),
       }),
     );
 }
@@ -274,7 +290,7 @@ async function fetchSmartRecruiters(src: AtsSource): Promise<RawListing[]> {
         location:
           [j.location?.city, j.location?.region, j.location?.country].filter(Boolean).join(", ") ||
           null,
-        postedAt: safeDate(j.releasedDate),
+        ...parseDate(j.releasedDate),
       }),
     );
 }
@@ -314,7 +330,7 @@ async function fetchBreezy(src: AtsSource): Promise<RawListing[]> {
         description: desc || null,
         employer: src.name,
         location: location || null,
-        postedAt: safeDate(j.published_date),
+        ...parseDate(j.published_date),
       };
     });
 }

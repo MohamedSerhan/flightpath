@@ -153,6 +153,7 @@ export const nbaaAdapter: SourceAdapter = {
         // NBAA's tile doesn't expose a parseable post date in markup —
         // detail-enrichment fills `datePosted` from JSON-LD on each page.
         postedAt: Date.now(),
+        postedAtAccurate: false,
       });
     }
     return out;

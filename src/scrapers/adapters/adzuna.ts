@@ -57,7 +57,8 @@ async function fetchPage(
       // Drop non-US results (Adzuna's US endpoint occasionally returns Canada).
       const area = r.location?.area ?? [];
       if (area.length > 0 && area[0] !== "US") return null;
-      const postedAt = r.created ? Date.parse(r.created) : Date.now();
+      const parsed = r.created ? Date.parse(r.created) : NaN;
+      const haveRealDate = Number.isFinite(parsed);
       return {
         externalId: `adzuna-${r.id}`,
         title,
@@ -65,7 +66,8 @@ async function fetchPage(
         description: r.description?.trim() || null,
         employer: r.company?.display_name?.trim() || null,
         location: r.location?.display_name?.trim() || null,
-        postedAt: Number.isFinite(postedAt) ? postedAt : Date.now(),
+        postedAt: haveRealDate ? parsed : Date.now(),
+        postedAtAccurate: haveRealDate,
       };
     })
     .filter((x): x is RawListing => x !== null);

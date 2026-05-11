@@ -19,6 +19,7 @@ function rowToListing(r: typeof listings.$inferSelect): Listing {
     url: r.url,
     description: r.description,
     postedAt: r.postedAt,
+    postedAtAccurate: r.postedAtAccurate === 1,
     fetchedAt: r.fetchedAt,
     jobCategory: r.jobCategory as Listing["jobCategory"],
     hoursRequired: r.hoursRequired,

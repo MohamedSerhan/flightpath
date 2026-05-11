@@ -8,6 +8,10 @@ export type RawListing = {
   employer?: string | null;
   location?: string | null;
   postedAt: number;
+  /** Set to false when the adapter had no real posting date and fell back
+   *  to Date.now(). Default (undefined / true) means postedAt came from
+   *  the source. Drives the UI's "Indexed" vs "Posted" copy. */
+  postedAtAccurate?: boolean;
 };
 
 export type SourceAdapter = {

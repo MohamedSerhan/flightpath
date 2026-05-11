@@ -92,6 +92,7 @@ export const avJobsAdapter: SourceAdapter = {
         employer: company,
         location,
         postedAt: Date.now(), // AvJobs doesn't expose post date on the index — corrected by detail-enrichment if available.
+        postedAtAccurate: false,
       });
     }
     return out;
