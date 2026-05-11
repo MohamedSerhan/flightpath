@@ -55,7 +55,16 @@ export function isNonUS(location: string | null | undefined): boolean {
 // in a Level-D sim, not signing off student solos. Sibling wants the
 // latter — route these to "airline" instead.
 const AIRLINE_TYPE_RE =
-  /\b(a3[1-8]\d|a220|b7[3-8]\d|md[-\s]?(80|88|90|11)|crj[-\s]?\d{3}|erj[-\s]?\d{3}|emb[-\s]?\d{3}|atr[-\s]?\d{2}|dh[c]?[-\s]?\d|bd[-\s]?(700|100)|gulfstream|global\s*\d{4}|falcon\s*\d{1,4}|citation|hawker|king\s*air|learjet|legacy)\b/i;
+  /\b(a3[1-8]\d|a220|b7[3-8]\d|md[-\s]?(80|88|90|11)|crj[-\s]?\d{3}|erj[-\s]?\d{3}|e[-\s]?(1[79]0|145|170|175|190|195)|emb[-\s]?\d{3}|atr[-\s]?\d{2}|dh[c]?[-\s]?\d|bd[-\s]?(700|100)|gulfstream|global\s*\d{4}|falcon\s*\d{1,4}|citation|hawker|king\s*air|learjet|legacy|saab\s*\d{2,3}|pc[-\s]?12|tbm\s*\d{3})\b/i;
+
+// Title-level airline cues. When a posting's TITLE contains these tokens,
+// the role is airline pilot work — even if the title also says "CFI" or
+// "flight instructor", which in that context means CFI is a *requirement*
+// of the airline role, not the role itself. Previously such titles fell
+// through to the broad CFI regex and polluted the CFI filter ("Captain —
+// CFI required", "First Officer (CFI preferred)" etc.).
+const TITLE_AIRLINE_RE =
+  /\b(first\s+officer|f\/o|fo\b|captain|airline\s+pilot|regional\s+pilot|line\s+pilot|121\s+pilot|right\s+seat|type[-\s]?rating|cadet\s+program|atp\s+ctp)\b/i;
 
 // Sim/ground instructor roles. These don't fly with students — they teach
 // systems/procedures in a classroom or full-motion simulator. Useful jobs,
@@ -113,6 +122,14 @@ export function classifyCategory(
   const isSimBody = SIM_BODY_RE.test(fullLc);
   if (/instructor/.test(titleLc) && (isSimEmployer || isSimBody)) {
     return "other";
+  }
+
+  // Airline-cue titles outrank the CFI fallback. A title that says
+  // "First Officer" or "Captain" alongside "CFI" is an airline role that
+  // *requires* a CFI cert — not a CFI role. Route to airline before the
+  // broad CFI title match below so it doesn't leak into the CFI filter.
+  if (TITLE_AIRLINE_RE.test(titleLc)) {
+    return "airline";
   }
 
   // Title-primary matching. Description is too noisy — listings often
