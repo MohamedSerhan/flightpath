@@ -18,10 +18,33 @@
 
 export type PipelineStatus = "saved" | "applied" | "interviewing" | "offered" | "rejected";
 
+/**
+ * Display fields snapshotted into the pipeline entry at save time.
+ *
+ * Without this, the Logbook can only resolve listings that happen to be in
+ * the *currently filtered* Browse list — switch filters, and saved entries
+ * orphan into "dropped out of window" placeholders. Snapshotting makes the
+ * Logbook self-sufficient regardless of filter state, and also preserves
+ * entries when the listing itself ages out of the 30-day window.
+ *
+ * `manual: true` flags entries the user typed in for a job they applied to
+ * outside of Flightpath (e.g. a posting we don't scrape).
+ */
+export type ListingSnapshot = {
+  title: string;
+  employer: string | null;
+  location: string | null;
+  url: string;
+  postedAt?: number;
+  jobCategory?: string | null;
+  manual?: boolean;
+};
+
 export type PipelineEntry = {
   status: PipelineStatus;
   note?: string;
   updatedAt: number;
+  snapshot?: ListingSnapshot;
 };
 
 export type PipelineMap = Record<string, PipelineEntry>;
@@ -30,6 +53,14 @@ const STORAGE_KEY = "flightpath:pipeline";
 
 export function entryKey(sourceId: string, externalId: string): string {
   return `${sourceId}:${externalId}`;
+}
+
+export function manualKey(): string {
+  return `manual:${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+}
+
+export function isManualKey(key: string): boolean {
+  return key.startsWith("manual:");
 }
 
 export function readPipeline(): PipelineMap {
@@ -57,14 +88,28 @@ export function setStatus(
   map: PipelineMap,
   key: string,
   status: PipelineStatus | null,
-  note?: string,
+  opts?: { snapshot?: ListingSnapshot; note?: string },
 ): PipelineMap {
   const next = { ...map };
   if (status === null) {
     delete next[key];
   } else {
-    next[key] = { status, note, updatedAt: Date.now() };
+    const prev = next[key];
+    next[key] = {
+      status,
+      note: opts?.note ?? prev?.note,
+      updatedAt: Date.now(),
+      snapshot: opts?.snapshot ?? prev?.snapshot,
+    };
   }
+  return next;
+}
+
+export function updateNote(map: PipelineMap, key: string, note: string | undefined): PipelineMap {
+  const prev = map[key];
+  if (!prev) return map;
+  const next = { ...map };
+  next[key] = { ...prev, note, updatedAt: Date.now() };
   return next;
 }
 
@@ -98,7 +143,7 @@ export function exportToCsv(
 ): string {
   const rows = [["Status", "Title", "Employer", "Location", "URL", "Updated", "Note"]];
   for (const [key, entry] of Object.entries(map)) {
-    const r = resolver(key);
+    const r = entry.snapshot ?? resolver(key);
     rows.push([
       STATUS_LABELS[entry.status],
       r?.title ?? "",
