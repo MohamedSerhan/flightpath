@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   Plane,
@@ -529,12 +529,17 @@ export function App() {
                   </ul>
                 )}
                 {listingsQ.hasNextPage && sorted.length > 0 && (
-                  <InfiniteScrollTrigger
-                    fetchNextPage={() => listingsQ.fetchNextPage()}
-                    isFetching={listingsQ.isFetchingNextPage}
-                    nextBatch={Math.min(PAGE_SIZE, remaining)}
-                    remaining={remaining}
-                  />
+                  <div className="mt-6">
+                    <button
+                      onClick={() => listingsQ.fetchNextPage()}
+                      disabled={listingsQ.isFetchingNextPage}
+                      className="w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm font-semibold text-ink-800 transition hover:border-sky-500 hover:text-sky-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-sky-500 dark:hover:text-sky-300"
+                    >
+                      {listingsQ.isFetchingNextPage
+                        ? "Loading…"
+                        : `Load ${Math.min(PAGE_SIZE, remaining)} more · ${remaining} remaining`}
+                    </button>
+                  </div>
                 )}
                 {!listingsQ.hasNextPage && loadedCount > PAGE_SIZE && (
                   <div className="mt-6 text-center text-xs text-ink-400">
@@ -2585,71 +2590,6 @@ function ErrorBox({ message, onRetry }: { message: string; onRetry: () => void }
         className="mt-3 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700"
       >
         Retry
-      </button>
-    </div>
-  );
-}
-
-/**
- * Auto-loads the next page when the user scrolls within ~600px of the
- * trigger element. Pairs an IntersectionObserver with the explicit
- * "Load more" button so:
- *   - Desktop users scrolling fast / mouse-wheel: fetch fires automatically
- *     as the bottom of the list comes into view. Feels like a single
- *     continuous scroll instead of paging.
- *   - Mobile users / anyone wanting explicit control: the button is still
- *     clickable and visible.
- *
- * The observer's rootMargin extends 600px below the viewport so the next
- * page kicks off slightly before the user actually hits the trigger —
- * cuts the "spinner gap" most users would otherwise see.
- */
-function InfiniteScrollTrigger({
-  fetchNextPage,
-  isFetching,
-  nextBatch,
-  remaining,
-}: {
-  fetchNextPage: () => void;
-  isFetching: boolean;
-  nextBatch: number;
-  remaining: number;
-}) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const isFetchingRef = useRef(isFetching);
-  useEffect(() => {
-    isFetchingRef.current = isFetching;
-  }, [isFetching]);
-
-  const stableFetch = useCallback(() => {
-    if (!isFetchingRef.current) fetchNextPage();
-  }, [fetchNextPage]);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            stableFetch();
-          }
-        }
-      },
-      { rootMargin: "600px 0px 600px 0px" },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [stableFetch]);
-
-  return (
-    <div ref={ref} className="mt-6">
-      <button
-        onClick={() => fetchNextPage()}
-        disabled={isFetching}
-        className="w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm font-semibold text-ink-800 transition hover:border-sky-500 hover:text-sky-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-sky-500 dark:hover:text-sky-300"
-      >
-        {isFetching ? "Loading…" : `Load ${nextBatch} more · ${remaining} remaining`}
       </button>
     </div>
   );
