@@ -1,0 +1,4090 @@
+[
+  {
+    "id": "2102",
+    "name": "AandR",
+    "city": "A",
+    "state": "AK",
+    "website": null
+  },
+  {
+    "id": "1933",
+    "name": "AAP",
+    "city": "Forst Hill",
+    "state": "AK",
+    "website": null
+  },
+  {
+    "id": "27",
+    "name": "Above Alaska Aviation",
+    "city": "Talkeetna, AK",
+    "state": "AK",
+    "website": "http://www.abovealaska.com/"
+  },
+  {
+    "id": "2052",
+    "name": "Alsworth Foundation",
+    "city": "Port Alsworth",
+    "state": "AK",
+    "website": null
+  },
+  {
+    "id": "20",
+    "name": "ARCTIC FLYERS",
+    "city": "Anchorage",
+    "state": "AK",
+    "website": "http://www.arcticflyers.biz/"
+  },
+  {
+    "id": "1959",
+    "name": "ASAC",
+    "city": "Anchorage",
+    "state": "AK",
+    "website": null
+  },
+  {
+    "id": "2094",
+    "name": "Flying Above Alaska",
+    "city": "Palmer",
+    "state": "AK",
+    "website": "http://www.articsairacademy.com"
+  },
+  {
+    "id": "2253",
+    "name": "Aeropro",
+    "city": "Gulf Shores",
+    "state": "AL",
+    "website": "http://www.aeroproinflight.com"
+  },
+  {
+    "id": "2235",
+    "name": "Aeropro LLC",
+    "city": "Gulf Shores",
+    "state": "AL",
+    "website": "https://www.aeroproinflight.com/"
+  },
+  {
+    "id": "2281",
+    "name": "Apollo Aviation",
+    "city": "Bessemer",
+    "state": "AL",
+    "website": "http://www.apolloaviation.com"
+  },
+  {
+    "id": "2032",
+    "name": "Aviator Academy",
+    "city": "Santa Cruz",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "2123",
+    "name": "Babrak Aviotion",
+    "city": "Alabama",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "1807",
+    "name": "Brown Aero Technologies LLC",
+    "city": "Lanett",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "7",
+    "name": "DOUBLE BRIDGES AVIATION",
+    "city": "ENTERPRISE",
+    "state": "AL",
+    "website": "http://www.doublebridgesaviation.com/"
+  },
+  {
+    "id": "2205",
+    "name": "Double Bridges Aviation, LLC.",
+    "city": "Enterprise",
+    "state": "AL",
+    "website": "http://www.doublebridgesaviation.com"
+  },
+  {
+    "id": "2302",
+    "name": "Dream Airline Aviation Academy",
+    "city": "Tuscaloosa",
+    "state": "AL",
+    "website": "http://www.Flightschooltcl.com"
+  },
+  {
+    "id": "2089",
+    "name": "EAA",
+    "city": "AA",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "2280",
+    "name": "Flight Training of Mobile",
+    "city": "Fairhope",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "2279",
+    "name": "Flight Training of Mobile",
+    "city": "Mobile",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "15",
+    "name": "FLIGHT TRAINING OF MOBILE",
+    "city": "MOBILE",
+    "state": "AL",
+    "website": "http://www.flyftm.com/"
+  },
+  {
+    "id": "1948",
+    "name": "Gostner Aviation pty Ltd",
+    "city": "Camden, NSW, Australia",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "1736",
+    "name": "Gulf Air Center",
+    "city": "Gulf Shores",
+    "state": "AL",
+    "website": "http://www.gulfaircenter.com"
+  },
+  {
+    "id": "1767",
+    "name": "MADIBA BAY SCHOOL FLIGHT",
+    "city": "PORT ELIZABETH",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "1798",
+    "name": "Over The Mountain Aviation",
+    "city": "Calera",
+    "state": "AL",
+    "website": "http://www.otmaviation.com"
+  },
+  {
+    "id": "1976",
+    "name": "Sanders Flight Training Center",
+    "city": "Jasper",
+    "state": "AL",
+    "website": null
+  },
+  {
+    "id": "2121",
+    "name": "R and R Unlimited INC",
+    "city": "Ozark",
+    "state": "AR",
+    "website": null
+  },
+  {
+    "id": "2087",
+    "name": "Superior Aviation Arkansas",
+    "city": "Conway",
+    "state": "AR",
+    "website": "http://superioraviationar.com/"
+  },
+  {
+    "id": "1791",
+    "name": "Upper Limit Aviation",
+    "city": "West Memphis",
+    "state": "AR",
+    "website": "http://www.ulaheli.com"
+  },
+  {
+    "id": "2219",
+    "name": "AeroGuard Flight Training Center",
+    "city": "Phoenix",
+    "state": "AZ",
+    "website": "https://flyaeroguard.com"
+  },
+  {
+    "id": "1986",
+    "name": "Airplane Rental Ventures",
+    "city": "Mesa",
+    "state": "AZ",
+    "website": "http://www.airplanerental.wix.com/airplanerental"
+  },
+  {
+    "id": "1815",
+    "name": "Desert Aero Club",
+    "city": "Maricopa",
+    "state": "AZ",
+    "website": "http://www.desertaeroclub.com/"
+  },
+  {
+    "id": "1749",
+    "name": "DESERT AEROCLUB",
+    "city": "Maricopa",
+    "state": "AZ",
+    "website": null
+  },
+  {
+    "id": "2301",
+    "name": "Ethan T. Martin, CFI, CFII",
+    "city": "Mesa",
+    "state": "AZ",
+    "website": "http://www.martin-cfi.com"
+  },
+  {
+    "id": "1910",
+    "name": "FLY At Goodyear",
+    "city": "Goodyear",
+    "state": "AZ",
+    "website": "Http://www.flygoodyear.com"
+  },
+  {
+    "id": "30",
+    "name": "Fly Goodyear",
+    "city": "BUCKEYE",
+    "state": "AZ",
+    "website": "https://www.flygoodyear.com/"
+  },
+  {
+    "id": "1548",
+    "name": "K and S Aviation Services Inc",
+    "city": "Mesa",
+    "state": "AZ",
+    "website": "http://www.kandsaviation.com"
+  },
+  {
+    "id": "2324",
+    "name": "Relentless Flight School",
+    "city": "Mesa",
+    "state": "AZ",
+    "website": "https://relentlessflight.com/location"
+  },
+  {
+    "id": "2151",
+    "name": "Sierra Charlie Aviation",
+    "city": "Scottsdale",
+    "state": "AZ",
+    "website": "Http://www.SierraCharlieAviation.com"
+  },
+  {
+    "id": "1551",
+    "name": "Tiffin Aviation Services Inc",
+    "city": "Nogales",
+    "state": "AZ",
+    "website": "http://www.tiffinaviation.com"
+  },
+  {
+    "id": "2345",
+    "name": "30 Day CFI Flight Training Academy",
+    "city": "Van Nuys",
+    "state": "CA",
+    "website": "http://www.30daycfi.com"
+  },
+  {
+    "id": "1810",
+    "name": "A&G",
+    "city": "San Carlos",
+    "state": "CA",
+    "website": "http://www.lessonstofly.com"
+  },
+  {
+    "id": "2036",
+    "name": "AA aviation co",
+    "city": "redland",
+    "state": "CA",
+    "website": "Http://www.aaaviationco.com"
+  },
+  {
+    "id": "1707",
+    "name": "Accelerated Flight Academy",
+    "city": "Long Beach",
+    "state": "CA",
+    "website": "http://acceleratedflightacademy.com/"
+  },
+  {
+    "id": "2131",
+    "name": "ADVANCED International Aviation Academy",
+    "city": "Sacramento",
+    "state": "CA",
+    "website": "http://www.jetexe.com"
+  },
+  {
+    "id": "1733",
+    "name": "Aero Squad",
+    "city": "Compton",
+    "state": "CA",
+    "website": "http://www.aerosquad.org"
+  },
+  {
+    "id": "1750",
+    "name": "Aero Tech Academy inc",
+    "city": "Redlands",
+    "state": "CA",
+    "website": "http://ata.bz/"
+  },
+  {
+    "id": "1677",
+    "name": "All American Aviation Inc",
+    "city": "Rialto",
+    "state": "CA",
+    "website": "http://aviation.schools.officelive.com/default.aspx"
+  },
+  {
+    "id": "1698",
+    "name": "ALLIANCE INTERNATIONAL AVIATION",
+    "city": "Riverside",
+    "state": "CA",
+    "website": "http://www.aiaflight.com/"
+  },
+  {
+    "id": "303",
+    "name": "AMERICAN AVIATION",
+    "city": "Van Nuys",
+    "state": "CA",
+    "website": "http://americanaviationvny.com/"
+  },
+  {
+    "id": "1723",
+    "name": "AOPA ASN San Diego",
+    "city": "San Diego",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "1647",
+    "name": "Aviation Facilities Inc",
+    "city": "Fullerton, CA",
+    "state": "CA",
+    "website": "http://www.flyafi.com"
+  },
+  {
+    "id": "1634",
+    "name": "AVIATORS WEST FLIGHT ACADEMY",
+    "city": "San Diego",
+    "state": "CA",
+    "website": "http://www.aviatorswest.com"
+  },
+  {
+    "id": "2236",
+    "name": "Bay Area Flying Club",
+    "city": "Livermore",
+    "state": "CA",
+    "website": "https://bayareaflyingclub.com/"
+  },
+  {
+    "id": "1902",
+    "name": "Bel Air International Flight School",
+    "city": "San Carlos",
+    "state": "CA",
+    "website": "http://www.belairintl.com"
+  },
+  {
+    "id": "1669",
+    "name": "Cal Air Aviation",
+    "city": "Torrance",
+    "state": "CA",
+    "website": "http://calaironline.com"
+  },
+  {
+    "id": "213",
+    "name": "CALIFORNIA AVIATION SERVICES",
+    "city": "Riverside",
+    "state": "CA",
+    "website": "http://www.caaviationservices.com/"
+  },
+  {
+    "id": "1690",
+    "name": "California Flight Academy LLC",
+    "city": "El Cajon",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "1992",
+    "name": "California Flight Academy LLC",
+    "city": "El Cajon",
+    "state": "CA",
+    "website": "http://www.flycfa.com"
+  },
+  {
+    "id": "1945",
+    "name": "California Wingz",
+    "city": "Palm Springs",
+    "state": "CA",
+    "website": "http://www.cawingz.com"
+  },
+  {
+    "id": "2033",
+    "name": "California-Flyers",
+    "city": "Long Beach",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "117",
+    "name": "CELEBRITY HELICOPTERS",
+    "city": "Compton",
+    "state": "CA",
+    "website": "http://www.celebheli.com/"
+  },
+  {
+    "id": "1823",
+    "name": "CFI Academy",
+    "city": "Sacramento",
+    "state": "CA",
+    "website": "http://cfiacademy.com"
+  },
+  {
+    "id": "2223",
+    "name": "Chico Flight Training",
+    "city": "Chico",
+    "state": "CA",
+    "website": "http://chicoft.com"
+  },
+  {
+    "id": "1969",
+    "name": "Corsair Aviation",
+    "city": "Van Nuys",
+    "state": "CA",
+    "website": "http://www.corsairaviation.com"
+  },
+  {
+    "id": "1974",
+    "name": "Demo Flight Club",
+    "city": "Long beach",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "2054",
+    "name": "Edwards AFB Aero Club Flight Training Center",
+    "city": "Edwards AFB",
+    "state": "CA",
+    "website": "http://www.edwardsaeroclub.org"
+  },
+  {
+    "id": "2148",
+    "name": "Edwards AFB Aero Club Flight Training Center",
+    "city": "Edwards AFB",
+    "state": "CA",
+    "website": "http://edwardsfss.com/wordpress/recreation/aero-club"
+  },
+  {
+    "id": "1754",
+    "name": "First Flight Corporation",
+    "city": "San Diego, Ca",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "230",
+    "name": "FIRST FLIGHT CORPORATION",
+    "city": "San Diego",
+    "state": "CA",
+    "website": "http://firstflightcorp.com/"
+  },
+  {
+    "id": "2318",
+    "name": "Flex Air Kansas Flight School",
+    "city": "San Diego",
+    "state": "CA",
+    "website": "https://goflexair.com/kansas-flight-school"
+  },
+  {
+    "id": "1763",
+    "name": "Flight Academy of the Pacific",
+    "city": "Long Beach",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "1914",
+    "name": "Fly lightsport CA",
+    "city": "Murietta, chino, redlands",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "2008",
+    "name": "Flying Monkey Aero Club",
+    "city": "Van Nuys",
+    "state": "CA",
+    "website": "http://www.baymarkaviation.com"
+  },
+  {
+    "id": "1802",
+    "name": "Fresno Flyers Flying Club",
+    "city": "Fresno",
+    "state": "CA",
+    "website": "http://www.fresnoflyers.com"
+  },
+  {
+    "id": "1800",
+    "name": "GAMA",
+    "city": "Fresno",
+    "state": "CA",
+    "website": "http://www.gama-air.com"
+  },
+  {
+    "id": "1526",
+    "name": "Hayward Flight",
+    "city": "Hayward",
+    "state": "CA",
+    "website": "http://www.haywardflight.com"
+  },
+  {
+    "id": "1560",
+    "name": "JacksonAir Flight Training",
+    "city": "Thermal",
+    "state": "CA",
+    "website": "http://www.flyjacksonair.com"
+  },
+  {
+    "id": "1725",
+    "name": "Jenna Wells Aviation",
+    "city": "San Francisco",
+    "state": "CA",
+    "website": "http://www.jennawellsaviation.com/"
+  },
+  {
+    "id": "2136",
+    "name": "Kevin Morisette CFI",
+    "city": "Lincoln",
+    "state": "CA",
+    "website": "https://www.kevincfi.com"
+  },
+  {
+    "id": "1573",
+    "name": "king schools",
+    "city": "san diego",
+    "state": "CA",
+    "website": "http://www.kingschools.com"
+  },
+  {
+    "id": "1996",
+    "name": "LTN GROUP IAA",
+    "city": "SAN DIEGO",
+    "state": "CA",
+    "website": "http://www.ltngroup.net"
+  },
+  {
+    "id": "2245",
+    "name": "Mach 1 Aviation, Inc",
+    "city": "Van Nuys",
+    "state": "CA",
+    "website": "http://www.mach1aviation.com"
+  },
+  {
+    "id": "1671",
+    "name": "Mach 5 Aviation Inc",
+    "city": "Auburn",
+    "state": "CA",
+    "website": "http://www.mach5aviation.com/"
+  },
+  {
+    "id": "1905",
+    "name": "Max Aero",
+    "city": "Cameron Park",
+    "state": "CA",
+    "website": "http://www.max.aero"
+  },
+  {
+    "id": "1917",
+    "name": "Max G Aviation",
+    "city": "Palo Alto",
+    "state": "CA",
+    "website": "http://www.maxgaviation.com"
+  },
+  {
+    "id": "2256",
+    "name": "Mike Smith Aviation",
+    "city": "Napa",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "2246",
+    "name": "MP Aviation",
+    "city": "Concord",
+    "state": "CA",
+    "website": "http://www.mp-aviation.com"
+  },
+  {
+    "id": "2041",
+    "name": "NorCal Flight Center",
+    "city": "Lincoln",
+    "state": "CA",
+    "website": "http://www.norcalflightcenter.com"
+  },
+  {
+    "id": "1827",
+    "name": "NorCalSim",
+    "city": "Marsville",
+    "state": "CA",
+    "website": "http://www.norcalsim.com"
+  },
+  {
+    "id": "274",
+    "name": "NORTH COAST AIR SAFARI",
+    "city": "Santa Rosa",
+    "state": "CA",
+    "website": "http://www.northcoastair.com/"
+  },
+  {
+    "id": "187",
+    "name": "Oakland Flyers",
+    "city": "Oakland",
+    "state": "CA",
+    "website": "http://www.oaklandflyers.com/"
+  },
+  {
+    "id": "1781",
+    "name": "Pacific Skies Aviation",
+    "city": "Torrance",
+    "state": "CA",
+    "website": "http://www.pacificskies.com"
+  },
+  {
+    "id": "119",
+    "name": "PACIFIC STATES AVIATION",
+    "city": "Concord",
+    "state": "CA",
+    "website": "http://www.pacificstatesaviation.com/"
+  },
+  {
+    "id": "1701",
+    "name": "Pinnacle Aviation Academy",
+    "city": "Carlsbad",
+    "state": "CA",
+    "website": "http://www.pinnacleacademy.com"
+  },
+  {
+    "id": "107",
+    "name": "PINNACLE AVIATION ACADEMY",
+    "city": "Carlsbad",
+    "state": "CA",
+    "website": "http://www.pinnacleacademy.com/"
+  },
+  {
+    "id": "2137",
+    "name": "Revolution Aviation",
+    "city": "Newport Beach",
+    "state": "CA",
+    "website": "http://www.eatsleepfly.com"
+  },
+  {
+    "id": "1975",
+    "name": "ROTOR FX LLC",
+    "city": "Los Angeles",
+    "state": "CA",
+    "website": "http://www.rotorfx.com"
+  },
+  {
+    "id": "1927",
+    "name": "Sierra Aero",
+    "city": "Truckee",
+    "state": "CA",
+    "website": "http://www.flytruckee.com"
+  },
+  {
+    "id": "1818",
+    "name": "sim time",
+    "city": "Marysville",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "2020",
+    "name": "Skyview Flight Academy",
+    "city": "Tracy",
+    "state": "CA",
+    "website": "http://www.skyviewaviation.com"
+  },
+  {
+    "id": "2270",
+    "name": "SoCal Aviation, Inc.",
+    "city": "Chino, CA",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "2044",
+    "name": "Stanford Flying Club Flight School",
+    "city": "Palo Alto, S.F.Bay Area, California",
+    "state": "CA",
+    "website": "http://www.FlyStanford.com"
+  },
+  {
+    "id": "2088",
+    "name": "tfa flight academy california",
+    "city": "bellflower",
+    "state": "CA",
+    "website": "http://www.tfaacademy.hol.es"
+  },
+  {
+    "id": "1925",
+    "name": "The Flight Club LA",
+    "city": "Los Angeles",
+    "state": "CA",
+    "website": "http://www.theflightclubla.com"
+  },
+  {
+    "id": "1784",
+    "name": "Ukiah Aviation",
+    "city": "Ukiah",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "1731",
+    "name": "western air",
+    "city": "visalia",
+    "state": "CA",
+    "website": null
+  },
+  {
+    "id": "1906",
+    "name": "Aspen Flying Club",
+    "city": "Englewood",
+    "state": "CO",
+    "website": "http://www.aspenflyingclub.com"
+  },
+  {
+    "id": "333",
+    "name": "Aspen Flying Club",
+    "city": "Englewood",
+    "state": "CO",
+    "website": "http://www.aspenflyingclub.com/"
+  },
+  {
+    "id": "2003",
+    "name": "Aspen Higher Learning Flight Academy",
+    "city": "Aspen",
+    "state": "CO",
+    "website": null
+  },
+  {
+    "id": "1809",
+    "name": "Colorado Takes Flight llc",
+    "city": "Erie",
+    "state": "CO",
+    "website": "http://coloradotakesflight.com/"
+  },
+  {
+    "id": "2308",
+    "name": "Direct Connect Flight Academy",
+    "city": "Colorado Springs",
+    "state": "CO",
+    "website": "HTTPS://www.flydcfa.com"
+  },
+  {
+    "id": "2310",
+    "name": "Fly CTX",
+    "city": "Fort Collins",
+    "state": "CO",
+    "website": "http://www.flyctx.com"
+  },
+  {
+    "id": "2309",
+    "name": "Fly CTX",
+    "city": "Greeley",
+    "state": "CO",
+    "website": "http://www.flyctx.com"
+  },
+  {
+    "id": "1528",
+    "name": "Leading Edge Flight Training",
+    "city": "Fort Collins Loveland",
+    "state": "CO",
+    "website": "http://www.leflighttraining.com"
+  },
+  {
+    "id": "336",
+    "name": "Mountain Flying Aviation",
+    "city": "Greeley and Fort Collins",
+    "state": "CO",
+    "website": "http://www.jerslash.net"
+  },
+  {
+    "id": "325",
+    "name": "Peak Aviation Center",
+    "city": "Colorado Springs",
+    "state": "CO",
+    "website": "http://www.cospilot.com/"
+  },
+  {
+    "id": "1525",
+    "name": "Rocky Mountain Rotorcraft",
+    "city": "Erie",
+    "state": "CO",
+    "website": "http://www.rockymountainrotorcraft.com"
+  },
+  {
+    "id": "1687",
+    "name": "Skyraider Aviation",
+    "city": "Centennial",
+    "state": "CO",
+    "website": "http://www.skyraideraviation.com"
+  },
+  {
+    "id": "1686",
+    "name": "Skyraider Aviation",
+    "city": "Erie",
+    "state": "CO",
+    "website": "http://www.skyraideraviation.com"
+  },
+  {
+    "id": "2227",
+    "name": "Southern Colorado Flight Professionals",
+    "city": "Pueblo",
+    "state": "CO",
+    "website": "https://www.socoflightpros.com/"
+  },
+  {
+    "id": "1550",
+    "name": "Taking Flight",
+    "city": "Denver",
+    "state": "CO",
+    "website": "http://www.takingflightllc.com"
+  },
+  {
+    "id": "2275",
+    "name": "Avia Flight Academy",
+    "city": "Stratford",
+    "state": "CT",
+    "website": "http://www.aviaflightacademy.com"
+  },
+  {
+    "id": "2276",
+    "name": "Avia Flight Academy",
+    "city": "Farmingdale",
+    "state": "CT",
+    "website": "http://www.aviaflightacademy.com"
+  },
+  {
+    "id": "1589",
+    "name": "Gaudette Aviation LLC",
+    "city": "Danielson",
+    "state": "CT",
+    "website": "http://www.GaudetteAviation.com"
+  },
+  {
+    "id": "2220",
+    "name": "Inter-Global Aviation, LLC",
+    "city": "Danbury",
+    "state": "CT",
+    "website": "Http://Www.Flyiga.com"
+  },
+  {
+    "id": "1498",
+    "name": "Horizon Helicopters Inc",
+    "city": "Newark",
+    "state": "DE",
+    "website": "http://www.horizonhelicopters.com"
+  },
+  {
+    "id": "1640",
+    "name": "1st Class Aviation",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://www.1stclassaviation.com"
+  },
+  {
+    "id": "2135",
+    "name": "424 Aviation",
+    "city": "Miami",
+    "state": "FL",
+    "website": "http://www.424aviation.com"
+  },
+  {
+    "id": "2298",
+    "name": "A-Cent Avaition Inc",
+    "city": "Fernandina Beach",
+    "state": "FL",
+    "website": "http://www.FlyAtlanticAviationInc.com"
+  },
+  {
+    "id": "1912",
+    "name": "A-Cent Avaition Inc",
+    "city": "Jacksonville",
+    "state": "FL",
+    "website": "http://www.FlyAtlanticAviationInc.com"
+  },
+  {
+    "id": "2289",
+    "name": "A-Cent Aviation",
+    "city": "Fernandina Beach",
+    "state": "FL",
+    "website": "http://www.acentaviation.com"
+  },
+  {
+    "id": "2267",
+    "name": "Academic Flight",
+    "city": "Miami",
+    "state": "FL",
+    "website": "https://academicflight.com"
+  },
+  {
+    "id": "2012",
+    "name": "Accelerate Flight Training Academy",
+    "city": "Haines City",
+    "state": "FL",
+    "website": "http://www.acceleratedflighttrainingacademy.com"
+  },
+  {
+    "id": "2015",
+    "name": "Accelerated Flight Training Academy",
+    "city": "Winter Haven",
+    "state": "FL",
+    "website": "http://www.acceleratedflighttrainingacademy.com"
+  },
+  {
+    "id": "1577",
+    "name": "Accelerated Flying Academy",
+    "city": "Winter Haven",
+    "state": "FL",
+    "website": "http://www.LearnToFlyQuick.com"
+  },
+  {
+    "id": "2143",
+    "name": "Adventure Seaplanes",
+    "city": "Lake Wales",
+    "state": "FL",
+    "website": "Http://www.adventureseaplanes.com"
+  },
+  {
+    "id": "1494",
+    "name": "Aeronautica Flight Training Academy",
+    "city": "Miami Spring",
+    "state": "FL",
+    "website": "http://www.aeronauticainc.com"
+  },
+  {
+    "id": "1942",
+    "name": "Aerosim Flight Academy",
+    "city": "Sanford",
+    "state": "FL",
+    "website": "http://academy.aerosim.com/"
+  },
+  {
+    "id": "2153",
+    "name": "AeroStar Training Services",
+    "city": "Kissimmee",
+    "state": "FL",
+    "website": "https://aerostartyperatings.com/"
+  },
+  {
+    "id": "1536",
+    "name": "AeroStar Training Services LLC",
+    "city": "Orlando/Miami",
+    "state": "FL",
+    "website": "http://www.aerostartyperatings.com"
+  },
+  {
+    "id": "2233",
+    "name": "Air America Flight Center",
+    "city": "St Augustine",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "2132",
+    "name": "Air Club International",
+    "city": "Miami",
+    "state": "FL",
+    "website": "http://airclubinternational.org"
+  },
+  {
+    "id": "1708",
+    "name": "Airline Operation",
+    "city": "Miami",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "2101",
+    "name": "American Aviation Flight Academy",
+    "city": "Brooksville",
+    "state": "FL",
+    "website": "http://www.flyaafa.com"
+  },
+  {
+    "id": "1813",
+    "name": "American Aviation Inc",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://americanaviationinc.net/"
+  },
+  {
+    "id": "1574",
+    "name": "Asoler Aviation",
+    "city": "Miami",
+    "state": "FL",
+    "website": "http://www.asoleraviation.com"
+  },
+  {
+    "id": "1549",
+    "name": "AUSSIE AIR INC",
+    "city": "Daytona beach",
+    "state": "FL",
+    "website": "http://www.aussieair.net"
+  },
+  {
+    "id": "1567",
+    "name": "AUSSIE AIR INC",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "website": "http://www.aussieair.net"
+  },
+  {
+    "id": "2017",
+    "name": "Aviation Pilot Academy of Hoolywood",
+    "city": "Pembroke Pines",
+    "state": "FL",
+    "website": "http://www.apaflightschool.com"
+  },
+  {
+    "id": "2273",
+    "name": "Aviator Zone Academy",
+    "city": "Miami",
+    "state": "FL",
+    "website": "https://www.aviator.zone"
+  },
+  {
+    "id": "2133",
+    "name": "Beach Aviation",
+    "city": "Boca Raton and Orlando",
+    "state": "FL",
+    "website": "http://www.beachaviationacademy.com"
+  },
+  {
+    "id": "1495",
+    "name": "Cloud 9 Helicopters LLC",
+    "city": "West Palm Beach",
+    "state": "FL",
+    "website": "http://www.cloud9helicopters.com"
+  },
+  {
+    "id": "2026",
+    "name": "Coastal Flight Training LLC",
+    "city": "Sebastian",
+    "state": "FL",
+    "website": "http://www.coastalflight.com"
+  },
+  {
+    "id": "2204",
+    "name": "College of Missionary Aviation",
+    "city": "Keystone Heights",
+    "state": "FL",
+    "website": "https://floridaaviationcollege.com/"
+  },
+  {
+    "id": "1978",
+    "name": "Dare to Dream Aviation",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "1816",
+    "name": "Daytona Aviation Academy",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://www.Daytonaaviationacademy.com"
+  },
+  {
+    "id": "1595",
+    "name": "Daytona Aviation Academy",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://www.daytonaaviationacademy.com"
+  },
+  {
+    "id": "1641",
+    "name": "Daytona Aviation Academy",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://www.daytonaaviationacademy.com/"
+  },
+  {
+    "id": "1790",
+    "name": "Deland Aviation",
+    "city": "Deland",
+    "state": "FL",
+    "website": "http://www.delandaviation.com"
+  },
+  {
+    "id": "1663",
+    "name": "Destin Jet",
+    "city": "Destin, Florida",
+    "state": "FL",
+    "website": "http://www.destinjet.com"
+  },
+  {
+    "id": "466",
+    "name": "Epic Aviation",
+    "city": "New Smyrna Beach",
+    "state": "FL",
+    "website": "http://www.epicaviation.com/"
+  },
+  {
+    "id": "2117",
+    "name": "Epic Flight Academy Flight Training",
+    "city": "New Smyrna Beach",
+    "state": "FL",
+    "website": "http://epicflightacademy.com/flight-training/"
+  },
+  {
+    "id": "2221",
+    "name": "FALCON AVIATION ACADEMY",
+    "city": "Bogota",
+    "state": "FL",
+    "website": "http://www.falconaviacion.com.co"
+  },
+  {
+    "id": "1998",
+    "name": "First Landing Aviation",
+    "city": "Apopka",
+    "state": "FL",
+    "website": "http://www.firstlandings.com"
+  },
+  {
+    "id": "2110",
+    "name": "FL Aviation Center",
+    "city": "Tallahassee",
+    "state": "FL",
+    "website": "http://www.flaviationcenter.com"
+  },
+  {
+    "id": "2333",
+    "name": "FL Aviation Center",
+    "city": "Tallahasse",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "2100",
+    "name": "Flight Attendant JumpStart",
+    "city": "Orlando",
+    "state": "FL",
+    "website": "http://www.flightattendantjumpstart.com"
+  },
+  {
+    "id": "1963",
+    "name": "Flight Center",
+    "city": "Fort lauderdale",
+    "state": "FL",
+    "website": "http://www.flightcenterus.com"
+  },
+  {
+    "id": "2083",
+    "name": "Flight Center International Academy",
+    "city": "Pembroke Pines",
+    "state": "FL",
+    "website": "http://www.flightcenterinternational.com/"
+  },
+  {
+    "id": "1552",
+    "name": "Flight Ready Aviation",
+    "city": "Orlando",
+    "state": "FL",
+    "website": "http://www.flightreadyaviation.com"
+  },
+  {
+    "id": "486",
+    "name": "Florida Aviation Academy",
+    "city": "Pompano Beach",
+    "state": "FL",
+    "website": "http://www.flaviationacademy.com/"
+  },
+  {
+    "id": "1626",
+    "name": "Florida Aviation Academy",
+    "city": "Pompano Beach",
+    "state": "FL",
+    "website": "http://www.flaviationacademy.com"
+  },
+  {
+    "id": "1829",
+    "name": "Florida Flight Training Center",
+    "city": "Venice",
+    "state": "FL",
+    "website": "http://fftc.info"
+  },
+  {
+    "id": "1691",
+    "name": "Florida Flight Training LLC",
+    "city": "Sanford",
+    "state": "FL",
+    "website": "http://www.FLflighttraining.com"
+  },
+  {
+    "id": "1955",
+    "name": "Florida International Flight Academy Inc",
+    "city": "Brooksville, FL",
+    "state": "FL",
+    "website": "http://www.flyfifa.com"
+  },
+  {
+    "id": "1803",
+    "name": "Florida Pilot Center I Inc",
+    "city": "Vero Beach",
+    "state": "FL",
+    "website": "http://www.floridapilotcenter.com"
+  },
+  {
+    "id": "2238",
+    "name": "Florida Sky Aviation",
+    "city": "Clearwater",
+    "state": "FL",
+    "website": "http://www.flskyaviation.com"
+  },
+  {
+    "id": "1777",
+    "name": "Fly School",
+    "city": "Madrid Spain",
+    "state": "FL",
+    "website": "http://www.flyschool.es"
+  },
+  {
+    "id": "1747",
+    "name": "Flying V Flight School",
+    "city": "Melbourne",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "1672",
+    "name": "Freedom Flight Training",
+    "city": "Lantana",
+    "state": "FL",
+    "website": "http://www.freedomflighttraining.com"
+  },
+  {
+    "id": "1990",
+    "name": "Global Pilot Academy Inc",
+    "city": "Tampa",
+    "state": "FL",
+    "website": "http://www.gpapilot.com"
+  },
+  {
+    "id": "2084",
+    "name": "GPS GLOBAL PILOT SCHOOL",
+    "city": "MIAMI",
+    "state": "FL",
+    "website": "HTTP://WWW.FLYWITHGPS.COM"
+  },
+  {
+    "id": "2336",
+    "name": "Harborside Aviation",
+    "city": "Punta Gorda",
+    "state": "FL",
+    "website": "http://www.harborsideaviation.com"
+  },
+  {
+    "id": "1805",
+    "name": "Harborside Aviation Inc",
+    "city": "Punta Gorda",
+    "state": "FL",
+    "website": "http://www.harborsideaviation.com"
+  },
+  {
+    "id": "1730",
+    "name": "Hayes Aviation LLC",
+    "city": "New Smyrna",
+    "state": "FL",
+    "website": "http://www.flyhayes.com"
+  },
+  {
+    "id": "1793",
+    "name": "Hollywood Flight Training",
+    "city": "Pembroke Pines",
+    "state": "FL",
+    "website": "http://www.hlflight.com"
+  },
+  {
+    "id": "1545",
+    "name": "Horizon Flight Academy",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "website": "http://www.Horizonflightacademy.com"
+  },
+  {
+    "id": "1934",
+    "name": "Island Air Express",
+    "city": "Panama City",
+    "state": "FL",
+    "website": "http://www.islandairexpress.com"
+  },
+  {
+    "id": "2028",
+    "name": "KeysAir Aviation",
+    "city": "Marathon",
+    "state": "FL",
+    "website": "http://www.flykeysair.com"
+  },
+  {
+    "id": "2112",
+    "name": "LarryAire",
+    "city": "Destin",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "1778",
+    "name": "Learn To Fly Center",
+    "city": "Pompano Beach",
+    "state": "FL",
+    "website": "http://www.LTFCPompano.com"
+  },
+  {
+    "id": "1775",
+    "name": "Legacy Aviation",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "website": "http://www.legacyaviation.net/"
+  },
+  {
+    "id": "1776",
+    "name": "Legacy Aviation",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "website": "http://www.legacyaviation.net/"
+  },
+  {
+    "id": "2010",
+    "name": "LIFT AIR Cirrus Flight Training",
+    "city": "Sarasota",
+    "state": "FL",
+    "website": "http://flyliftair.com/cirrus-pilot-training-flight-school/"
+  },
+  {
+    "id": "1899",
+    "name": "National Aviation Academy",
+    "city": "Clearwater",
+    "state": "FL",
+    "website": "http://www.naa.edu/programs/professional_pilot_technology"
+  },
+  {
+    "id": "2285",
+    "name": "NeunAir Aviation",
+    "city": "Orlando",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "424",
+    "name": "NS Aviation",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "website": "http://www.nsaviation.com"
+  },
+  {
+    "id": "467",
+    "name": "Ocala Aviation Services",
+    "city": "Ocala",
+    "state": "FL",
+    "website": "http://www.ocalaaviation.com/"
+  },
+  {
+    "id": "2126",
+    "name": "Old Buzzard Aviation",
+    "city": "Jacksonville",
+    "state": "FL",
+    "website": "http://oldbuzzardaviation.wixsite.com/tailwheeltraining"
+  },
+  {
+    "id": "1700",
+    "name": "Orlando Club Flying Inc",
+    "city": "Orlando",
+    "state": "FL",
+    "website": null
+  },
+  {
+    "id": "524",
+    "name": "Palm Beach Helicopters",
+    "city": "West Palm Beach",
+    "state": "FL",
+    "website": "http://www.palmbeachhelicopters.com/"
+  },
+  {
+    "id": "2296",
+    "name": "Paragon Flight Training Co.",
+    "city": "Fort Myers",
+    "state": "FL",
+    "website": "https://www.paragonflight.com/"
+  },
+  {
+    "id": "2341",
+    "name": "Pelican Flight Training",
+    "city": "Miami",
+    "state": "FL",
+    "website": "https://pelicanflightschool.com/"
+  },
+  {
+    "id": "398",
+    "name": "Phoenix East Aviation",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://www.pea.com/"
+  },
+  {
+    "id": "2082",
+    "name": "Pi Aero Management",
+    "city": "Valkaria",
+    "state": "FL",
+    "website": "http://www.piaeromanagement.com/"
+  },
+  {
+    "id": "2093",
+    "name": "Pilots Paradise",
+    "city": "Sebastian",
+    "state": "FL",
+    "website": "http://sebastianaeroservices.com/"
+  },
+  {
+    "id": "1941",
+    "name": "RTC",
+    "city": "Odessa",
+    "state": "FL",
+    "website": "http://www.rtcpilot.com/"
+  },
+  {
+    "id": "1783",
+    "name": "SkyEagle Aviation Academy",
+    "city": "Fort Luderdale",
+    "state": "FL",
+    "website": "http://www.skyeagleaviation.com"
+  },
+  {
+    "id": "1924",
+    "name": "Spectrum Flying Club",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://www.spectrumflyingclub.com"
+  },
+  {
+    "id": "1919",
+    "name": "Sport Aviation LLC",
+    "city": "Stuart",
+    "state": "FL",
+    "website": "http://www.flysportaviation.com"
+  },
+  {
+    "id": "2154",
+    "name": "Stick n Rudder Aviation Inc",
+    "city": "Daytona Beach",
+    "state": "FL",
+    "website": "http://sticknrudderaviati.wixsite.com/stickandrudder/"
+  },
+  {
+    "id": "2099",
+    "name": "SunState Aviation",
+    "city": "Kissimmee FL",
+    "state": "FL",
+    "website": "http://www.sunstateaviation.com"
+  },
+  {
+    "id": "1943",
+    "name": "Tailwheels Etc Accelerated Flight Training Center",
+    "city": "Lakeland, Florida",
+    "state": "FL",
+    "website": "http://www.tailwheelsetc.com"
+  },
+  {
+    "id": "2085",
+    "name": "TFA flight academy",
+    "city": "Daytona beach",
+    "state": "FL",
+    "website": "http://www.tfaacademy.hol.es"
+  },
+  {
+    "id": "1946",
+    "name": "Treasure Coast Flight Training",
+    "city": "Stuart",
+    "state": "FL",
+    "website": "http://www.fl-flight.com"
+  },
+  {
+    "id": "2140",
+    "name": "Treasure Coast Seaplanes",
+    "city": "Vero Beach, FL",
+    "state": "FL",
+    "website": "http://www.flytcs.com"
+  },
+  {
+    "id": "511",
+    "name": "US Aviation Training Solutions",
+    "city": "Titusville",
+    "state": "FL",
+    "website": "https://www.usatsflighttraining.com/"
+  },
+  {
+    "id": "449",
+    "name": "Voyager Aviation",
+    "city": "Merritt Island",
+    "state": "FL",
+    "website": "http://www.voyageraviation.com/"
+  },
+  {
+    "id": "1651",
+    "name": "Voyager Aviation",
+    "city": "Merritt Island",
+    "state": "FL",
+    "website": "http://www.voyageraviation.com"
+  },
+  {
+    "id": "2294",
+    "name": "Warbird Adventures",
+    "city": "Kissimmee",
+    "state": "FL",
+    "website": "http://www.warbirdadventures.com"
+  },
+  {
+    "id": "456",
+    "name": "Wayman Aviation Flight School",
+    "city": "Miami",
+    "state": "FL",
+    "website": "http://wayman.net/"
+  },
+  {
+    "id": "1649",
+    "name": "Yoanna Flight Scool",
+    "city": "Fort Myers",
+    "state": "FL",
+    "website": "http://www.flight-services.us"
+  },
+  {
+    "id": "2199",
+    "name": "Zulutime Pilot Flight Training",
+    "city": "Stuart",
+    "state": "FL",
+    "website": "http://zulutimepilot.com"
+  },
+  {
+    "id": "568",
+    "name": "Advanced Aviation",
+    "city": "Lawrenceville",
+    "state": "GA",
+    "website": "http://advancedaviation.com/"
+  },
+  {
+    "id": "1822",
+    "name": "ALL2FLY",
+    "city": "KENNESAW",
+    "state": "GA",
+    "website": "http://WWW.ALL2FLYEXPORTS.COM"
+  },
+  {
+    "id": "2226",
+    "name": "Atlanta Aviators",
+    "city": "Atlanta",
+    "state": "GA",
+    "website": "http://www.atlantaaviators.com"
+  },
+  {
+    "id": "2047",
+    "name": "Atlanta East Aviation",
+    "city": "Peachtree City",
+    "state": "GA",
+    "website": "http://www.atlantaeastfly.com"
+  },
+  {
+    "id": "1605",
+    "name": "Atlanta East Flight Center",
+    "city": "Lawrenceville",
+    "state": "GA",
+    "website": "http://www.AtlantaEastAviation.com"
+  },
+  {
+    "id": "1676",
+    "name": "ATP Flight School LZU",
+    "city": "Lawrenceville",
+    "state": "GA",
+    "website": "http://www.ATPFlightSchool.com"
+  },
+  {
+    "id": "1588",
+    "name": "Centennial Aviation Club",
+    "city": "Atlanta",
+    "state": "GA",
+    "website": "http://www.centennialaviationclub.com"
+  },
+  {
+    "id": "1535",
+    "name": "ChuckStroman.com",
+    "city": "Covington",
+    "state": "GA",
+    "website": "http://ChuckStroman.com"
+  },
+  {
+    "id": "1516",
+    "name": "Coastal Empire Flight Training",
+    "city": "Savannah",
+    "state": "GA",
+    "website": "http://www.idreamofflying.com"
+  },
+  {
+    "id": "2234",
+    "name": "Fly Corps Aviation",
+    "city": "Savannah",
+    "state": "GA",
+    "website": "http://www.flycorps.com"
+  },
+  {
+    "id": "2249",
+    "name": "Get Inspired Flight",
+    "city": "Jasper",
+    "state": "GA",
+    "website": "https://getinspiredflight.com/"
+  },
+  {
+    "id": "2295",
+    "name": "Manzo Brothers Aviation",
+    "city": "Gainesville",
+    "state": "GA",
+    "website": "https://facebook.com/ManzoBrothersAviation/"
+  },
+  {
+    "id": "2055",
+    "name": "Midcoast Aviation Services",
+    "city": "Reidsville",
+    "state": "GA",
+    "website": "http://www.midcoastaviationservices.com"
+  },
+  {
+    "id": "2056",
+    "name": "Midcoast Aviation Services",
+    "city": "Statesboro",
+    "state": "GA",
+    "website": "http://www.midcoastaviationservices.com"
+  },
+  {
+    "id": "1571",
+    "name": "Sharp Mountain Aviation, LLC",
+    "city": "Jasper",
+    "state": "GA",
+    "website": "http://www.sharpmountainaviation.com"
+  },
+  {
+    "id": "573",
+    "name": "Skyblaze Flight Training",
+    "city": "Marietta",
+    "state": "GA",
+    "website": "http://www.av8inc.com/"
+  },
+  {
+    "id": "2116",
+    "name": "South Atlanta Flight Training",
+    "city": "Hampton",
+    "state": "GA",
+    "website": "http://www.FlySAFT.com"
+  },
+  {
+    "id": "594",
+    "name": "Mauna Loa Helicopters",
+    "city": "Kailua/Kona",
+    "state": "HI",
+    "website": "http://www.maunaloahelicopters.com/"
+  },
+  {
+    "id": "2139",
+    "name": "The Right Flight Services",
+    "city": "Kapolei",
+    "state": "HI",
+    "website": "http://www.trfshawaii.com/"
+  },
+  {
+    "id": "597",
+    "name": "Tropicbird Flight Service",
+    "city": "Kona",
+    "state": "HI",
+    "website": "http://www.tropicbirdflightservice.com/"
+  },
+  {
+    "id": "1631",
+    "name": "Advanced Air",
+    "city": "Council Bluffs",
+    "state": "IA",
+    "website": "http://www.advancedaircb.com"
+  },
+  {
+    "id": "728",
+    "name": "Exec 1 Aviation",
+    "city": "Des Moines",
+    "state": "IA",
+    "website": "http://www.exec1aviation.com/"
+  },
+  {
+    "id": "2268",
+    "name": "FLY KDSM",
+    "city": "Des Moines",
+    "state": "IA",
+    "website": "https://flykdsm.com"
+  },
+  {
+    "id": "2291",
+    "name": "Future Flyers of Iowa",
+    "city": "Winterset",
+    "state": "IA",
+    "website": "https://futureflyersofiowa.com/"
+  },
+  {
+    "id": "1705",
+    "name": "Green Castle Aero Club",
+    "city": "Oxford",
+    "state": "IA",
+    "website": "http://www.greencastleeroclub.com/"
+  },
+  {
+    "id": "724",
+    "name": "Iowa Flight Training",
+    "city": "Cedar Rapids",
+    "state": "IA",
+    "website": "http://www.IowaFlightTraining.com"
+  },
+  {
+    "id": "1799",
+    "name": "Pictaio Aerospace",
+    "city": "Dubuque",
+    "state": "IA",
+    "website": "http://www.pictaioaerospace.com"
+  },
+  {
+    "id": "1543",
+    "name": "Sioux Center Aviation",
+    "city": "Sioux Center",
+    "state": "IA",
+    "website": "http://www.siouxcenteraviation.com"
+  },
+  {
+    "id": "2115",
+    "name": "Air O Drome Aviation",
+    "city": "Caldwell",
+    "state": "ID",
+    "website": "http://www.airidaho.com"
+  },
+  {
+    "id": "2022",
+    "name": "Alpine Aviation Academy",
+    "city": "Caldwell",
+    "state": "ID",
+    "website": "http://www.alpineflightschool.com"
+  },
+  {
+    "id": "2297",
+    "name": "American Made Aviation Services, LLC",
+    "city": "Mountain Home",
+    "state": "ID",
+    "website": "https://www.americanmadeaviation.com"
+  },
+  {
+    "id": "614",
+    "name": "Avcenter",
+    "city": "Pocatello",
+    "state": "ID",
+    "website": "http://www.avcenter.com/"
+  },
+  {
+    "id": "615",
+    "name": "International Aircraft Cooperative",
+    "city": "Rigby",
+    "state": "ID",
+    "website": "http://www.letsfly.org/"
+  },
+  {
+    "id": "611",
+    "name": "McCall Mountain Canyon Flying",
+    "city": "Mc Call",
+    "state": "ID",
+    "website": "http://www.mountaincanyonflying.com/index.html"
+  },
+  {
+    "id": "1780",
+    "name": "Mountain Home Aviation",
+    "city": "Mountain Home",
+    "state": "ID",
+    "website": null
+  },
+  {
+    "id": "604",
+    "name": "Northern Air",
+    "city": "Bonners Ferry",
+    "state": "ID",
+    "website": "http://www.northernair.biz/"
+  },
+  {
+    "id": "2203",
+    "name": "Ponderosa Aero Club",
+    "city": "Boise",
+    "state": "ID",
+    "website": "http://PonderosaAero.org"
+  },
+  {
+    "id": "2034",
+    "name": "Thompson Aviation",
+    "city": "Mountain Home",
+    "state": "ID",
+    "website": null
+  },
+  {
+    "id": "2025",
+    "name": "Aeronautics Academy, Inc.",
+    "city": "Chicago",
+    "state": "IL",
+    "website": "https://www.aeronauticsacademy.com"
+  },
+  {
+    "id": "656",
+    "name": "Allmond Aviation, LLC",
+    "city": "Peoria IL",
+    "state": "IL",
+    "website": "http://www.allmondaviation.com/"
+  },
+  {
+    "id": "1787",
+    "name": "Avel Flight School",
+    "city": "Chicago",
+    "state": "IL",
+    "website": "http://www.avelflightschool.com"
+  },
+  {
+    "id": "633",
+    "name": "Aviation Professionals Inc",
+    "city": "Chicago IL",
+    "state": "IL",
+    "website": "http://www.apischool.com/"
+  },
+  {
+    "id": "2096",
+    "name": "Big River Aviation LLC",
+    "city": "Alton",
+    "state": "IL",
+    "website": null
+  },
+  {
+    "id": "646",
+    "name": "Blue Skies Flying Services",
+    "city": "Lake In The Hills",
+    "state": "IL",
+    "website": "http://blueskiespilotshop.com/"
+  },
+  {
+    "id": "617",
+    "name": "Chicago Aerial Tours",
+    "city": "Chicago",
+    "state": "IL",
+    "website": "http://www.chicagoaerialtours.com"
+  },
+  {
+    "id": "1760",
+    "name": "CP Flight Training",
+    "city": "Romeoville",
+    "state": "IL",
+    "website": "http://www.cpflighttraining.com"
+  },
+  {
+    "id": "2210",
+    "name": "Earth Grazer, Inc.",
+    "city": "Chicago",
+    "state": "IL",
+    "website": "http://www.chicagoaerialtours.com"
+  },
+  {
+    "id": "2124",
+    "name": "Elite Flight Training and Aircraft Management LLC",
+    "city": "Kankakee",
+    "state": "IL",
+    "website": "http://www.eliteaviationpro.com/"
+  },
+  {
+    "id": "2125",
+    "name": "Elite Flight Training and Aircraft Management LLC",
+    "city": "Kankakee",
+    "state": "IL",
+    "website": "http://www.eliteaviationpro.com/"
+  },
+  {
+    "id": "1727",
+    "name": "Fly There LLC",
+    "city": "Wheeling",
+    "state": "IL",
+    "website": "http://www.flytherellc.com"
+  },
+  {
+    "id": "2060",
+    "name": "FSX Chicago",
+    "city": "Oak Park",
+    "state": "IL",
+    "website": "http://www.fsxchicago.com"
+  },
+  {
+    "id": "1759",
+    "name": "Great River Aviation",
+    "city": "Quincy",
+    "state": "IL",
+    "website": "http://www.greatriveraviation.com"
+  },
+  {
+    "id": "2066",
+    "name": "J F Aviation Inc",
+    "city": "Joliet",
+    "state": "IL",
+    "website": "http://www.jfaviationinc.com"
+  },
+  {
+    "id": "2198",
+    "name": "Lumanair Aviation Services",
+    "city": "Sugar Grove",
+    "state": "IL",
+    "website": null
+  },
+  {
+    "id": "2196",
+    "name": "M & M Aviation Services, Ltd.",
+    "city": "Rock Falls",
+    "state": "IL",
+    "website": "http://www.mmaviation.net"
+  },
+  {
+    "id": "1561",
+    "name": "Midwest Flight Academy",
+    "city": "Rochelle",
+    "state": "IL",
+    "website": "http://www.midwestflightacademy.com/pages/1/index.htm"
+  },
+  {
+    "id": "2002",
+    "name": "Nois Flight Academy",
+    "city": "noa",
+    "state": "IL",
+    "website": null
+  },
+  {
+    "id": "2092",
+    "name": "Northwest Flyers",
+    "city": "Schaumburg",
+    "state": "IL",
+    "website": "http://www.northwestflyers.com"
+  },
+  {
+    "id": "1529",
+    "name": "Rotors and Wings Aviation, LLC",
+    "city": "Kankakee",
+    "state": "IL",
+    "website": "http://www.rotorsandwings.us"
+  },
+  {
+    "id": "663",
+    "name": "RTC",
+    "city": "Savoy, IL",
+    "state": "IL",
+    "website": "http://www.rtcpilot.com/"
+  },
+  {
+    "id": "1714",
+    "name": "St Louis Flight Training",
+    "city": "Cahokia",
+    "state": "IL",
+    "website": "http://www.stlflight.com"
+  },
+  {
+    "id": "1833",
+    "name": "Synergy Flight Center",
+    "city": "Bloomington",
+    "state": "IL",
+    "website": "http://www.synergyfbo.com"
+  },
+  {
+    "id": "2251",
+    "name": "TimeBuildingUSA.Com",
+    "city": "Chicago",
+    "state": "IL",
+    "website": "https://www.timebuildingusa.com"
+  },
+  {
+    "id": "2284",
+    "name": "AlphaFlight",
+    "city": "Plymouth",
+    "state": "IN",
+    "website": "http://alphaflight.aero"
+  },
+  {
+    "id": "2272",
+    "name": "AndAir Aircraft Rental & Instruction, LLC",
+    "city": "Anderson",
+    "state": "IN",
+    "website": "http://www.andair-ari.com"
+  },
+  {
+    "id": "2070",
+    "name": "Brown Flying School Inc",
+    "city": "Terre Haute",
+    "state": "IN",
+    "website": "http://brownflyingschool.com/"
+  },
+  {
+    "id": "1834",
+    "name": "Dubois County Flight Services",
+    "city": "Huntingburg",
+    "state": "IN",
+    "website": null
+  },
+  {
+    "id": "1703",
+    "name": "Eagle Aircraft",
+    "city": "Valparaiso",
+    "state": "IN",
+    "website": "http://www.jseagle.com"
+  },
+  {
+    "id": "717",
+    "name": "Eagle Aircraft",
+    "city": "Valparaiso",
+    "state": "IN",
+    "website": "http://www.jseagle.com/"
+  },
+  {
+    "id": "1625",
+    "name": "Eagle Flyers Inc",
+    "city": "Indianapolis",
+    "state": "IN",
+    "website": "http://www.montgomeryaviation.net/flight_school.html"
+  },
+  {
+    "id": "693",
+    "name": "Griffith Aviation",
+    "city": "Griffith",
+    "state": "IN",
+    "website": "http://www.griffithairport.com/"
+  },
+  {
+    "id": "2029",
+    "name": "Hoosier Aviation",
+    "city": "Terre Haute",
+    "state": "IN",
+    "website": "http://www.hoosieraviation.com"
+  },
+  {
+    "id": "1670",
+    "name": "Indy Flight Training",
+    "city": "Greenfield",
+    "state": "IN",
+    "website": "http://www.indyflighttraining.com"
+  },
+  {
+    "id": "1786",
+    "name": "SkolaLetenja",
+    "city": "VZ",
+    "state": "IN",
+    "website": null
+  },
+  {
+    "id": "682",
+    "name": "X-Cell Aviation",
+    "city": "Evansville",
+    "state": "IN",
+    "website": "http://www.x-cellaviation.com/"
+  },
+  {
+    "id": "2316",
+    "name": "Flex Air Kansas Flight School",
+    "city": "Kansas City",
+    "state": "KS",
+    "website": "https://goflexair.com/kansas-flight-school"
+  },
+  {
+    "id": "2317",
+    "name": "Flex Air Kansas Flight School",
+    "city": "Manhattan",
+    "state": "KS",
+    "website": "https://goflexair.com/kansas-flight-school"
+  },
+  {
+    "id": "1658",
+    "name": "KC Flight",
+    "city": "Gardner - New Century",
+    "state": "KS",
+    "website": "http://www.kcfight.com"
+  },
+  {
+    "id": "2292",
+    "name": "Matta Aviation Services",
+    "city": "Junction City",
+    "state": "KS",
+    "website": "https://www.mattaaviationservices.com"
+  },
+  {
+    "id": "750",
+    "name": "Vinland Aerodrome",
+    "city": "Baldwin City",
+    "state": "KS",
+    "website": "http://www.mcfarlaneaviation.com/vinland/"
+  },
+  {
+    "id": "760",
+    "name": "Wells Aircraft",
+    "city": "Hutchinson",
+    "state": "KS",
+    "website": "http://www.wellsac.com/"
+  },
+  {
+    "id": "1674",
+    "name": "Wells Aircraft Inc",
+    "city": "Hutchinson",
+    "state": "KS",
+    "website": "http://www.wellsac.com"
+  },
+  {
+    "id": "1664",
+    "name": "Cardinal Wings Aviation LLC",
+    "city": "Louisville",
+    "state": "KY",
+    "website": "http://www.cardinalwingsaviation.com"
+  },
+  {
+    "id": "1527",
+    "name": "Douglas Aviation LLC",
+    "city": "Springfield",
+    "state": "KY",
+    "website": "http://www.douglasaviation.org"
+  },
+  {
+    "id": "2326",
+    "name": "Final Approach Aviation LLC",
+    "city": "Murray",
+    "state": "KY",
+    "website": "https://finalapproachaviation.com/"
+  },
+  {
+    "id": "793",
+    "name": "Lexington Flying Club",
+    "city": "Lexington",
+    "state": "KY",
+    "website": "http://www.lexingtonflyingclub.org/"
+  },
+  {
+    "id": "1558",
+    "name": "Professional Aeronautics Academy",
+    "city": "Deridder",
+    "state": "LA",
+    "website": "http://www.professionalaeronautics.com"
+  },
+  {
+    "id": "1639",
+    "name": "Allen Aviation LLC dba The Worcester Regional Flight Academy",
+    "city": "Worcester",
+    "state": "MA",
+    "website": "http://www.allenaviationllc.com"
+  },
+  {
+    "id": "1709",
+    "name": "Beverly Flight Center inc",
+    "city": "Danvers",
+    "state": "MA",
+    "website": "http://www.beverlyflightcenter.com"
+  },
+  {
+    "id": "854",
+    "name": "East Coast Aero Club",
+    "city": "Bedford",
+    "state": "MA",
+    "website": "http://www.eastcoastaeroclub.com/"
+  },
+  {
+    "id": "1656",
+    "name": "East Coast Aero Club",
+    "city": "Norwood",
+    "state": "MA",
+    "website": "http://www.eastcoastaeroclub.com/"
+  },
+  {
+    "id": "1921",
+    "name": "Pilgrim Aviation Flight School",
+    "city": "Plymouth, Nantucket",
+    "state": "MA",
+    "website": "http://www.flypilgrim.com/"
+  },
+  {
+    "id": "2080",
+    "name": "Sticknrudderaero",
+    "city": "Chatham",
+    "state": "MA",
+    "website": null
+  },
+  {
+    "id": "1949",
+    "name": "Teamflys",
+    "city": "North Adams",
+    "state": "MA",
+    "website": "http://www.teamflys.com"
+  },
+  {
+    "id": "845",
+    "name": "ATC Flight Training Center",
+    "city": "Ft. Washington",
+    "state": "MD",
+    "website": "http://www.lrn2fly.com/"
+  },
+  {
+    "id": "1762",
+    "name": "Freeway Aviation Inc",
+    "city": "Bowie",
+    "state": "MD",
+    "website": "http://www.FreewayAviation.com"
+  },
+  {
+    "id": "1797",
+    "name": "Harford Air Services",
+    "city": "Chruchville",
+    "state": "MD",
+    "website": "http://www.harfordair.com"
+  },
+  {
+    "id": "1578",
+    "name": "Learn To Fly Today",
+    "city": "Gaithersburg",
+    "state": "MD",
+    "website": "http://www.learntoflytoday.net"
+  },
+  {
+    "id": "2078",
+    "name": "Ocean Aviation Flight Academy",
+    "city": "Ocean City, Maryland",
+    "state": "MD",
+    "website": "http://www.flyoceanaviation.com"
+  },
+  {
+    "id": "836",
+    "name": "The Community College Of Baltimore County",
+    "city": "Baltimore",
+    "state": "MD",
+    "website": "http://www.ccbcmd.edu/aviation"
+  },
+  {
+    "id": "1599",
+    "name": "Flightsource",
+    "city": "Auburn",
+    "state": "ME",
+    "website": null
+  },
+  {
+    "id": "1632",
+    "name": "Morgan Aviation",
+    "city": "Norridgewock",
+    "state": "ME",
+    "website": "http://www.morganaviation.org"
+  },
+  {
+    "id": "1958",
+    "name": "Portland Flight Services",
+    "city": "Portland",
+    "state": "ME",
+    "website": null
+  },
+  {
+    "id": "914",
+    "name": "Benz Aviation East",
+    "city": "Ionia",
+    "state": "MI",
+    "website": "http://www.benzaviation.com/"
+  },
+  {
+    "id": "1650",
+    "name": "Blue Sun Air",
+    "city": "Zeeland",
+    "state": "MI",
+    "website": "http://www.BlueSunAir.com"
+  },
+  {
+    "id": "2247",
+    "name": "Buzzard Air Service",
+    "city": "Carleton",
+    "state": "MI",
+    "website": "http://www.buzzardairservice.com"
+  },
+  {
+    "id": "947",
+    "name": "Conrad Aero",
+    "city": "Three Rivers",
+    "state": "MI",
+    "website": "http://conradaero.com/"
+  },
+  {
+    "id": "2067",
+    "name": "Contrail Aviation",
+    "city": "Cheboygan",
+    "state": "MI",
+    "website": "http://www.contrail-aviation.com"
+  },
+  {
+    "id": "2283",
+    "name": "Giving Wings Aviation",
+    "city": "Traverse City",
+    "state": "MI",
+    "website": null
+  },
+  {
+    "id": "2134",
+    "name": "Jensen Aviation Inc",
+    "city": "South Haven",
+    "state": "MI",
+    "website": "http://www.Jensen-Aviation.com"
+  },
+  {
+    "id": "920",
+    "name": "Lansing Community College",
+    "city": "Lansing",
+    "state": "MI",
+    "website": "http://www.lcc.edu/"
+  },
+  {
+    "id": "1668",
+    "name": "Lansing Community College Flight Center",
+    "city": "Lansing",
+    "state": "MI",
+    "website": "http://www.lcc.edu/tet/aviation"
+  },
+  {
+    "id": "2313",
+    "name": "Lavion Aero",
+    "city": "Zeeland",
+    "state": "MI",
+    "website": "https://www.lavion.aero/"
+  },
+  {
+    "id": "1901",
+    "name": "Mid Michigan Aviation",
+    "city": "Owosso",
+    "state": "MI",
+    "website": null
+  },
+  {
+    "id": "1520",
+    "name": "ProFlight Training Academy",
+    "city": "Jackson",
+    "state": "MI",
+    "website": "http://www.proflightacademy.com"
+  },
+  {
+    "id": "2090",
+    "name": "Solo Aviation",
+    "city": "Canton - Plymouth - Mettetal",
+    "state": "MI",
+    "website": "http://www.soloaviation.aero/"
+  },
+  {
+    "id": "885",
+    "name": "Solo Aviation",
+    "city": "Ann Arbor",
+    "state": "MI",
+    "website": "http://www.soloaviation.aero/"
+  },
+  {
+    "id": "2091",
+    "name": "Solo Aviation",
+    "city": "Jackson",
+    "state": "MI",
+    "website": "http://www.soloaviation.aero/"
+  },
+  {
+    "id": "2049",
+    "name": "10 Day Instrument Rating",
+    "city": "Duluth",
+    "state": "MN",
+    "website": "http://www.10dayinstrumentrating.com"
+  },
+  {
+    "id": "1831",
+    "name": "Academy College",
+    "city": "Bloomington",
+    "state": "MN",
+    "website": "http://www.academycollege.edu"
+  },
+  {
+    "id": "2266",
+    "name": "Accelerated Aviation Instruction LLC",
+    "city": "Owatonna",
+    "state": "MN",
+    "website": "Http://www.accelerated-aviation.com"
+  },
+  {
+    "id": "2142",
+    "name": "Adventure Seaplanes",
+    "city": "Lino Lakes",
+    "state": "MN",
+    "website": "Http://www.adventureseaplanes.com"
+  },
+  {
+    "id": "1956",
+    "name": "Air Trek North",
+    "city": "Lakeville",
+    "state": "MN",
+    "website": "http://www.airtreknorth.com"
+  },
+  {
+    "id": "2149",
+    "name": "Fly Duluth",
+    "city": "Duluth",
+    "state": "MN",
+    "website": null
+  },
+  {
+    "id": "1642",
+    "name": "Lake Superior College",
+    "city": "Duluth",
+    "state": "MN",
+    "website": "http://www.lsc.edu"
+  },
+  {
+    "id": "1630",
+    "name": "Lake Superior College Center for Advanced Aviation",
+    "city": "Duluth",
+    "state": "MN",
+    "website": "http://www.lsc-caa.info"
+  },
+  {
+    "id": "993",
+    "name": "St Cloud State University",
+    "city": "St. Cloud",
+    "state": "MN",
+    "website": "http://www.stcloudstate.edu/aviation/"
+  },
+  {
+    "id": "1624",
+    "name": "Twin Cities Flight Training",
+    "city": "Blaine and St Paul",
+    "state": "MN",
+    "website": "http://www.tcaviation.com"
+  },
+  {
+    "id": "2048",
+    "name": "Venture North Aviation",
+    "city": "Cloquet",
+    "state": "MN",
+    "website": "http://www.venturenorthaviation.com"
+  },
+  {
+    "id": "2105",
+    "name": "Alpha Air Center",
+    "city": "Joplin",
+    "state": "MO",
+    "website": "http://www.alphaaircenter.com"
+  },
+  {
+    "id": "1962",
+    "name": "Flying KC",
+    "city": "Kansas City",
+    "state": "MO",
+    "website": "http://www.flyingkc.com"
+  },
+  {
+    "id": "2113",
+    "name": "GATEWAY FLIGHT TRAINING",
+    "city": "Chesterfield",
+    "state": "MO",
+    "website": "http://www.gatewayflight.com"
+  },
+  {
+    "id": "2062",
+    "name": "GATEWAY FLIGHT TRAINING",
+    "city": "SAINT LOUIS",
+    "state": "MO",
+    "website": "http://www.gatewayflight.com"
+  },
+  {
+    "id": "1028",
+    "name": "Midwest Executive Aircraft",
+    "city": "Lee&#039;s Summit",
+    "state": "MO",
+    "website": "http://www.learn2flymea.com/"
+  },
+  {
+    "id": "1523",
+    "name": "Skyline Aeronautics",
+    "city": "Chesterfield",
+    "state": "MO",
+    "website": "http://www.skylineaero.com"
+  },
+  {
+    "id": "1715",
+    "name": "St Louis Flight Training",
+    "city": "St. Louis",
+    "state": "MO",
+    "website": "http://www.stlflight.com"
+  },
+  {
+    "id": "2282",
+    "name": "US Flight Co",
+    "city": "Kansas City",
+    "state": "MO",
+    "website": "https://usflightco.com/kansas-city/"
+  },
+  {
+    "id": "1675",
+    "name": "Wells Aircraft Inc",
+    "city": "Kansas City",
+    "state": "MO",
+    "website": "http://www.wellsac.com"
+  },
+  {
+    "id": "2329",
+    "name": "Down To Fly!",
+    "city": "Gulfport",
+    "state": "MS",
+    "website": "http://www.downtoflyllc.com"
+  },
+  {
+    "id": "2335",
+    "name": "Keen2Fly",
+    "city": "Ocean Springs",
+    "state": "MS",
+    "website": "http://www.keen2fly.com"
+  },
+  {
+    "id": "2229",
+    "name": "A-Tec Aircraft Maintenance Center",
+    "city": "Hamilton",
+    "state": "MT",
+    "website": "http://www.atec-amc.com"
+  },
+  {
+    "id": "1696",
+    "name": "Summit Aviation Inc",
+    "city": "Belgrade",
+    "state": "MT",
+    "website": "http://flysummit.net/"
+  },
+  {
+    "id": "1590",
+    "name": "Acro Dynamics llc",
+    "city": "Mooresville",
+    "state": "NC",
+    "website": "http://acrodynamics.org/"
+  },
+  {
+    "id": "2057",
+    "name": "AEROConnor Aviation Services",
+    "city": "Durham",
+    "state": "NC",
+    "website": "http://www.flightschoolnc.com"
+  },
+  {
+    "id": "1971",
+    "name": "Alpha One Air Service",
+    "city": "Concord",
+    "state": "NC",
+    "website": "http://www.AlphaOneAirService.com"
+  },
+  {
+    "id": "1965",
+    "name": "Alpha One Air Service",
+    "city": "Salisbury",
+    "state": "NC",
+    "website": "http://www.AlphaOneAirService.com"
+  },
+  {
+    "id": "1682",
+    "name": "Big Air Aviation LLC",
+    "city": "Rutherfordton",
+    "state": "NC",
+    "website": "http://www.bigairaviation.com"
+  },
+  {
+    "id": "1908",
+    "name": "Blue Ridge Sport Flight LLC",
+    "city": "Hendersonville",
+    "state": "NC",
+    "website": "http://www.blueridgesportflight.com"
+  },
+  {
+    "id": "1150",
+    "name": "Burlington Aviation",
+    "city": "Burlington",
+    "state": "NC",
+    "website": "http://www.burlingtonaviation.com/"
+  },
+  {
+    "id": "2107",
+    "name": "Burlington Aviation",
+    "city": "Burlington",
+    "state": "NC",
+    "website": "http://www.burlingtonaviation.com"
+  },
+  {
+    "id": "2159",
+    "name": "Cape Fear Aviation Flight Training",
+    "city": "Fayetteville",
+    "state": "NC",
+    "website": "http://www.capefearaviation.com/"
+  },
+  {
+    "id": "2343",
+    "name": "Crosswind Flight Academy",
+    "city": "Statesville",
+    "state": "NC",
+    "website": "http://www.crosswindflightacademy.com"
+  },
+  {
+    "id": "1806",
+    "name": "Currituck Flying Club",
+    "city": "Currituck",
+    "state": "NC",
+    "website": null
+  },
+  {
+    "id": "1752",
+    "name": "Daviation",
+    "city": "Elkin",
+    "state": "NC",
+    "website": null
+  },
+  {
+    "id": "2069",
+    "name": "DaVinci Flight Academy",
+    "city": "Salisbury",
+    "state": "NC",
+    "website": "http://www.davinciflightacademy.com"
+  },
+  {
+    "id": "1991",
+    "name": "Global Pilot Academy Inc",
+    "city": "Jacksonville",
+    "state": "NC",
+    "website": "http://www.gpapilot.com"
+  },
+  {
+    "id": "2290",
+    "name": "High Tide Aviation",
+    "city": "Southport NC",
+    "state": "NC",
+    "website": "https://flyhightide.com/"
+  },
+  {
+    "id": "2287",
+    "name": "Imperial Aviation",
+    "city": "Mooresville",
+    "state": "NC",
+    "website": null
+  },
+  {
+    "id": "1172",
+    "name": "Piedmont Flight Training",
+    "city": "Winston-Salem",
+    "state": "NC",
+    "website": "http://www.piedmontflighttraining.com/"
+  },
+  {
+    "id": "1903",
+    "name": "TAA Flight Training",
+    "city": "Greensboro",
+    "state": "NC",
+    "website": "http://www.flytaa.com"
+  },
+  {
+    "id": "2278",
+    "name": "Taildusters LLC",
+    "city": "Mooresville",
+    "state": "NC",
+    "website": "http://www.taildusters.org"
+  },
+  {
+    "id": "2216",
+    "name": "Total Flight Solutions",
+    "city": "Louisburg",
+    "state": "NC",
+    "website": "http://totalflight.com"
+  },
+  {
+    "id": "2319",
+    "name": "Total Flight Solutions",
+    "city": "Pinehurst",
+    "state": "NC",
+    "website": "http://totalflight.com"
+  },
+  {
+    "id": "1521",
+    "name": "UND Aerospace Foundation",
+    "city": "Lumberton",
+    "state": "NC",
+    "website": "http://ftc.aero.und.edu/lumberton/index.php"
+  },
+  {
+    "id": "1156",
+    "name": "WNC Aviation",
+    "city": "Fletcher",
+    "state": "NC",
+    "website": "http://www.wncaviation.com/"
+  },
+  {
+    "id": "1175",
+    "name": "Grand Forks Flight Support",
+    "city": "Grank Forks",
+    "state": "ND",
+    "website": "http://www.flygfk.com/"
+  },
+  {
+    "id": "2332",
+    "name": "JeyInin",
+    "city": "Jeynin",
+    "state": "NE",
+    "website": null
+  },
+  {
+    "id": "2120",
+    "name": "OCS Flight Training",
+    "city": "KMLE",
+    "state": "NE",
+    "website": "http://omahacap.org"
+  },
+  {
+    "id": "2213",
+    "name": "Taylor-Made Flight Training",
+    "city": "Wahoo",
+    "state": "NE",
+    "website": null
+  },
+  {
+    "id": "2228",
+    "name": "409th Aviation",
+    "city": "Manchester",
+    "state": "NH",
+    "website": "http://www.409thaviation.com"
+  },
+  {
+    "id": "1657",
+    "name": "East Coast Aero Club",
+    "city": "Nashua",
+    "state": "NH",
+    "website": "http://www.eastcoastaeroclub.com/"
+  },
+  {
+    "id": "1718",
+    "name": "Hampton Airfield",
+    "city": "North Hampton",
+    "state": "NH",
+    "website": "http://www.hamptonflightschool.com"
+  },
+  {
+    "id": "2081",
+    "name": "Keystone Aerosports",
+    "city": "Hooksett",
+    "state": "NH",
+    "website": "http://www.keystoneaerosports.com"
+  },
+  {
+    "id": "2005",
+    "name": "Seacoast Helicopters",
+    "city": "Portsmouth",
+    "state": "NH",
+    "website": "http://www.seacoasthelos.com"
+  },
+  {
+    "id": "1086",
+    "name": "Signal Aviation Services",
+    "city": "West Lebanon",
+    "state": "NH",
+    "website": "http://www.signalaviation.com/"
+  },
+  {
+    "id": "1994",
+    "name": "Air Fleet Training Systems",
+    "city": "Fairfield",
+    "state": "NJ",
+    "website": "http://www.airfleettraining.com/"
+  },
+  {
+    "id": "1761",
+    "name": "Air Mods flight center",
+    "city": "Robbinsville",
+    "state": "NJ",
+    "website": "http://www.airmodsflightcenter.com"
+  },
+  {
+    "id": "1983",
+    "name": "Air Mods Flight Center",
+    "city": "Robbinsville",
+    "state": "NJ",
+    "website": "http://www.air-mods.com"
+  },
+  {
+    "id": "1090",
+    "name": "Century Flight Academy",
+    "city": "Fairfield",
+    "state": "NJ",
+    "website": "http://www.centuryair.com/cfa/cfa_dyn_home.asp?cid=1"
+  },
+  {
+    "id": "2337",
+    "name": "Costanzo Air Flight School",
+    "city": "Fairfield",
+    "state": "NJ",
+    "website": "https://www.costanzoair.com"
+  },
+  {
+    "id": "1096",
+    "name": "Freeflight Aviation",
+    "city": "Medford",
+    "state": "NJ",
+    "website": "http://freeflight-aviation.com/"
+  },
+  {
+    "id": "1563",
+    "name": "Freeflight Aviation LLC",
+    "city": "Medford, NJ",
+    "state": "NJ",
+    "website": "http://freeflight-aviation.coom"
+  },
+  {
+    "id": "1964",
+    "name": "Glass Panel Training LLC",
+    "city": "Wall Township",
+    "state": "NJ",
+    "website": "http://www.glasspaneltraining.com/"
+  },
+  {
+    "id": "1717",
+    "name": "Old Bridge Flight School, LLC",
+    "city": "Englishtown",
+    "state": "NJ",
+    "website": "http://oldbridgeflightschool.com/"
+  },
+  {
+    "id": "1954",
+    "name": "Skies Unlimited Flying Club",
+    "city": "Ewing",
+    "state": "NJ",
+    "website": "http://www.skiesunlimited.name/"
+  },
+  {
+    "id": "1666",
+    "name": "Somerset Air Service",
+    "city": "Bedminster",
+    "state": "NJ",
+    "website": "http://www.somersetairport.com"
+  },
+  {
+    "id": "1716",
+    "name": "Spitfire Aerospace Flight Training",
+    "city": "Pedricktown",
+    "state": "NJ",
+    "website": "http://spitfireaerospace.com/default.htm"
+  },
+  {
+    "id": "2043",
+    "name": "Tailspinners Flight Club and Bistro",
+    "city": "Lumberton",
+    "state": "NJ",
+    "website": "http://www.tailspinners.us"
+  },
+  {
+    "id": "1110",
+    "name": "Great Southwest Aviation",
+    "city": "Roswell",
+    "state": "NM",
+    "website": "http://www.greatsouthwestaviation.com/"
+  },
+  {
+    "id": "1738",
+    "name": "No 1 FTC",
+    "city": "Alor Star",
+    "state": "NM",
+    "website": null
+  },
+  {
+    "id": "1699",
+    "name": "Oxcart Aviation",
+    "city": "Taos",
+    "state": "NM",
+    "website": null
+  },
+  {
+    "id": "1111",
+    "name": "Sierra Aviation",
+    "city": "Santa Fe",
+    "state": "NM",
+    "website": "http://internet.cybermesa.com/~sierraav/"
+  },
+  {
+    "id": "2250",
+    "name": "Sierra Aviation LLC",
+    "city": "Santa Fe",
+    "state": "NM",
+    "website": "http://www.sierraflying.com"
+  },
+  {
+    "id": "1661",
+    "name": "SkyMachines USA",
+    "city": "Santa Fe",
+    "state": "NM",
+    "website": "http://www.santafeflying.com"
+  },
+  {
+    "id": "1077",
+    "name": "Ace Aviation",
+    "city": "Reno",
+    "state": "NV",
+    "website": "http://www.beanace.com/"
+  },
+  {
+    "id": "1944",
+    "name": "Ace Aviation",
+    "city": "Reno",
+    "state": "NV",
+    "website": null
+  },
+  {
+    "id": "1575",
+    "name": "Cactus Aviation",
+    "city": "Henderson",
+    "state": "NV",
+    "website": "http://www.cactuslv.com"
+  },
+  {
+    "id": "1576",
+    "name": "Cactus Aviation",
+    "city": "Las Vegas",
+    "state": "NV",
+    "website": "http://www.cactuslv.com"
+  },
+  {
+    "id": "2214",
+    "name": "Desert Dogs Aviation",
+    "city": "Henderson",
+    "state": "NV",
+    "website": "http://www.DesertDogsAviation.com"
+  },
+  {
+    "id": "2217",
+    "name": "Great Basin Aviation",
+    "city": "Reno",
+    "state": "NV",
+    "website": "http://www.greatbasinaviation.com"
+  },
+  {
+    "id": "1953",
+    "name": "Helios Aviation",
+    "city": "Henderson",
+    "state": "NV",
+    "website": "Http://www.heliosaviation.com"
+  },
+  {
+    "id": "1570",
+    "name": "Monarch Sky",
+    "city": "Henderson",
+    "state": "NV",
+    "website": "http://www.monarchsky.com"
+  },
+  {
+    "id": "1569",
+    "name": "Monarch Sky",
+    "city": "Las Vegas",
+    "state": "NV",
+    "website": "http://www.monarchsky.com"
+  },
+  {
+    "id": "2095",
+    "name": "2bapilot NYC",
+    "city": "Farmingdale",
+    "state": "NY",
+    "website": "http://www.2bapilotnyc.com/"
+  },
+  {
+    "id": "1977",
+    "name": "747 Aviation Inc",
+    "city": "Cortland",
+    "state": "NY",
+    "website": "http://www.747aviation.com/"
+  },
+  {
+    "id": "1554",
+    "name": "Aeromation",
+    "city": "Endicott",
+    "state": "NY",
+    "website": "http://www.aeromation.com"
+  },
+  {
+    "id": "2038",
+    "name": "Airborn Flight Services Inc",
+    "city": "Farmingdale",
+    "state": "NY",
+    "website": "http://www.flyforreal.com"
+  },
+  {
+    "id": "1734",
+    "name": "Ayla Aviation Academy",
+    "city": "Aqaba",
+    "state": "NY",
+    "website": "http://www.aylaaviation.com/"
+  },
+  {
+    "id": "2031",
+    "name": "Blue Sky Flights",
+    "city": "Hamilton BERMUDA",
+    "state": "NY",
+    "website": null
+  },
+  {
+    "id": "1654",
+    "name": "Danny Waizman Flight School and Aircraft Rental",
+    "city": "Farmingdale",
+    "state": "NY",
+    "website": "http://www.dannywaizman.com"
+  },
+  {
+    "id": "1119",
+    "name": "First Class Aviation",
+    "city": "Coram",
+    "state": "NY",
+    "website": "http://www.firstclassaviation.net/home.html"
+  },
+  {
+    "id": "2068",
+    "name": "Limitless Aviation",
+    "city": "Ballston Spa, NY",
+    "state": "NY",
+    "website": "http://myskyislimitless.com"
+  },
+  {
+    "id": "1137",
+    "name": "Mid Island Air Service",
+    "city": "Ronkonkoma",
+    "state": "NY",
+    "website": "http://www.midislandair.com/"
+  },
+  {
+    "id": "1593",
+    "name": "MJH Flying Club",
+    "city": "Farmingdale",
+    "state": "NY",
+    "website": "http://www.mjhflight.com"
+  },
+  {
+    "id": "1788",
+    "name": "QA flight schedule",
+    "city": "Croton on Hudson",
+    "state": "NY",
+    "website": null
+  },
+  {
+    "id": "1652",
+    "name": "Rochester Air Center",
+    "city": "Rochester",
+    "state": "NY",
+    "website": "http://www.rochesterair.com/"
+  },
+  {
+    "id": "1684",
+    "name": "WNY Flight Training",
+    "city": "Lockport",
+    "state": "NY",
+    "website": "http://www.flywny.com"
+  },
+  {
+    "id": "1811",
+    "name": "Wurtsboro Flight Management",
+    "city": "Wurtsboro",
+    "state": "NY",
+    "website": "http://www.wurtsboroairport.com"
+  },
+  {
+    "id": "1929",
+    "name": "YY Flight School",
+    "city": "Manhatten",
+    "state": "NY",
+    "website": null
+  },
+  {
+    "id": "1178",
+    "name": "American Winds Flight Academy",
+    "city": "Akron",
+    "state": "OH",
+    "website": "http://www.teachmetofly.com/"
+  },
+  {
+    "id": "1745",
+    "name": "American Winds Flight Academy",
+    "city": "Akron",
+    "state": "OH",
+    "website": "http://www.teachmetofly.com"
+  },
+  {
+    "id": "1814",
+    "name": "Aviators Flight Academy LLC",
+    "city": "Springboro",
+    "state": "OH",
+    "website": "http://www.aviatorsflightacademy.com"
+  },
+  {
+    "id": "2325",
+    "name": "Avit Flight Academy",
+    "city": "Wadsworth",
+    "state": "OH",
+    "website": "http://www.flyAvit.com"
+  },
+  {
+    "id": "1517",
+    "name": "BFR Flyers",
+    "city": "Akron/Canton",
+    "state": "OH",
+    "website": "http://www.bfrflyers.t83.net"
+  },
+  {
+    "id": "1920",
+    "name": "Bowling Green State University",
+    "city": "Bowling Green",
+    "state": "OH",
+    "website": "http://www.bgsu.edu/aviation"
+  },
+  {
+    "id": "2042",
+    "name": "Fitch Aerospace Inc",
+    "city": "Elyria",
+    "state": "OH",
+    "website": "http://www.fitchaerospace.com"
+  },
+  {
+    "id": "1950",
+    "name": "Glass City Flight",
+    "city": "Toledo / Swanton",
+    "state": "OH",
+    "website": "http://www.glasscityflight.com"
+  },
+  {
+    "id": "2103",
+    "name": "Great Plains enterprises LLC",
+    "city": "Wilmington",
+    "state": "OH",
+    "website": "http://www.gpeflightschool.org/"
+  },
+  {
+    "id": "1918",
+    "name": "MacAir Aviation and Aero Club",
+    "city": "Dayton",
+    "state": "OH",
+    "website": "http://macair.us"
+  },
+  {
+    "id": "1179",
+    "name": "Ohio University Community Aviation",
+    "city": "Albany",
+    "state": "OH",
+    "website": "http://www.ohiou.edu/airport/"
+  },
+  {
+    "id": "2058",
+    "name": "Premier Flight Academy ltd",
+    "city": "Cleveland",
+    "state": "OH",
+    "website": "http://premierflightacademy.com"
+  },
+  {
+    "id": "1522",
+    "name": "Springfield Flight Academy",
+    "city": "Springfield",
+    "state": "OH",
+    "website": "http://www.springfieldflightacademy.com"
+  },
+  {
+    "id": "1947",
+    "name": "Sundowner Aviation LLC",
+    "city": "Lancaster",
+    "state": "OH",
+    "website": "http://www.sundowneraviation.com"
+  },
+  {
+    "id": "1198",
+    "name": "TAS Aviation",
+    "city": "Defiance",
+    "state": "OH",
+    "website": "http://www.tas-aviation.com/"
+  },
+  {
+    "id": "1597",
+    "name": "DestinationsEFC LLC Executive Flight Center",
+    "city": "Tulsa",
+    "state": "OK",
+    "website": "http://destinationsefc.com/"
+  },
+  {
+    "id": "1695",
+    "name": "Hangar 1 Flight Center",
+    "city": "Stillwater",
+    "state": "OK",
+    "website": "http://www.hangar1flightcenter.com"
+  },
+  {
+    "id": "1234",
+    "name": "Riverside Flight Center",
+    "city": "Tulsa",
+    "state": "OK",
+    "website": "http://www.riversideflightcenter.com/"
+  },
+  {
+    "id": "2342",
+    "name": "S&S AIRCRAFT",
+    "city": "Cushing",
+    "state": "OK",
+    "website": "https://www.facebook.com/people/SS-Aircraft-Rental/61570927712274/"
+  },
+  {
+    "id": "1524",
+    "name": "Southeastern Oklahoma State University",
+    "city": "Durant",
+    "state": "OK",
+    "website": "http://www.se.edu/aerospace"
+  },
+  {
+    "id": "2030",
+    "name": "Advanced Flight Dynamics",
+    "city": "Redmond",
+    "state": "OR",
+    "website": "http://www.advancedflightdynamics.com"
+  },
+  {
+    "id": "1692",
+    "name": "ApexHeli Oregon Inc",
+    "city": "Florence",
+    "state": "OR",
+    "website": "http://www.apexheli.com"
+  },
+  {
+    "id": "1628",
+    "name": "Aurora Aviation Inc",
+    "city": "Aurora",
+    "state": "OR",
+    "website": "http://www.auroraaviation.com/"
+  },
+  {
+    "id": "1629",
+    "name": "B and E Aviation",
+    "city": "Hillsboro",
+    "state": "OR",
+    "website": "http://www.bneaviation.com"
+  },
+  {
+    "id": "1711",
+    "name": "Corvallis Aero",
+    "city": "Corvallis",
+    "state": "OR",
+    "website": "http://www.corvallisaero.net"
+  },
+  {
+    "id": "2001",
+    "name": "Eugene Flight Center",
+    "city": "Eugene",
+    "state": "OR",
+    "website": "http://www.flyefc.com"
+  },
+  {
+    "id": "1513",
+    "name": "Graham Aviation Services LLC",
+    "city": "Salem",
+    "state": "OR",
+    "website": "http://www.grahamaviation.com"
+  },
+  {
+    "id": "2202",
+    "name": "Infinite Aero Academy",
+    "city": "Albany",
+    "state": "OR",
+    "website": "http://www.InfiniteAeroAcademy.com"
+  },
+  {
+    "id": "1254",
+    "name": "Low-N-Slow Aviation Inc Ultralight Flights",
+    "city": "Sandy",
+    "state": "OR",
+    "website": "http://www.oisp.org/~caroline1/index.htm"
+  },
+  {
+    "id": "1568",
+    "name": "Salem Flight Training",
+    "city": "Salem",
+    "state": "OR",
+    "website": "http://www.salem-flighttraining.com"
+  },
+  {
+    "id": "2271",
+    "name": "Specialized Aero Works",
+    "city": "Bend",
+    "state": "OR",
+    "website": "http://www.Fly-SAW.com"
+  },
+  {
+    "id": "1801",
+    "name": "ACES Aviation",
+    "city": "Beaver Falls",
+    "state": "PA",
+    "website": "http://www.facebook.com/acesbvi"
+  },
+  {
+    "id": "1581",
+    "name": "Adventure Flight Training LP",
+    "city": "Lancaster",
+    "state": "PA",
+    "website": "http://www.adventureflighttrainingpa.com"
+  },
+  {
+    "id": "2108",
+    "name": "Aero Tech Services Inc",
+    "city": "Lancaster",
+    "state": "PA",
+    "website": "http://www.aerotechservices.com"
+  },
+  {
+    "id": "1951",
+    "name": "Airquest Aviation",
+    "city": "Butler, PA",
+    "state": "PA",
+    "website": "http://www.airquestaviation.com"
+  },
+  {
+    "id": "1261",
+    "name": "AirQuest Aviation",
+    "city": "Butler",
+    "state": "PA",
+    "website": "http://www.flybutler.com/"
+  },
+  {
+    "id": "2340",
+    "name": "Fundamentals Flight Training",
+    "city": "Erie",
+    "state": "PA",
+    "website": "http://www.fundamentalsflight.com"
+  },
+  {
+    "id": "1743",
+    "name": "Harrisburg Pilots",
+    "city": "Harrisburg",
+    "state": "PA",
+    "website": "http://www.harrisburgpilots.com"
+  },
+  {
+    "id": "1273",
+    "name": "Haski Aviation",
+    "city": "New Castle",
+    "state": "PA",
+    "website": "http://www.haski.com/"
+  },
+  {
+    "id": "1496",
+    "name": "Lane&#039;s Valley Forge Aviation Inc.",
+    "city": "Collegeville/Skippack",
+    "state": "PA",
+    "website": null
+  },
+  {
+    "id": "2322",
+    "name": "Laurel Highlands Aeronautical Academy",
+    "city": "Latrobe",
+    "state": "PA",
+    "website": "https://www.laurelhighlandsaeronauticalacademy.com/"
+  },
+  {
+    "id": "1826",
+    "name": "LCCC Simulators",
+    "city": "Allentown",
+    "state": "PA",
+    "website": null
+  },
+  {
+    "id": "2195",
+    "name": "LEGACY AVIATION",
+    "city": "PHILADELPHIA",
+    "state": "PA",
+    "website": "http://flylegacyaviation.com"
+  },
+  {
+    "id": "1926",
+    "name": "Liberty Sport Aviation",
+    "city": "Lititz",
+    "state": "PA",
+    "website": "http://www.iwanttoflylsa.com"
+  },
+  {
+    "id": "1997",
+    "name": "Linden Hall Aviation Services",
+    "city": "Lititz",
+    "state": "PA",
+    "website": null
+  },
+  {
+    "id": "1519",
+    "name": "North Coast Flight School, Inc.",
+    "city": "Erie, PA",
+    "state": "PA",
+    "website": "http://www.flyerie.com"
+  },
+  {
+    "id": "2157",
+    "name": "Pa CFI",
+    "city": "East Greenville",
+    "state": "PA",
+    "website": null
+  },
+  {
+    "id": "2109",
+    "name": "Penn Flight School LLC",
+    "city": "Perkasie",
+    "state": "PA",
+    "website": "http://www.pennflightschool.com/"
+  },
+  {
+    "id": "1512",
+    "name": "Cindtronix Aviation",
+    "city": "North Kingstown",
+    "state": "RI",
+    "website": "http://www.cindtronix.com"
+  },
+  {
+    "id": "1980",
+    "name": "Atmosphere Aviation",
+    "city": "Ridgeland",
+    "state": "SC",
+    "website": "http://www.atmosphereaviation.com"
+  },
+  {
+    "id": "1957",
+    "name": "Charleston Flight Services LLC",
+    "city": "Charleston",
+    "state": "SC",
+    "website": "http://www.charlestonflight.net"
+  },
+  {
+    "id": "1751",
+    "name": "Cirrus Flight Training",
+    "city": "Camden",
+    "state": "SC",
+    "website": "http://www.CFTFlightSchool.com"
+  },
+  {
+    "id": "1515",
+    "name": "Coastal Empire Flight Training",
+    "city": "Ridgeland",
+    "state": "SC",
+    "website": "http://www.idreamofflying.com"
+  },
+  {
+    "id": "2104",
+    "name": "CRAFT",
+    "city": "Charleston, Mt. Pleasant, Summerville",
+    "state": "SC",
+    "website": "http://craftchs.com"
+  },
+  {
+    "id": "2006",
+    "name": "FLIGHT SCHOOL of Greenville",
+    "city": "Greenville",
+    "state": "SC",
+    "website": null
+  },
+  {
+    "id": "1542",
+    "name": "Kendall Air",
+    "city": "Conway",
+    "state": "SC",
+    "website": "http://www.flykendallair.com/"
+  },
+  {
+    "id": "2293",
+    "name": "Propel Aviation Center",
+    "city": "Newberry",
+    "state": "SC",
+    "website": "Http://www.propelac.com"
+  },
+  {
+    "id": "1771",
+    "name": "USAeroTech Institute",
+    "city": "Greenville",
+    "state": "SC",
+    "website": null
+  },
+  {
+    "id": "2021",
+    "name": "Lake Area Tech Aviation",
+    "city": "Watertown",
+    "state": "SD",
+    "website": "http://www.lakeareatech.edu/academics/programs/aviation/"
+  },
+  {
+    "id": "2077",
+    "name": "Plane Training LLC",
+    "city": "Rapid City",
+    "state": "SD",
+    "website": "http://www.planeflighttraining.com"
+  },
+  {
+    "id": "2119",
+    "name": "Tauranga Aero Club Inc",
+    "city": "Rapid City",
+    "state": "SD",
+    "website": null
+  },
+  {
+    "id": "1586",
+    "name": "Blackhawk Aviation",
+    "city": "Springfield",
+    "state": "TN",
+    "website": "http://www.samdawsoncfi.com"
+  },
+  {
+    "id": "1812",
+    "name": "Blue Side Up Aviation",
+    "city": "Knoxville",
+    "state": "TN",
+    "website": "http://www.bluesideupaviation.com/"
+  },
+  {
+    "id": "2145",
+    "name": "Class Bravo Air",
+    "city": "Lebanon",
+    "state": "TN",
+    "website": "http://www.classbravoair.com"
+  },
+  {
+    "id": "2242",
+    "name": "Fast Track Flight Training",
+    "city": "Knoxville",
+    "state": "TN",
+    "website": null
+  },
+  {
+    "id": "2098",
+    "name": "Flyers Cross",
+    "city": "Tullahoma",
+    "state": "TN",
+    "website": null
+  },
+  {
+    "id": "1911",
+    "name": "Missionaire International",
+    "city": "Sewanee - Winchester",
+    "state": "TN",
+    "website": "http://missionaire.org/"
+  },
+  {
+    "id": "2269",
+    "name": "Murfreesboro Aviation",
+    "city": "Murfreesboro",
+    "state": "TN",
+    "website": "http://www.murfreesboroaviation.com"
+  },
+  {
+    "id": "2206",
+    "name": "NA",
+    "city": "NA",
+    "state": "TN",
+    "website": null
+  },
+  {
+    "id": "1546",
+    "name": "Smoky Mountain Flight Center LLC",
+    "city": "Knoxville",
+    "state": "TN",
+    "website": "http://www.smokymountainflightcenter.com"
+  },
+  {
+    "id": "2207",
+    "name": "Tennessee Flight Services",
+    "city": "Elizabethton",
+    "state": "TN",
+    "website": "http://www.elizabethtonairport.com/solutions"
+  },
+  {
+    "id": "2307",
+    "name": "Tennessee Flight Training",
+    "city": "Nashville, TN",
+    "state": "TN",
+    "website": "http://www.tnflighttraining.com"
+  },
+  {
+    "id": "1973",
+    "name": "Tri State Flying Club LLC",
+    "city": "Germantown",
+    "state": "TN",
+    "website": null
+  },
+  {
+    "id": "1587",
+    "name": "Ascent Aviation LLC",
+    "city": "La Porte",
+    "state": "TX",
+    "website": "http://ascentaviation.net"
+  },
+  {
+    "id": "2344",
+    "name": "Austin Aviation Training",
+    "city": "Austin",
+    "state": "TX",
+    "website": "https://austin-aviation.com"
+  },
+  {
+    "id": "2018",
+    "name": "Ayers Aviation",
+    "city": "Gainesville",
+    "state": "TX",
+    "website": "http://www.ayersaviation.com"
+  },
+  {
+    "id": "1688",
+    "name": "Blevins Enterprises",
+    "city": "Rowlett, TX",
+    "state": "TX",
+    "website": "http://www.blevinsenterprises.com"
+  },
+  {
+    "id": "2019",
+    "name": "Boerne Stage Aero Service",
+    "city": "Boerne",
+    "state": "TX",
+    "website": "http://www.5c1.net"
+  },
+  {
+    "id": "2004",
+    "name": "Cobra Kai Flight Academy",
+    "city": "Wichita Falls",
+    "state": "TX",
+    "website": "http://www.cobrakaiflightschool.com"
+  },
+  {
+    "id": "1681",
+    "name": "Dal Aviation",
+    "city": "Dallas",
+    "state": "TX",
+    "website": null
+  },
+  {
+    "id": "1544",
+    "name": "Decatur Jet Center",
+    "city": "Decatur",
+    "state": "TX",
+    "website": "http://www.decaturjetcenter.com"
+  },
+  {
+    "id": "1555",
+    "name": "Dutchwings",
+    "city": "arcola",
+    "state": "TX",
+    "website": "http://www.dutchwingsflightschool.com"
+  },
+  {
+    "id": "1773",
+    "name": "Edinburg Aviation",
+    "city": "McAllen",
+    "state": "TX",
+    "website": "http://www.edinburgaviation.com"
+  },
+  {
+    "id": "1557",
+    "name": "Highflight Services",
+    "city": "Fort Worth",
+    "state": "TX",
+    "website": "http://Highflightservices.com"
+  },
+  {
+    "id": "2035",
+    "name": "Learn To Fly Dallas",
+    "city": "Addison",
+    "state": "TX",
+    "website": "http://www.dfwflighttraining.com"
+  },
+  {
+    "id": "2013",
+    "name": "McAllen Aviation",
+    "city": "McAllen Texas",
+    "state": "TX",
+    "website": "http://www.mcallenaviation.com"
+  },
+  {
+    "id": "2127",
+    "name": "McAllen Flight Academy",
+    "city": "McAllen",
+    "state": "TX",
+    "website": "http://www.mcallenflightacademy.com"
+  },
+  {
+    "id": "1660",
+    "name": "Midland College Pilot Program",
+    "city": "Midland",
+    "state": "TX",
+    "website": "http://www.midland.edu/pilots"
+  },
+  {
+    "id": "2327",
+    "name": "Pilot Rise Flight School",
+    "city": "Fort Worth",
+    "state": "TX",
+    "website": "https://pilotrise.com/"
+  },
+  {
+    "id": "1345",
+    "name": "Pilots Choice Aviation",
+    "city": "Georgetown",
+    "state": "TX",
+    "website": "http://www.pilotschoice.com/"
+  },
+  {
+    "id": "2158",
+    "name": "Route 66 Aviation",
+    "city": "Amarillo",
+    "state": "TX",
+    "website": "http://www.route66aviation.com"
+  },
+  {
+    "id": "2118",
+    "name": "Sky Safety Inc",
+    "city": "San Antonio",
+    "state": "TX",
+    "website": "http://www.skysafety.com"
+  },
+  {
+    "id": "2161",
+    "name": "Skyline Aviation Inc",
+    "city": "San Angelo",
+    "state": "TX",
+    "website": "http://www.skylinefbo.com"
+  },
+  {
+    "id": "1706",
+    "name": "Slipstream Aviation",
+    "city": "Dallas",
+    "state": "TX",
+    "website": "http://www.flyslipstream.com"
+  },
+  {
+    "id": "1832",
+    "name": "Surratt Aviation LLC",
+    "city": "El Paso",
+    "state": "TX",
+    "website": null
+  },
+  {
+    "id": "2106",
+    "name": "Texas State Aviation",
+    "city": "San Marcos",
+    "state": "TX",
+    "website": "http://www.TSaviation.com"
+  },
+  {
+    "id": "1591",
+    "name": "Texas State Technical College",
+    "city": "Waco",
+    "state": "TX",
+    "website": "http://www.waco.tstc.edu"
+  },
+  {
+    "id": "2224",
+    "name": "The Flight School Inc.",
+    "city": "Cypress",
+    "state": "TX",
+    "website": "http://www.theflightschooltexas.com"
+  },
+  {
+    "id": "2225",
+    "name": "The Flight School Inc.",
+    "city": "Katy",
+    "state": "TX",
+    "website": "http://www.theflightschooltexas.com"
+  },
+  {
+    "id": "2254",
+    "name": "Thrust Flight",
+    "city": "Addison",
+    "state": "TX",
+    "website": "https://www.thrustflight.com/"
+  },
+  {
+    "id": "1836",
+    "name": "US Aviation Academy",
+    "city": "Denton",
+    "state": "TX",
+    "website": "http://www.usaviationacademy.com"
+  },
+  {
+    "id": "1327",
+    "name": "US Flight Academy International",
+    "city": "Big Spring",
+    "state": "TX",
+    "website": "http://www.usflightacademy.org/"
+  },
+  {
+    "id": "1928",
+    "name": "Veracity Aviation LLC",
+    "city": "Seguin",
+    "state": "TX",
+    "website": "http://www.veracityaviation.com"
+  },
+  {
+    "id": "1662",
+    "name": "West Texas Flyers Inc",
+    "city": "Midland",
+    "state": "TX",
+    "website": "http://westtexasflyers.com"
+  },
+  {
+    "id": "1553",
+    "name": "Astral Flight Academy LLC",
+    "city": "Salt Lake City",
+    "state": "UT",
+    "website": "http://www.astralflightacademy.com"
+  },
+  {
+    "id": "1995",
+    "name": "Diamond Flight Center",
+    "city": "Spanish Fork",
+    "state": "UT",
+    "website": "http://www.dfcflyer.com"
+  },
+  {
+    "id": "1391",
+    "name": "Leading Edge Aviation",
+    "city": "Logan",
+    "state": "UT",
+    "website": "http://www.leaviation.com/"
+  },
+  {
+    "id": "2097",
+    "name": "Randon Aviation",
+    "city": "West Jordan",
+    "state": "UT",
+    "website": "http://www.randonaviation.com"
+  },
+  {
+    "id": "1830",
+    "name": "Redtail Aviation",
+    "city": "Moab",
+    "state": "UT",
+    "website": "http://www.redtailaviation.com"
+  },
+  {
+    "id": "1412",
+    "name": "AV-ED Flight School",
+    "city": "Winchester",
+    "state": "VA",
+    "website": "http://www.av-ed.com/"
+  },
+  {
+    "id": "1756",
+    "name": "Aviation Adventures",
+    "city": "Leesburg",
+    "state": "VA",
+    "website": "http://www.aviationadventures.com"
+  },
+  {
+    "id": "1580",
+    "name": "Chesapeake Aviation",
+    "city": "Chesapeake",
+    "state": "VA",
+    "website": "http://www.chesapeakeaviation.com"
+  },
+  {
+    "id": "1648",
+    "name": "Curtis Eads Flight School",
+    "city": "Chesapeake",
+    "state": "VA",
+    "website": "http://www.curtiseads.com"
+  },
+  {
+    "id": "2079",
+    "name": "GreyCat Aviation",
+    "city": "Chesapeake",
+    "state": "VA",
+    "website": "Http://www.greycataviation.com"
+  },
+  {
+    "id": "2311",
+    "name": "Safe Flight Avaiation",
+    "city": "Chesapeake",
+    "state": "VA",
+    "website": "https://www.safeflightaviation.com/"
+  },
+  {
+    "id": "1789",
+    "name": "Skyline Aviation Servies",
+    "city": "Orange",
+    "state": "VA",
+    "website": "Http://www.flyskylineaviation.com"
+  },
+  {
+    "id": "1604",
+    "name": "Shelburne Flight School",
+    "city": "Shelburne",
+    "state": "VT",
+    "website": "http://www.shelburneairport.com"
+  },
+  {
+    "id": "1935",
+    "name": "Vermont Flight Academy",
+    "city": "South Burlington",
+    "state": "VT",
+    "website": "http://www.flyvfa.org"
+  },
+  {
+    "id": "1425",
+    "name": "Bergstrom Aircraft",
+    "city": "Pasco",
+    "state": "WA",
+    "website": "http://www.bergstromaircraft.com/index.php"
+  },
+  {
+    "id": "1633",
+    "name": "Bergstrom Aircraft Inc",
+    "city": "Pasco",
+    "state": "WA",
+    "website": "http://www.bergstromaircraft.com"
+  },
+  {
+    "id": "1746",
+    "name": "Boise flight",
+    "city": "Pitt Meadows",
+    "state": "WA",
+    "website": null
+  },
+  {
+    "id": "1785",
+    "name": "Command Aviation",
+    "city": "Bellingham",
+    "state": "WA",
+    "website": "http://www.commandaviation.net"
+  },
+  {
+    "id": "1423",
+    "name": "Crest Airpark",
+    "city": "Kent",
+    "state": "WA",
+    "website": "http://www.crestairpark.com/"
+  },
+  {
+    "id": "2128",
+    "name": "Deer Park Air Center",
+    "city": "Deer Park",
+    "state": "WA",
+    "website": "http://www.deerparkaircenter.com/"
+  },
+  {
+    "id": "1694",
+    "name": "Glacier Aviation Inc",
+    "city": "Olympia",
+    "state": "WA",
+    "website": "http://www.glacieraviation.com"
+  },
+  {
+    "id": "1643",
+    "name": "Jackson Flight Center",
+    "city": "Kennewick",
+    "state": "WA",
+    "website": "http://www.jacksonflight.com"
+  },
+  {
+    "id": "1808",
+    "name": "Northwest Flight School",
+    "city": "Spokane",
+    "state": "WA",
+    "website": "http://www.northwestflightschool.com"
+  },
+  {
+    "id": "2114",
+    "name": "Pavco Flight Center",
+    "city": "Gig Harbor",
+    "state": "WA",
+    "website": "http://www.flypavco.com"
+  },
+  {
+    "id": "2130",
+    "name": "Seaplane Scenics Training Center",
+    "city": "Seattle",
+    "state": "WA",
+    "website": "http://www.seaplanescenics.com"
+  },
+  {
+    "id": "1638",
+    "name": "SIM Flight Center",
+    "city": "Puyallup",
+    "state": "WA",
+    "website": null
+  },
+  {
+    "id": "1689",
+    "name": "Tailwinds Flight School Inc",
+    "city": "Walla Walla",
+    "state": "WA",
+    "website": null
+  },
+  {
+    "id": "1923",
+    "name": "Wild Blue Aviation",
+    "city": "Arlington",
+    "state": "WA",
+    "website": "http://www.flywba.com"
+  },
+  {
+    "id": "2050",
+    "name": "Baraboo Dells Flight Center Inc",
+    "city": "Baraboo",
+    "state": "WI",
+    "website": "http://www.baraboodellsairport.com"
+  },
+  {
+    "id": "2122",
+    "name": "Duffys Aircraft Sales and Leasing Inc",
+    "city": "Marshfield",
+    "state": "WI",
+    "website": "http://www.duffysaircraft.com"
+  },
+  {
+    "id": "1735",
+    "name": "MoreyAirplane Co",
+    "city": "Middleton",
+    "state": "WI",
+    "website": "http://www.moreyairport.com"
+  },
+  {
+    "id": "2071",
+    "name": "Pilotsmith",
+    "city": "Green Bay",
+    "state": "WI",
+    "website": "http://www.pilotsmith.com"
+  },
+  {
+    "id": "1680",
+    "name": "Racine Sport Flyers",
+    "city": "Racine",
+    "state": "WI",
+    "website": "http://www.racinesportflyers.com"
+  },
+  {
+    "id": "1467",
+    "name": "Wausau Flying Service",
+    "city": "Wausau",
+    "state": "WI",
+    "website": "http://www.flywausau.com/"
+  },
+  {
+    "id": "1470",
+    "name": "Wings Air Charter",
+    "city": "Wisconsin Rapids",
+    "state": "WI",
+    "website": "http://www.wingsaircharter.com/"
+  },
+  {
+    "id": "2011",
+    "name": "A Pilot Shop",
+    "city": "Wheeling",
+    "state": "WV",
+    "website": "http://www.apilotshop.webs.com"
+  },
+  {
+    "id": "2147",
+    "name": "RSA Flight Training",
+    "city": "Morgantown",
+    "state": "WV",
+    "website": "http://www.flyrsa.com"
+  },
+  {
+    "id": "1768",
+    "name": "Choice Aviation",
+    "city": "Cody",
+    "state": "WY",
+    "website": "http://www.choiceaviation.com"
+  }
+]

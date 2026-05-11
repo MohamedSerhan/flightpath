@@ -13,6 +13,7 @@ import { millionairAdapter } from "./adapters/millionair.ts";
 import { avJobsAdapter } from "./adapters/avjobs.ts";
 import { icimsAdapter } from "./adapters/icims.ts";
 import { nbaaAdapter } from "./adapters/nbaa.ts";
+import { flightSchoolsAdapter } from "./adapters/flight-schools.ts";
 
 export const adapters: SourceAdapter[] = [
   jsfirmAdapter,
@@ -29,6 +30,7 @@ export const adapters: SourceAdapter[] = [
   avJobsAdapter,
   icimsAdapter,
   nbaaAdapter,
+  flightSchoolsAdapter,
 ];
 
 /** Sources that have been intentionally removed. The migrate step uses
