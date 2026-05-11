@@ -52,6 +52,13 @@ if (!colNames.has("is_closed")) {
   sqlite.exec("ALTER TABLE listings ADD COLUMN is_closed INTEGER NOT NULL DEFAULT 0");
   console.log("migrate: added is_closed column");
 }
+if (!colNames.has("posted_at_accurate")) {
+  // Existing rows default to "accurate" — we can't tell which historical
+  // postedAt values were source-derived vs fallback after the fact. New
+  // scrapes will overwrite the flag correctly via upsert.
+  sqlite.exec("ALTER TABLE listings ADD COLUMN posted_at_accurate INTEGER NOT NULL DEFAULT 1");
+  console.log("migrate: added posted_at_accurate column");
+}
 
 // Retroactively hide listings from sources we've removed. Idempotent —
 // re-running marks already-closed rows is_closed = 1 again, which is a no-op

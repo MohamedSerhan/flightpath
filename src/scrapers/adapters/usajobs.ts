@@ -58,7 +58,8 @@ async function fetchTerm(term: string, authKey: string, ua: string): Promise<Raw
         d.PositionLocationDisplay?.trim() ||
         d.PositionLocation?.[0]?.LocationName?.trim() ||
         null;
-      const postedAt = d.PublicationStartDate ? Date.parse(d.PublicationStartDate) : Date.now();
+      const parsed = d.PublicationStartDate ? Date.parse(d.PublicationStartDate) : NaN;
+      const haveRealDate = Number.isFinite(parsed);
       return {
         externalId: `usajobs-${it.MatchedObjectId}`,
         title,
@@ -66,7 +67,8 @@ async function fetchTerm(term: string, authKey: string, ua: string): Promise<Raw
         description: d.UserArea?.Details?.JobSummary?.trim() || null,
         employer: d.OrganizationName?.trim() || d.DepartmentName?.trim() || null,
         location,
-        postedAt: Number.isFinite(postedAt) ? postedAt : Date.now(),
+        postedAt: haveRealDate ? parsed : Date.now(),
+        postedAtAccurate: haveRealDate,
       };
     })
     .filter((x): x is RawListing => x !== null);

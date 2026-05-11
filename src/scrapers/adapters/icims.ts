@@ -123,7 +123,10 @@ async function fetchTenantPage(
       employer: tenantName,
       // iCIMS markup doesn't expose location reliably; detail-enrich fills.
       location: null,
+      // The job search HTML strips post dates — detail-enrichment may
+      // recover one, but the index pass is always a Date.now() fallback.
       postedAt: Date.now(),
+      postedAtAccurate: false,
     });
   }
   return out;

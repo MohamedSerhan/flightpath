@@ -19,6 +19,14 @@ export const listings = sqliteTable(
     hoursRequired: integer("hours_required"),
     ratingsRequired: text("ratings_required"),
     enrichedAt: integer("enriched_at"),
+    /** 1 = postedAt came from the source. 0 = adapter had no real date and
+     *  fell back to "first time we saw it". Several aggregators (AvJobs,
+     *  iCIMS HTML, NBAA, PCC) never expose a parseable post date — we used
+     *  to silently fill postedAt with Date.now() at first sight, making
+     *  long-stale listings look freshly posted. The UI now uses this flag
+     *  to switch copy from "Posted N days ago" → "Indexed N days ago" so
+     *  the sibling knows when the date is our guess vs. the source's. */
+    postedAtAccurate: integer("posted_at_accurate").notNull().default(1),
     /** 1 = detail-enrichment confirmed the role is closed/gone. Filter
      *  out of all user-facing queries. Scrape upsert never touches this
      *  column, so once a listing is marked closed it stays closed even

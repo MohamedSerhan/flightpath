@@ -28,6 +28,10 @@ async function runOne(adapter: SourceAdapter): Promise<void> {
 
     for (const r of raw) {
       const enriched = enrichListing(r);
+      // Default to accurate when the adapter didn't speak. Most adapters
+      // parse a real source date; the ones that fall back to Date.now()
+      // are responsible for explicitly setting postedAtAccurate: false.
+      const accurate = enriched.postedAtAccurate !== false;
       const result = await db
         .insert(listings)
         .values({
@@ -41,6 +45,7 @@ async function runOne(adapter: SourceAdapter): Promise<void> {
           url: enriched.url,
           description: enriched.description ?? null,
           postedAt: enriched.postedAt,
+          postedAtAccurate: accurate ? 1 : 0,
           fetchedAt: now,
           jobCategory: enriched.jobCategory,
           hoursRequired: enriched.hoursRequired,
@@ -55,6 +60,11 @@ async function runOne(adapter: SourceAdapter): Promise<void> {
           // adapter ships. Without this, every cron tick resets postedAt
           // back to "now" for sources that don't expose a real post date,
           // and the listing looks artificially fresh forever.
+          //
+          // postedAtAccurate is monotone-upgrade only: once we've recorded
+          // a real source date (either at insert or via detail-enrichment),
+          // don't let a later index pass with a fallback date flip it back
+          // to inaccurate.
           set: {
             title: enriched.title,
             employer: enriched.employer ?? null,
@@ -62,6 +72,7 @@ async function runOne(adapter: SourceAdapter): Promise<void> {
             state: sql`CASE WHEN ${listings.enrichedAt} IS NULL OR ${listings.state} IS NULL THEN ${enriched.state} ELSE ${listings.state} END`,
             description: enriched.description ?? null,
             postedAt: sql`CASE WHEN ${listings.enrichedAt} IS NULL THEN ${enriched.postedAt} ELSE ${listings.postedAt} END`,
+            postedAtAccurate: sql`CASE WHEN ${listings.postedAtAccurate} = 1 THEN 1 ELSE ${accurate ? 1 : 0} END`,
             fetchedAt: now,
             jobCategory: enriched.jobCategory,
             hoursRequired: enriched.hoursRequired,

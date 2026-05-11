@@ -404,6 +404,9 @@ export async function enrichDetailPages(): Promise<void> {
     };
     if (realDate !== null) {
       setValues.postedAt = realDate;
+      // Detail enrichment found a real source date — flip the accuracy
+      // flag so the UI stops showing "Indexed N days ago" for this row.
+      setValues.postedAtAccurate = 1;
       dated++;
     }
     if (realLocation) {

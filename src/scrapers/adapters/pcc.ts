@@ -142,7 +142,10 @@ export const pccAdapter: SourceAdapter = {
             description: null,
             employer: j.Company?.trim() || null,
             location: extractLocation(j.AircraftType),
+            // PCC aggregates from employers' generic careers pages — its
+            // API never ships a per-job post date.
             postedAt: Date.now(),
+            postedAtAccurate: false,
           });
         }
         const total = resp.m_Item1 ?? 0;
