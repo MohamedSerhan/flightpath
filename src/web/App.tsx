@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   Plane,
   MapPin,
@@ -332,10 +332,28 @@ export function App() {
     });
   }
 
-  const listingsQ = useQuery({
-    queryKey: ["listings", filter],
-    queryFn: () => fetchListings(filter),
+  // Page size is fixed across the session — pagination is driven by
+  // fetchNextPage(), and the offset on the filter object is ignored. We
+  // keep `filter.limit` as a per-page knob for users who want a denser /
+  // sparser feed; the URL hash already drops it when it equals the
+  // default.
+  const PAGE_SIZE = filter.limit ?? 50;
+  const listingsQ = useInfiniteQuery({
+    queryKey: ["listings", { ...filter, offset: undefined, limit: PAGE_SIZE }],
+    queryFn: ({ pageParam }) =>
+      fetchListings({ ...filter, offset: pageParam as number, limit: PAGE_SIZE }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const loaded = allPages.reduce((sum, p) => sum + p.items.length, 0);
+      return loaded < lastPage.total ? loaded : undefined;
+    },
   });
+
+  const allItems = useMemo<Listing[]>(
+    () => listingsQ.data?.pages.flatMap((p) => p.items) ?? [],
+    [listingsQ.data],
+  );
+  const totalListings = listingsQ.data?.pages[0]?.total ?? 0;
 
   const sourcesQ = useQuery({ queryKey: ["sources"], queryFn: fetchSources });
   const summaryQ = useQuery({ queryKey: ["summary"], queryFn: fetchSummary });
@@ -350,7 +368,10 @@ export function App() {
   }, [sourcesQ.data]);
 
   function update<K extends keyof ListingFilter>(key: K, value: ListingFilter[K]) {
-    setFilter((f) => ({ ...f, [key]: value, offset: 0 }));
+    // `offset` is no longer user-controllable; pagination is driven by
+    // useInfiniteQuery's pageParam. Changing any other filter naturally
+    // resets via the queryKey change.
+    setFilter((f) => ({ ...f, [key]: value }));
   }
 
   const filterChips = useMemo(() => {
@@ -385,7 +406,7 @@ export function App() {
       {view === "pipeline" && (
         <PipelineView
           pipeline={pipeline}
-          listings={listingsQ.data?.items ?? []}
+          listings={allItems}
           onOpen={openListing}
           onSetEntryStatus={setEntryStatus}
           onSetEntryNote={setEntryNote}
@@ -448,7 +469,7 @@ export function App() {
             <ErrorBox message={(listingsQ.error as Error).message} onRetry={() => listingsQ.refetch()} />
           )}
           {listingsQ.data && (() => {
-            const scored = listingsQ.data.items.map((l) => ({
+            const scored = allItems.map((l) => ({
               listing: l,
               match: matchScore(l, profile),
               viewed: isViewed(l),
@@ -460,17 +481,24 @@ export function App() {
                 ? b.match.score - a.match.score || b.listing.postedAt - a.listing.postedAt
                 : b.listing.postedAt - a.listing.postedAt,
             );
+            const loadedCount = allItems.length;
+            const remaining = Math.max(0, totalListings - loadedCount);
             return (
               <>
                 <div className="mb-3 flex items-center justify-between text-sm text-ink-400">
                   <span>
-                    {listingsQ.data.total} {listingsQ.data.total === 1 ? "listing" : "listings"}
-                    {newCount > 0 && newCount < listingsQ.data.total && (
+                    {totalListings} {totalListings === 1 ? "listing" : "listings"}
+                    {loadedCount < totalListings && (
+                      <span className="ml-2 text-xs">· showing {loadedCount}</span>
+                    )}
+                    {newCount > 0 && newCount < totalListings && (
                       <span className="ml-2 text-xs">· {newCount} new</span>
                     )}
                   </span>
                   <div className="flex items-center gap-2">
-                    {listingsQ.isFetching && <span className="text-xs">refreshing…</span>}
+                    {listingsQ.isFetching && !listingsQ.isFetchingNextPage && (
+                      <span className="text-xs">refreshing…</span>
+                    )}
                     <ViewedToggle hide={hideViewed} onChange={setHideViewed} />
                     <SortToggle mode={sortMode} onChange={setSortMode} />
                   </div>
@@ -478,7 +506,7 @@ export function App() {
                 {sorted.length === 0 ? (
                   <EmptyState
                     message={
-                      hideViewed && listingsQ.data.total > 0
+                      hideViewed && totalListings > 0
                         ? "Caught up — every listing in this view has been opened. Toggle 'Hide viewed' off to see them again."
                         : undefined
                     }
@@ -499,6 +527,24 @@ export function App() {
                       />
                     ))}
                   </ul>
+                )}
+                {listingsQ.hasNextPage && sorted.length > 0 && (
+                  <div className="mt-6">
+                    <button
+                      onClick={() => listingsQ.fetchNextPage()}
+                      disabled={listingsQ.isFetchingNextPage}
+                      className="w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm font-semibold text-ink-800 transition hover:border-sky-500 hover:text-sky-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-sky-500 dark:hover:text-sky-300"
+                    >
+                      {listingsQ.isFetchingNextPage
+                        ? "Loading…"
+                        : `Load ${Math.min(PAGE_SIZE, remaining)} more · ${remaining} remaining`}
+                    </button>
+                  </div>
+                )}
+                {!listingsQ.hasNextPage && loadedCount > PAGE_SIZE && (
+                  <div className="mt-6 text-center text-xs text-ink-400">
+                    End of results — all {totalListings} loaded.
+                  </div>
                 )}
               </>
             );
@@ -576,7 +622,7 @@ export function App() {
       {showCompare && (
         <CompareModal
           keys={compareKeys}
-          listings={listingsQ.data?.items ?? []}
+          listings={allItems}
           profile={profile}
           onClose={() => setShowCompare(false)}
         />
@@ -1268,7 +1314,7 @@ function FilterPanel({
   onClose: () => void;
 }) {
   function set<K extends keyof ListingFilter>(key: K, value: ListingFilter[K]) {
-    onChange({ ...filter, [key]: value, offset: 0 });
+    onChange({ ...filter, [key]: value });
   }
   return (
     <div className="mt-4 rounded-2xl border border-ink-200 bg-white p-4 shadow-sm dark:bg-ink-800 dark:border-ink-800">
