@@ -99,6 +99,15 @@ jobs:
       - name: Run migrations
         run: bun run db:migrate
 
+      # Re-runs the classifier over every cached row. Idempotent — only
+      # touches rows whose category differs from the current logic, so
+      # steady-state runs are a no-op. Runs on every deploy (including
+      # push deploys that skip the scrape) so classifier code changes
+      # take effect immediately, not on the next time each row happens
+      # to re-surface in its source feed.
+      - name: Reclassify categories on cached rows
+        run: bun scripts/reclassify-categories.ts
+
       - name: Scrape HTTP sources
         if: ${{ env.DO_SCRAPE == 'true' }}
         run: bun run scrape
