@@ -31,6 +31,10 @@ on:
         description: "Run the full scrape (default: yes)"
         type: boolean
         default: true
+      flight_schools_full:
+        description: "Probe every flight school (skip the rotation, ~5min)"
+        type: boolean
+        default: false
 
 # We deploy at most one Pages build at a time. Newer runs cancel
 # stale ones to avoid racing the cache restore.
@@ -72,6 +76,11 @@ jobs:
       DO_SCRAPE: >-
         ${{ github.event_name == 'schedule'
           || (github.event_name == 'workflow_dispatch' && inputs.force_scrape == true) }}
+      # Manual one-shot: probe every flight school in data/flight-schools.json
+      # instead of today's rotation slice. The flight-schools adapter reads
+      # this env var; cron runs leave it unset and use the rotation.
+      FLIGHT_SCHOOLS_FULL: >-
+        ${{ (github.event_name == 'workflow_dispatch' && inputs.flight_schools_full == true) && '1' || '' }}
     steps:
       - uses: actions/checkout@v4
 
