@@ -44,7 +44,10 @@ export type JobCategory =
 
 export type ListingFilter = {
   q?: string;
-  category?: JobCategory;
+  /** Single category OR array of categories. The API accepts repeated
+   *  `category=` query params; the UI's grouped chips (e.g. "Non-CFI" =
+   *  aerial_survey | pipeline_patrol | ...) submit multiple values. */
+  category?: JobCategory | JobCategory[];
   state?: string;
   postedSinceDays?: number;
   maxHoursRequired?: number;

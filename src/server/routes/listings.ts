@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { and, desc, eq, gte, lte, like, or, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte, like, or, sql } from "drizzle-orm";
 import { db } from "../../db/client.ts";
 import { listings } from "../../db/schema.ts";
 import type { Listing } from "../../shared/types.ts";
@@ -38,7 +38,9 @@ function safeParseRatings(s: string): string[] | null {
 
 listingsRoute.get("/", async (c) => {
   const q = c.req.query("q")?.trim();
-  const category = c.req.query("category")?.trim();
+  // Accept either a single category or repeated `category=` params for
+  // the grouped chips in the UI (e.g. "Non-CFI" → 6 categories).
+  const categories = c.req.queries("category")?.map((s) => s.trim()).filter(Boolean) ?? [];
   const state = c.req.query("state")?.trim().toUpperCase();
   const source = c.req.query("source")?.trim();
   const postedSinceDays = numParam(c.req.query("postedSinceDays"), 30);
@@ -52,7 +54,11 @@ listingsRoute.get("/", async (c) => {
     const cutoff = Date.now() - postedSinceDays * 86400_000;
     conditions.push(gte(listings.postedAt, cutoff));
   }
-  if (category) conditions.push(eq(listings.jobCategory, category));
+  if (categories.length === 1) {
+    conditions.push(eq(listings.jobCategory, categories[0]));
+  } else if (categories.length > 1) {
+    conditions.push(inArray(listings.jobCategory, categories));
+  }
   if (state) conditions.push(eq(listings.state, state));
   if (source) conditions.push(eq(listings.sourceId, source));
   if (maxHoursRequired !== undefined) {
