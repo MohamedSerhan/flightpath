@@ -1,31 +1,27 @@
 /**
- * One-time bootstrap: scrape lowtimepilot.com/company-map to produce
- * data/lowtimepilot-companies.json — a seed list of aviation employers
- * (aerial survey, skydiving, banner tow, pipeline patrol, etc.) with
- * their websites and operation categories.
+ * One-time bootstrap: scrape the Google My Maps KML behind
+ * lowtimepilot.com/company-map to produce data/lowtimepilot-companies.json —
+ * a seed list of aviation employers (aerial survey, skydiving, banner tow,
+ * pipeline patrol, etc.) with their websites and operation categories.
  *
- * Used by the `lowtimepilot` adapter (src/scrapers/adapters/lowtimepilot.ts)
- * to probe each company's careers page for active hiring signals — same
- * pattern as the flight-schools adapter, but with a broader, category-tagged
- * source.
+ * Discovery (commit 90f3685's --probe mode) found that lowtimepilot embeds
+ * a Google My Maps; the map's full dataset is fetchable as KML XML directly
+ * from Google with no auth. We drop Playwright entirely and parse XML.
+ *
+ * Used by src/scrapers/adapters/lowtimepilot.ts to probe each company's
+ * careers page for active hiring signals.
  *
  * Run manually when refreshing the seed:
- *   bun src/scrapers/bootstrap-lowtimepilot.ts          # full harvest
- *   bun src/scrapers/bootstrap-lowtimepilot.ts --probe  # discovery mode:
- *                                                       # dumps the rendered
- *                                                       # network calls + DOM
- *                                                       # shape so we can
- *                                                       # write the parser
- *
- * On Windows local dev, set PLAYWRIGHT_BROWSER=firefox if chromium hangs
- * (same convention as runner.ts).
+ *   bun src/scrapers/bootstrap-lowtimepilot.ts
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { XMLParser } from "fast-xml-parser";
 import type { JobCategory } from "../shared/types.ts";
 
-const SOURCE_URL = "https://www.lowtimepilot.com/company-map";
+const KML_URL =
+  "https://www.google.com/maps/d/kml?mid=1ij8TXrDVNEHg25itX_CnXoV-YdGev-s&forcekml=1";
 const OUTPUT = "data/lowtimepilot-companies.json";
 
 /** `"time_building"` is a seed-only category — it's NOT in the public
@@ -49,23 +45,50 @@ const US_STATES = new Set([
   "VA","WA","WV","WI","WY","DC","PR","VI","GU",
 ]);
 
+const STATE_NAMES_TO_ABBR: Record<string, string> = {
+  alabama:"AL", alaska:"AK", arizona:"AZ", arkansas:"AR", california:"CA",
+  colorado:"CO", connecticut:"CT", delaware:"DE", florida:"FL", georgia:"GA",
+  hawaii:"HI", idaho:"ID", illinois:"IL", indiana:"IN", iowa:"IA",
+  kansas:"KS", kentucky:"KY", louisiana:"LA", maine:"ME", maryland:"MD",
+  massachusetts:"MA", michigan:"MI", minnesota:"MN", mississippi:"MS", missouri:"MO",
+  montana:"MT", nebraska:"NE", nevada:"NV", "new hampshire":"NH", "new jersey":"NJ",
+  "new mexico":"NM", "new york":"NY", "north carolina":"NC", "north dakota":"ND", ohio:"OH",
+  oklahoma:"OK", oregon:"OR", pennsylvania:"PA", "rhode island":"RI", "south carolina":"SC",
+  "south dakota":"SD", tennessee:"TN", texas:"TX", utah:"UT", vermont:"VT",
+  virginia:"VA", washington:"WA", "west virginia":"WV", wisconsin:"WI", wyoming:"WY",
+  "district of columbia":"DC",
+};
+
 const CATEGORY_MAP: Record<string, JobCategory | "time_building"> = {
-  "aerial survey": "aerial_survey",
-  "pipeline patrol": "pipeline_patrol",
-  "powerline patrol": "pipeline_patrol",
-  "air ambulance": "air_ambulance",
-  "hems": "air_ambulance",
-  "medevac": "air_ambulance",
+  // Real labels from KML — folder names and Type values
+  "part 141 flight schools": "cfi",
+  "141 school": "cfi",
   "skydiving": "skydiving",
   "skydive": "skydiving",
   "jump pilot": "skydiving",
-  "banner tow": "banner_tow",
   "banner towing": "banner_tow",
-  "traffic watch": "traffic_watch",
-  "eng": "traffic_watch",
+  "banner tow": "banner_tow",
+  "pipeline patrol": "pipeline_patrol",
+  "powerline patrol": "pipeline_patrol",
+  "aerial survey": "aerial_survey",
+  "isr defense contractors": "part91",
+  "isr": "part91",
+  "air ambulance": "air_ambulance",
+  "hems": "air_ambulance",
+  "medevac": "air_ambulance",
+  "fedex/ ups feeder": "part135",
+  "fedex/ ups feeders": "part135",
+  "flight sim centers": "other",
+  "flight simulator center": "other",
+  "air tour operators": "part91",
+  "air tour operators - map data - apr 2026": "part91",
+  "air tours": "part91",
+  // Generic fallbacks that may appear if upstream relabels
   "charter": "part135",
   "part 135": "part135",
   "airline": "airline",
+  "traffic watch": "traffic_watch",
+  "eng": "traffic_watch",
   // Seed-only — adapter filters these out before probing. Pay-to-play
   // programs aren't real job postings; we keep the data but never
   // emit listings.
@@ -80,84 +103,140 @@ function mapCategory(label: string): JobCategory | "time_building" {
   return "part91";
 }
 
+/** Pull a value from the placemark's ExtendedData by Data[name]. Returns
+ *  the inner value, or "" if not present. */
+function ed(placemark: any, fieldName: string): string {
+  const data = placemark?.ExtendedData?.Data;
+  if (!data) return "";
+  const arr = Array.isArray(data) ? data : [data];
+  for (const d of arr) {
+    if (d?.["@_name"] === fieldName) {
+      const v = d.value;
+      return typeof v === "string" ? v : v == null ? "" : String(v);
+    }
+  }
+  return "";
+}
+
+function normalizeState(value: string): string {
+  const t = value.trim();
+  if (!t) return "";
+  // Already a 2-letter code?
+  if (/^[A-Za-z]{2}$/.test(t)) return t.toUpperCase();
+  // Full name?
+  return STATE_NAMES_TO_ABBR[t.toLowerCase()] ?? "";
+}
+
+function stateFromAddress(address: string): string {
+  // Match patterns like "..., Florida 33125, USA" or "..., FL 33125".
+  const m = address.match(/,\s*([A-Za-z][A-Za-z\s]{1,18}?)\s+\d{5}/);
+  if (m) {
+    const norm = normalizeState(m[1]);
+    if (norm) return norm;
+  }
+  const m2 = address.match(/,\s*([A-Z]{2})\b/);
+  if (m2) return m2[1];
+  return "";
+}
+
+function cityFromAddress(address: string): string {
+  // The address is typically "Street, City, State Zip, Country".
+  // Split by commas and pick the city as the segment before the
+  // "State Zip" segment.
+  const parts = address.split(",").map((s) => s.trim()).filter(Boolean);
+  for (let i = 0; i < parts.length; i++) {
+    if (/^[A-Za-z\s]+\s+\d{5}/.test(parts[i]) || /^[A-Z]{2}\s+\d{5}/.test(parts[i])) {
+      if (i - 1 >= 0) return parts[i - 1];
+    }
+  }
+  // Fallback: second-to-last part.
+  if (parts.length >= 2) return parts[parts.length - 2];
+  return "";
+}
+
 async function main() {
-  const probeMode = process.argv.includes("--probe");
-  const playwright = await import("playwright");
-  const engine = (process.env.PLAYWRIGHT_BROWSER ?? "chromium") as
-    | "chromium"
-    | "firefox"
-    | "webkit";
-  const browser = await playwright[engine].launch({
-    headless: process.env.PLAYWRIGHT_HEADLESS !== "0",
+  console.log(`[lowtimepilot] fetching KML…`);
+  const res = await fetch(KML_URL);
+  if (!res.ok) {
+    console.error(`[lowtimepilot] KML fetch failed: ${res.status} ${res.statusText}`);
+    process.exit(1);
+  }
+  const xml = await res.text();
+  console.log(`[lowtimepilot] received ${xml.length} bytes`);
+
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: "@_",
+    isArray: (tag) => tag === "Folder" || tag === "Placemark" || tag === "Data",
   });
-  try {
-    const ctx = await browser.newContext({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      viewport: { width: 1280, height: 900 },
-    });
-    const page = await ctx.newPage();
+  const doc = parser.parse(xml);
 
-    if (probeMode) {
-      console.log("[probe] capturing network responses…");
-      const captured: Array<{ url: string; status: number; type: string; bytes: number; sample: string }> = [];
-      page.on("response", async (res) => {
-        try {
-          const url = res.url();
-          const ct = res.headers()["content-type"] ?? "";
-          // Focus on JSON, scripts that might inline data, and same-origin requests.
-          if (!/json|javascript|application\/x|text\/plain/i.test(ct)) return;
-          const buf = await res.body().catch(() => null);
-          if (!buf) return;
-          const body = buf.toString("utf8");
-          captured.push({
-            url,
-            status: res.status(),
-            type: ct,
-            bytes: buf.length,
-            sample: body.slice(0, 400),
-          });
-        } catch {
-          /* ignore — some responses can't be re-read */
-        }
-      });
+  // KML structure: kml > Document > Folder[] > Placemark[]
+  const folders: any[] = doc?.kml?.Document?.Folder ?? [];
+  if (folders.length === 0) {
+    console.error("[lowtimepilot] no Folder elements parsed — KML structure may have changed");
+    process.exit(1);
+  }
 
-      await page.goto(SOURCE_URL, { waitUntil: "networkidle", timeout: 45_000 });
-      // Give late XHRs a moment to settle.
-      await page.waitForTimeout(2_000);
+  const results: LowtimepilotCompany[] = [];
+  let totalPlacemarks = 0;
+  let droppedNonUS = 0;
+  let droppedNoName = 0;
 
-      console.log(`[probe] captured ${captured.length} JSON/JS responses`);
-      for (const c of captured) {
-        console.log(`\n--- ${c.status} ${c.url} (${c.type}, ${c.bytes} bytes) ---`);
-        console.log(c.sample);
+  for (const folder of folders) {
+    const folderName = folder?.name ?? "";
+    const placemarks: any[] = folder?.Placemark ?? [];
+    for (const p of placemarks) {
+      totalPlacemarks++;
+      const name = (p?.name ?? "").toString().trim();
+      if (!name) { droppedNoName++; continue; }
+
+      const address = (p?.address ?? "").toString().trim();
+      const stateFromED = normalizeState(ed(p, "State"));
+      const state = stateFromED || stateFromAddress(address);
+      if (!US_STATES.has(state)) { droppedNonUS++; continue; }
+
+      const cityFromED = ed(p, "City").trim();
+      const city = cityFromED || cityFromAddress(address);
+
+      const homepage = ed(p, "Homepage URL").trim();
+      const careerPage = ed(p, "Career page").trim();
+      let website: string | null = homepage || careerPage || null;
+      if (website && !/^https?:\/\//i.test(website)) {
+        website = `https://${website}`;
       }
 
-      const domDump = await page.evaluate(() => {
-        // Heuristics: look for elements with map-marker-like attributes,
-        // any data-* attributes that reference companies, and the structured
-        // text content of the largest list element on the page.
-        const candidates = Array.from(
-          document.querySelectorAll("[data-company], [data-id], .company, .marker, [class*='company']"),
-        ).slice(0, 10);
-        return candidates.map((el) => ({
-          tag: el.tagName,
-          cls: el.className,
-          attrs: Array.from(el.attributes).map((a) => `${a.name}="${a.value.slice(0, 80)}"`),
-          text: (el.textContent || "").slice(0, 200),
-        }));
-      });
+      // Prefer the Type field's value (more specific) over Folder name.
+      const typeLabel = ed(p, "Type").trim();
+      const categoryLabel = typeLabel || folderName;
+      const category = mapCategory(categoryLabel);
 
-      console.log("\n--- DOM candidates ---");
-      console.log(JSON.stringify(domDump, null, 2));
-      return;
+      // Stable id: slug of name + city + state to keep deterministic
+      // re-runs producing the same JSON.
+      const slug = `${name}-${city}-${state}`
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      const id = slug || `${results.length + 1}`;
+
+      results.push({ id, name, city, state, website, category });
     }
-
-    // Full harvest path — implemented in Task 5 once we know the shape.
-    console.error("[lowtimepilot] full harvest not yet implemented. Run with --probe first.");
-    process.exit(1);
-  } finally {
-    await browser.close();
   }
+
+  results.sort((a, b) => a.state.localeCompare(b.state) || a.name.localeCompare(b.name));
+
+  const withSite = results.filter((s) => s.website).length;
+  const byCategory: Record<string, number> = {};
+  for (const r of results) byCategory[r.category] = (byCategory[r.category] ?? 0) + 1;
+
+  console.log(`[lowtimepilot] parsed ${totalPlacemarks} placemarks total`);
+  console.log(`[lowtimepilot] dropped ${droppedNonUS} non-US, ${droppedNoName} no-name`);
+  console.log(`[lowtimepilot] kept ${results.length} US companies (${withSite} with websites)`);
+  console.log(`[lowtimepilot] category breakdown:`, byCategory);
+
+  await mkdir(dirname(OUTPUT), { recursive: true });
+  await writeFile(OUTPUT, JSON.stringify(results, null, 2));
+  console.log(`[lowtimepilot] wrote ${OUTPUT}`);
 }
 
 main().catch((err) => {
