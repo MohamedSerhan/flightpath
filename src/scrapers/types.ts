@@ -17,7 +17,7 @@ export type RawListing = {
    *  classifier. Use for adapters whose source already tags each posting
    *  (e.g. lowtimepilot.com's company map exposes per-company category).
    *  Leave undefined to let the classifier decide. */
-  categoryHint?: import("../shared/types.ts").JobCategory | null;
+  categoryHint?: JobCategory | null;
 };
 
 export type SourceAdapter = {
