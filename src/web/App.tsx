@@ -1418,7 +1418,13 @@ function FilterPanel({
               return (
                 <button
                   key={cat}
-                  onClick={() => set("category", selected ? undefined : cat)}
+                  onClick={() => {
+                    // Only deselect when this chip is the *exclusive* selection. If the
+                    // chip was selected because it's a member of an active group, clicking
+                    // it narrows the filter to just this category instead of clearing.
+                    const isExactlyThis = filter.category === cat;
+                    set("category", isExactlyThis ? undefined : cat);
+                  }}
                   className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
                     selected
                       ? "border-sky-500 bg-sky-500 text-white"
