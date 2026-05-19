@@ -202,10 +202,16 @@ export function extractRatings(text: string | null | undefined): string[] | null
 }
 
 export function enrichListing(raw: RawListing): EnrichedListing {
+  // categoryHint short-circuits the classifier — adapters whose source
+  // already tags each posting (lowtimepilot) carry the category through
+  // directly so we don't risk misclassifying based on title text alone
+  // (e.g. a "Pilot Wanted — XYZ Skydiving" posting would otherwise
+  // fall back to "other" if the body doesn't contain "skydive").
+  const category = raw.categoryHint ?? classifyCategory(raw.title, raw.description, raw.employer);
   return {
     ...raw,
     state: extractState(raw.location),
-    jobCategory: classifyCategory(raw.title, raw.description, raw.employer),
+    jobCategory: category,
     hoursRequired: extractHoursRequired(`${raw.title}\n${raw.description ?? ""}`),
     ratingsRequired: extractRatings(`${raw.title}\n${raw.description ?? ""}`),
   };
