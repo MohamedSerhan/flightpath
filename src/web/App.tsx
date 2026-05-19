@@ -147,6 +147,12 @@ const CATEGORY_LABELS: Record<JobCategory, string> = {
   airline: "Airline",
   corporate: "Corporate",
   other: "Other",
+  aerial_survey: "Aerial Survey",
+  pipeline_patrol: "Pipeline Patrol",
+  skydiving: "Skydiving",
+  banner_tow: "Banner Tow",
+  traffic_watch: "Traffic Watch",
+  air_ambulance: "Air Ambulance",
 };
 
 const CATEGORY_ORDER: JobCategory[] = [
@@ -157,6 +163,12 @@ const CATEGORY_ORDER: JobCategory[] = [
   "part91",
   "corporate",
   "airline",
+  "aerial_survey",
+  "pipeline_patrol",
+  "skydiving",
+  "banner_tow",
+  "traffic_watch",
+  "air_ambulance",
   "other",
 ];
 

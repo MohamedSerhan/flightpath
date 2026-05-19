@@ -30,7 +30,17 @@ export type JobCategory =
   | "part91"
   | "airline"
   | "corporate"
-  | "other";
+  | "other"
+  // Non-CFI part-91-adjacent operations. Split out from the old
+  // catch-all `part91` so the sibling can filter for them directly.
+  // `part91` remains the bucket for personal/general GA that doesn't fit
+  // a more specific operation.
+  | "aerial_survey"
+  | "pipeline_patrol"
+  | "skydiving"
+  | "banner_tow"
+  | "traffic_watch"
+  | "air_ambulance";
 
 export type ListingFilter = {
   q?: string;

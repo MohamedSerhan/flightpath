@@ -124,6 +124,18 @@ export function classifyCategory(
     return "other";
   }
 
+  // Per-operation non-CFI part-91 buckets. Order matters — most specific
+  // wins. `air ambulance` / `hems` is the rarest and most unambiguous;
+  // the rest are common enough that the user wants a dedicated chip.
+  // These checks run before the airline-title check so that, e.g.,
+  // "Air Ambulance Captain" routes to air_ambulance rather than airline.
+  if (/\b(air\s+ambulance|hems|helicopter\s+ems|medevac|medivac)\b/.test(fullLc)) return "air_ambulance";
+  if (/\b(aerial\s+survey|aerial\s+mapping|photogrammetry|lidar\s+pilot)\b/.test(fullLc)) return "aerial_survey";
+  if (/\b(pipeline\s+patrol|powerline\s+patrol|pipeline\s+pilot)\b/.test(fullLc)) return "pipeline_patrol";
+  if (/\b(skydive|skydiving|jump\s+pilot|parachute\s+operations?)\b/.test(fullLc)) return "skydiving";
+  if (/\b(banner\s+tow|banner-tow|banner\s+pilot)\b/.test(fullLc)) return "banner_tow";
+  if (/\b(traffic\s+watch|traffic-watch|news\s+helicopter|eng\s+pilot|electronic\s+news\s+gathering)\b/.test(fullLc)) return "traffic_watch";
+
   // Airline-cue titles outrank the CFI fallback. A title that says
   // "First Officer" or "Captain" alongside "CFI" is an airline role that
   // *requires* a CFI cert — not a CFI role. Route to airline before the
@@ -144,7 +156,6 @@ export function classifyCategory(
   if (/\bpart\s*135\b|charter pilot|on[-\s]demand/.test(fullLc)) return "part135";
   if (/\bpart\s*91\b|corporate pilot|business jet/.test(fullLc)) return "corporate";
   if (/\b(first officer|fo\b|captain|airline)\b/.test(fullLc)) return "airline";
-  if (/\b(banner tow|pipeline patrol|skydive|aerial survey|traffic watch)\b/.test(fullLc)) return "part91";
   return "other";
 }
 
