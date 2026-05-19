@@ -108,7 +108,12 @@ function parseFilter(usp: URLSearchParams): ListingFilter {
   };
   return {
     q: usp.get("q") ?? undefined,
-    category: (usp.get("category") as JobCategory) ?? undefined,
+    category: (() => {
+      const all = usp.getAll("category") as JobCategory[];
+      if (all.length === 0) return undefined;
+      if (all.length === 1) return all[0];
+      return all;
+    })(),
     state: usp.get("state") ?? undefined,
     source: usp.get("source") ?? undefined,
     postedSinceDays: num("postedSinceDays") ?? 30,
@@ -124,7 +129,11 @@ function writeFilterToUrl(f: ListingFilter): void {
   for (const [k, v] of Object.entries(f)) {
     if (v === undefined || v === null || v === "") continue;
     if ((k === "postedSinceDays" && v === 30) || (k === "limit" && v === 50) || (k === "offset" && v === 0)) continue;
-    usp.set(k, String(v));
+    if (Array.isArray(v)) {
+      for (const item of v) usp.append(k, String(item));
+    } else {
+      usp.set(k, String(v));
+    }
   }
   const hash = usp.toString();
   const target = hash ? `#${hash}` : "";
@@ -170,6 +179,24 @@ const CATEGORY_ORDER: JobCategory[] = [
   "traffic_watch",
   "air_ambulance",
   "other",
+];
+
+/**
+ * Grouped chips for the filter row. Each chip selects one or more
+ * categories — the "Non-CFI" chip is a composite that unions the six
+ * operator categories (aerial_survey, pipeline_patrol, etc.) so the
+ * sibling can browse them as a single tab. Individual categories are
+ * still selectable separately further down the row.
+ */
+const CATEGORY_GROUPS: Array<{ id: string; label: string; categories: JobCategory[] }> = [
+  { id: "cfi-all", label: "All CFI", categories: ["cfi", "cfii", "mei"] },
+  { id: "non-cfi", label: "Non-CFI", categories: [
+    "aerial_survey", "pipeline_patrol", "skydiving",
+    "banner_tow", "traffic_watch", "air_ambulance",
+  ]},
+  { id: "charter", label: "Charter / 135", categories: ["part135"] },
+  { id: "airline", label: "Airline", categories: ["airline"] },
+  { id: "corporate", label: "Corporate", categories: ["corporate"] },
 ];
 
 const US_STATES = [
@@ -389,7 +416,21 @@ export function App() {
   const filterChips = useMemo(() => {
     const chips: Array<{ key: keyof ListingFilter; label: string }> = [];
     if (filter.q) chips.push({ key: "q", label: `“${filter.q}”` });
-    if (filter.category) chips.push({ key: "category", label: CATEGORY_LABELS[filter.category] });
+    if (filter.category) {
+      if (Array.isArray(filter.category)) {
+        // Try to match a group label first; fall back to "N categories".
+        const cats = filter.category;
+        const matched = CATEGORY_GROUPS.find(
+          (g) =>
+            g.categories.length === cats.length &&
+            g.categories.every((c) => cats.includes(c)),
+        );
+        const label = matched ? matched.label : `${cats.length} categories`;
+        chips.push({ key: "category", label });
+      } else {
+        chips.push({ key: "category", label: CATEGORY_LABELS[filter.category] });
+      }
+    }
     if (filter.state) chips.push({ key: "state", label: filter.state });
     if (filter.maxHoursRequired)
       chips.push({ key: "maxHoursRequired", label: `≤ ${filter.maxHoursRequired} hrs` });
@@ -1334,8 +1375,46 @@ function FilterPanel({
         <div>
           <Label>Category</Label>
           <div className="mt-2 flex flex-wrap gap-1.5">
+            {CATEGORY_GROUPS.map((g) => {
+              const currentSet = new Set(
+                Array.isArray(filter.category)
+                  ? filter.category
+                  : filter.category
+                    ? [filter.category]
+                    : [],
+              );
+              const selected =
+                g.categories.every((c) => currentSet.has(c)) &&
+                g.categories.length === currentSet.size;
+              return (
+                <button
+                  key={g.id}
+                  onClick={() =>
+                    set(
+                      "category",
+                      selected
+                        ? undefined
+                        : g.categories.length === 1
+                          ? g.categories[0]
+                          : g.categories,
+                    )
+                  }
+                  className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+                    selected
+                      ? "border-sky-500 bg-sky-500 text-white"
+                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:border-ink-500"
+                  }`}
+                >
+                  {g.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
             {CATEGORY_ORDER.map((cat) => {
-              const selected = filter.category === cat;
+              const selected = Array.isArray(filter.category)
+                ? filter.category.includes(cat)
+                : filter.category === cat;
               return (
                 <button
                   key={cat}

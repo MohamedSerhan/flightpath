@@ -15,11 +15,17 @@ import type { Listing, ListingFilter, ListingsResponse, SourceMeta } from "../sh
 const STATIC = (import.meta as { env?: { VITE_STATIC_DATA?: string } }).env?.VITE_STATIC_DATA === "1";
 const BASE = "/api";
 
-function qs(params: Record<string, string | number | undefined | null>): string {
+function qs(
+  params: Record<string, string | number | string[] | undefined | null>,
+): string {
   const usp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null || v === "") continue;
-    usp.set(k, String(v));
+    if (Array.isArray(v)) {
+      for (const item of v) usp.append(k, String(item));
+    } else {
+      usp.set(k, String(v));
+    }
   }
   const s = usp.toString();
   return s ? `?${s}` : "";
@@ -50,7 +56,14 @@ function applyFilter(listings: Listing[], f: ListingFilter): Listing[] {
     const cutoff = Date.now() - f.postedSinceDays * 86400_000;
     out = out.filter((l) => l.postedAt >= cutoff);
   }
-  if (f.category) out = out.filter((l) => l.jobCategory === f.category);
+  if (f.category) {
+    if (Array.isArray(f.category)) {
+      const set = new Set(f.category);
+      out = out.filter((l) => l.jobCategory !== null && set.has(l.jobCategory));
+    } else {
+      out = out.filter((l) => l.jobCategory === f.category);
+    }
+  }
   if (f.state) out = out.filter((l) => l.state === f.state);
   if (f.source) out = out.filter((l) => l.sourceId === f.source);
   if (typeof f.maxHoursRequired === "number") {
