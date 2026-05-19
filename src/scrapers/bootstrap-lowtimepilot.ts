@@ -139,6 +139,17 @@ function stateFromAddress(address: string): string {
   return "";
 }
 
+function cleanCity(raw: string): string {
+  // Strip trailing commas / whitespace.
+  let city = raw.replace(/,\s*$/, "").trim();
+  // Reject "City, ST" leakage from the splitter — the upstream
+  // ExtendedData City field is the primary source, so returning ""
+  // here just means the address-derived fallback didn't yield a
+  // usable city for this record.
+  if (/,\s*[A-Z]{2}$/.test(city)) return "";
+  return city;
+}
+
 function cityFromAddress(address: string): string {
   // The address is typically "Street, City, State Zip, Country".
   // Split by commas and pick the city as the segment before the
@@ -146,11 +157,11 @@ function cityFromAddress(address: string): string {
   const parts = address.split(",").map((s) => s.trim()).filter(Boolean);
   for (let i = 0; i < parts.length; i++) {
     if (/^[A-Za-z\s]+\s+\d{5}/.test(parts[i]) || /^[A-Z]{2}\s+\d{5}/.test(parts[i])) {
-      if (i - 1 >= 0) return parts[i - 1];
+      if (i - 1 >= 0) return cleanCity(parts[i - 1]);
     }
   }
   // Fallback: second-to-last part.
-  if (parts.length >= 2) return parts[parts.length - 2];
+  if (parts.length >= 2) return cleanCity(parts[parts.length - 2]);
   return "";
 }
 
@@ -196,14 +207,30 @@ async function main() {
       const state = stateFromED || stateFromAddress(address);
       if (!US_STATES.has(state)) { droppedNonUS++; continue; }
 
-      const cityFromED = ed(p, "City").trim();
+      const cityFromED = cleanCity(ed(p, "City").trim());
       const city = cityFromED || cityFromAddress(address);
 
       const homepage = ed(p, "Homepage URL").trim();
       const careerPage = ed(p, "Career page").trim();
       let website: string | null = homepage || careerPage || null;
-      if (website && !/^https?:\/\//i.test(website)) {
-        website = `https://${website}`;
+      if (website) {
+        // Some KML entries put free-text notes after the URL
+        // (e.g. "elpasoskydive.com/ – CLOSED"). Keep only the first
+        // whitespace-delimited token.
+        website = website.split(/\s/)[0] || "";
+        if (!website) {
+          website = null;
+        } else {
+          if (!/^https?:\/\//i.test(website)) {
+            website = `https://${website}`;
+          }
+          // Validate. If the result isn't a parseable URL, drop it.
+          try {
+            new URL(website);
+          } catch {
+            website = null;
+          }
+        }
       }
 
       // Prefer the Type field's value (more specific) over Folder name.
@@ -223,20 +250,72 @@ async function main() {
     }
   }
 
-  results.sort((a, b) => a.state.localeCompare(b.state) || a.name.localeCompare(b.name));
+  // Dedup pass: the same physical company often appears in multiple
+  // folders (e.g. a flight school that also runs aerial-survey work),
+  // or as case-variant duplicates. Merge by id, preferring records
+  // with a website, mixed-case names, and more specific categories.
+  const merged = new Map<string, LowtimepilotCompany>();
+  let dupCount = 0;
+  for (const r of results) {
+    const existing = merged.get(r.id);
+    if (!existing) {
+      merged.set(r.id, r);
+      continue;
+    }
+    dupCount++;
+    merged.set(r.id, mergeDup(existing, r));
+  }
+  const deduped = Array.from(merged.values());
+  console.log(`[lowtimepilot] dedup merged ${dupCount} duplicate id(s)`);
 
-  const withSite = results.filter((s) => s.website).length;
+  deduped.sort((a, b) => a.state.localeCompare(b.state) || a.name.localeCompare(b.name));
+
+  const withSite = deduped.filter((s) => s.website).length;
   const byCategory: Record<string, number> = {};
-  for (const r of results) byCategory[r.category] = (byCategory[r.category] ?? 0) + 1;
+  for (const r of deduped) byCategory[r.category] = (byCategory[r.category] ?? 0) + 1;
 
   console.log(`[lowtimepilot] parsed ${totalPlacemarks} placemarks total`);
   console.log(`[lowtimepilot] dropped ${droppedNonUS} non-US, ${droppedNoName} no-name`);
-  console.log(`[lowtimepilot] kept ${results.length} US companies (${withSite} with websites)`);
+  console.log(`[lowtimepilot] kept ${deduped.length} US companies (${withSite} with websites)`);
   console.log(`[lowtimepilot] category breakdown:`, byCategory);
 
   await mkdir(dirname(OUTPUT), { recursive: true });
-  await writeFile(OUTPUT, JSON.stringify(results, null, 2));
+  await writeFile(OUTPUT, JSON.stringify(deduped, null, 2));
   console.log(`[lowtimepilot] wrote ${OUTPUT}`);
+}
+
+/** Merge two records that share the same id. Picks the better website,
+ *  the better-cased name, and the more specific category. */
+function mergeDup(
+  a: LowtimepilotCompany,
+  b: LowtimepilotCompany,
+): LowtimepilotCompany {
+  // Website: keep the non-null one. If both have one, keep a's.
+  const website = a.website ?? b.website;
+
+  // Name: prefer mixed-case when one is all-caps and the other isn't.
+  const aAllCaps = a.name === a.name.toUpperCase();
+  const bAllCaps = b.name === b.name.toUpperCase();
+  let name = a.name;
+  if (aAllCaps && !bAllCaps) name = b.name;
+  else if (!aAllCaps && bAllCaps) name = a.name;
+
+  // Category: prefer the more specific one. `part91` and `other` are the
+  // generic buckets; anything else beats them. If both are specific and
+  // differ, keep a (and log so we notice if this happens often).
+  const generic = new Set(["part91", "other"]);
+  let category = a.category;
+  if (generic.has(a.category) && !generic.has(b.category)) {
+    category = b.category;
+  } else if (!generic.has(a.category) && generic.has(b.category)) {
+    category = a.category;
+  } else if (a.category !== b.category) {
+    console.log(
+      `[lowtimepilot] dedup: conflicting categories for ${a.id} — kept "${a.category}", dropped "${b.category}"`,
+    );
+  }
+
+  return { id: a.id, name, city: a.city || b.city, state: a.state, website, category };
 }
 
 main().catch((err) => {

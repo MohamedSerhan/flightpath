@@ -506,17 +506,9 @@
   {
     "id": "above-all-aviation-santa-barbara-ca",
     "name": "Above All Aviation",
-    "city": "Santa Barbara",
-    "state": "CA",
-    "website": "https://www.aboveallsba.com/",
-    "category": "part91"
-  },
-  {
-    "id": "above-all-aviation-santa-barbara-ca",
-    "name": "ABOVE ALL AVIATION",
     "city": "SANTA BARBARA",
     "state": "CA",
-    "website": null,
+    "website": "https://www.aboveallsba.com/",
     "category": "cfi"
   },
   {
@@ -1312,14 +1304,6 @@
     "category": "cfi"
   },
   {
-    "id": "colorado-mesa-university-tech-grand-junction-co",
-    "name": "COLORADO MESA UNIVERSITY TECH",
-    "city": "GRAND JUNCTION",
-    "state": "CO",
-    "website": null,
-    "category": "cfi"
-  },
-  {
     "id": "colorado-northwestern-community-college-rangely-co",
     "name": "COLORADO NORTHWESTERN COMMUNITY COLLEGE",
     "city": "RANGELY",
@@ -1330,7 +1314,7 @@
   {
     "id": "direct-connect-flight-academy-colorado-springs-co",
     "name": "DIRECT CONNECT FLIGHT ACADEMY",
-    "city": "COLORADO SPRINGS,",
+    "city": "COLORADO SPRINGS",
     "state": "CO",
     "website": null,
     "category": "cfi"
@@ -1390,14 +1374,6 @@
     "state": "CO",
     "website": "https://www.outoftheblueskydiving.com",
     "category": "skydiving"
-  },
-  {
-    "id": "prostar-greeley-co",
-    "name": "ProStar",
-    "city": "Greeley",
-    "state": "CO",
-    "website": "https://prostarflight.com/",
-    "category": "aerial_survey"
   },
   {
     "id": "prostar-greeley-co",
@@ -3704,14 +3680,6 @@
     "category": "cfi"
   },
   {
-    "id": "textron-aviation-employees-flying-club-inc-wichita-ks",
-    "name": "TEXTRON AVIATION EMPLOYEES' FLYING CLUB INC",
-    "city": "WICHITA",
-    "state": "KS",
-    "website": null,
-    "category": "cfi"
-  },
-  {
     "id": "wichita-state-university-campus-of-applied-scien-wichita-ks",
     "name": "WICHITA STATE UNIVERSITY - CAMPUS OF APPLIED SCIEN",
     "city": "WICHITA",
@@ -3848,14 +3816,6 @@
     "category": "aerial_survey"
   },
   {
-    "id": "skylens-hammond-la",
-    "name": "SkyLens",
-    "city": "Hammond",
-    "state": "LA",
-    "website": "https://www.skylensaerial.com/index.html",
-    "category": "aerial_survey"
-  },
-  {
     "id": "southern-seaplane-belle-chasse-la",
     "name": "Southern Seaplane",
     "city": "Belle Chasse",
@@ -3894,14 +3854,6 @@
     "state": "MA",
     "website": "https://www.bostonmedflight.org",
     "category": "air_ambulance"
-  },
-  {
-    "id": "bridgewater-state-university-bridgewater-ma",
-    "name": "BRIDGEWATER STATE UNIVERSITY",
-    "city": "BRIDGEWATER",
-    "state": "MA",
-    "website": null,
-    "category": "cfi"
   },
   {
     "id": "bridgewater-state-university-bridgewater-ma",
@@ -4362,7 +4314,7 @@
   {
     "id": "big-aerial-sign-service-forest-lake-mn",
     "name": "Big Aerial Sign Service",
-    "city": "Forest Lake,",
+    "city": "Forest Lake",
     "state": "MN",
     "website": "https://www.aerialbanners.com/",
     "category": "banner_tow"
@@ -5240,14 +5192,6 @@
     "category": "cfi"
   },
   {
-    "id": "bode-aviation-inc-albuquerque-nm",
-    "name": "BODE AVIATION INC",
-    "city": "ALBUQUERQUE",
-    "state": "NM",
-    "website": null,
-    "category": "cfi"
-  },
-  {
     "id": "csi-aviation-albuquerque-nm",
     "name": "CSI Aviation",
     "city": "Albuquerque",
@@ -5292,7 +5236,7 @@
     "name": "Skydive El Paso",
     "city": "Santa Teresa",
     "state": "NM",
-    "website": "https://elpasoskydive.com/ – CLOSED",
+    "website": "https://elpasoskydive.com/",
     "category": "skydiving"
   },
   {
@@ -6424,9 +6368,9 @@
     "category": "cfi"
   },
   {
-    "id": "north-coast-flight-school-inc-meadville-pa-pa",
+    "id": "north-coast-flight-school-inc-16469-morrison-road-meadville-pa",
     "name": "NORTH COAST FLIGHT SCHOOL INC",
-    "city": "MEADVILLE, PA",
+    "city": "16469 MORRISON ROAD MEADVILLE",
     "state": "PA",
     "website": null,
     "category": "cfi"
@@ -6530,14 +6474,6 @@
   {
     "id": "new-horizon-aviation-inc-warwick-ri",
     "name": "NEW HORIZON AVIATION INC",
-    "city": "WARWICK",
-    "state": "RI",
-    "website": null,
-    "category": "cfi"
-  },
-  {
-    "id": "new-horizon-aviation-inc-warwick-ri",
-    "name": "NEW HORIZON AVIATION, INC",
     "city": "WARWICK",
     "state": "RI",
     "website": null,
@@ -7248,14 +7184,6 @@
     "category": "cfi"
   },
   {
-    "id": "pro-aircraft-fort-worth-tx",
-    "name": "PRO AIRCRAFT",
-    "city": "FORT WORTH",
-    "state": "TX",
-    "website": null,
-    "category": "cfi"
-  },
-  {
     "id": "raider-aviation-llc-slaton-tx",
     "name": "RAIDER AVIATION LLC",
     "city": "SLATON",
@@ -7475,22 +7403,6 @@
     "id": "texas-southern-university-houston-tx",
     "name": "TEXAS SOUTHERN UNIVERSITY",
     "city": "HOUSTON",
-    "state": "TX",
-    "website": null,
-    "category": "cfi"
-  },
-  {
-    "id": "texas-southern-university-houston-tx",
-    "name": "TEXAS SOUTHERN UNIVERSITY",
-    "city": "HOUSTON",
-    "state": "TX",
-    "website": null,
-    "category": "cfi"
-  },
-  {
-    "id": "texas-state-technical-college-waco-tx",
-    "name": "TEXAS STATE TECHNICAL COLLEGE",
-    "city": "WACO",
     "state": "TX",
     "website": null,
     "category": "cfi"
@@ -7768,14 +7680,6 @@
     "category": "cfi"
   },
   {
-    "id": "southern-utah-university-cedar-city-ut",
-    "name": "SOUTHERN UTAH UNIVERSITY",
-    "city": "CEDAR CITY",
-    "state": "UT",
-    "website": null,
-    "category": "cfi"
-  },
-  {
     "id": "takeflight-llc-west-jordan-ut",
     "name": "TAKEFLIGHT, LLC",
     "city": "WEST JORDAN",
@@ -7811,14 +7715,6 @@
     "id": "utah-state-university-price-ut",
     "name": "UTAH STATE UNIVERSITY",
     "city": "PRICE",
-    "state": "UT",
-    "website": null,
-    "category": "cfi"
-  },
-  {
-    "id": "utah-state-university-logan-ut",
-    "name": "UTAH STATE UNIVERSITY",
-    "city": "LOGAN",
     "state": "UT",
     "website": null,
     "category": "cfi"
@@ -7902,14 +7798,6 @@
     "state": "VA",
     "website": "https://www.dynamicaviation.com/",
     "category": "aerial_survey"
-  },
-  {
-    "id": "dynamic-aviation-bridgewater-va",
-    "name": "Dynamic Aviation",
-    "city": "Bridgewater",
-    "state": "VA",
-    "website": "https://www.dynamicaviation.com/",
-    "category": "part91"
   },
   {
     "id": "epix-services-llc-chesapeake-va",
