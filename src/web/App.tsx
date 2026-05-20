@@ -1845,6 +1845,32 @@ function ListingCard({
           </div>
         )}
 
+        {listing.hoursBreakdown && Object.keys(listing.hoursBreakdown).length > 0 && (
+          <div className="mt-1 flex flex-wrap gap-1">
+            {([
+              ['multiEngine', 'ME'],
+              ['turbine', 'Turbine'],
+              ['tailwheel', 'Tailwheel'],
+              ['complex', 'Complex'],
+              ['instrument', 'Inst.'],
+              ['pic', 'PIC'],
+              ['crossCountry', 'XC'],
+            ] as const).map(([key, label]) => {
+              const value = listing.hoursBreakdown![key];
+              if (value == null) return null;
+              return (
+                <span
+                  key={key}
+                  className="inline-flex items-center gap-1 rounded bg-sky-500/10 px-1.5 py-0.5 text-[10px] font-medium text-sky-600 dark:bg-sky-500/20 dark:text-sky-300"
+                >
+                  <span className="font-semibold">{value}</span>
+                  <span>{label}</span>
+                </span>
+              );
+            })}
+          </div>
+        )}
+
         <div
           className="mt-3 flex items-center gap-1.5 border-t border-ink-100 pt-2 dark:border-ink-800"
           onClick={(e) => e.stopPropagation()}
