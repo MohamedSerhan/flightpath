@@ -22,6 +22,7 @@ import {
   BookOpen,
   ChevronDown,
   ChevronRight,
+  Library,
 } from "lucide-react";
 import { applyTheme, readTheme, writeTheme, type Theme } from "./theme.ts";
 import { fetchListings, fetchSources, fetchSummary } from "./api.ts";
@@ -778,6 +779,13 @@ function Header({
           >
             <BookOpen className="h-4 w-4" />
           </button>
+          <a
+            href={`${import.meta.env.BASE_URL}learn`}
+            className="inline-flex items-center justify-center rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-sm font-medium text-ink-800 transition hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:border-ink-500"
+            title="FAA reference library — PHAK, Commercial ACS, FAR"
+          >
+            <Library className="h-4 w-4" />
+          </a>
           <button
             onClick={() => onSetView(view === "pipeline" ? "browse" : "pipeline")}
             className={`relative inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition ${
