@@ -15,7 +15,7 @@
  * stated minimums) should land north of 80.
  */
 
-import type { Listing } from "../shared/types.ts";
+import type { HoursBreakdown, Listing } from "../shared/types.ts";
 import type { ApplicantProfile } from "./outreach.ts";
 
 export type MatchTier = "high" | "mid" | "low";
@@ -55,6 +55,54 @@ const PREFERRED_CATEGORIES = new Set([
 ]);
 const STRETCH_CATEGORIES = new Set(["part135", "corporate", "air_ambulance"]);
 const OUT_OF_REACH = new Set(["airline"]);
+
+/** Mapping of per-class hour fields between the listing's parsed
+ *  breakdown and the applicant profile, plus a short human label used
+ *  in the "Short N ME hours of M required" reason string. */
+const PER_CLASS_LABELS: Array<[keyof HoursBreakdown, keyof ApplicantProfile, string]> = [
+  ["multiEngine", "multiEngineHours", "ME"],
+  ["turbine", "turbineHours", "turbine"],
+  ["tailwheel", "tailwheelHours", "tailwheel"],
+  ["complex", "complexHours", "complex"],
+  ["instrument", "instrumentHours", "instrument"],
+  ["pic", "picHours", "PIC"],
+  ["crossCountry", "crossCountryHours", "XC"],
+];
+
+/** Per-class deficit penalty.
+ *
+ *  When a listing names a per-class minimum and the applicant has the
+ *  corresponding hours, deduct up to 10 points proportional to the
+ *  deficit per class. Capped at -25 across all classes. Skipped when
+ *  the applicant hasn't entered the field (don't penalize for missing
+ *  profile data). Surfaces the dominant deficit so callers can use it
+ *  in the `reason` string. */
+function perClassDeficit(
+  breakdown: HoursBreakdown | null,
+  profile: ApplicantProfile,
+): { penalty: number; topDeficit: { label: string; have: number; need: number } | null } {
+  if (!breakdown) return { penalty: 0, topDeficit: null };
+  let total = 0;
+  let top: { label: string; have: number; need: number; ratio: number } | null = null;
+  for (const [breakKey, profKey, label] of PER_CLASS_LABELS) {
+    const required = breakdown[breakKey];
+    const have = profile[profKey] as number | undefined;
+    if (required == null || have == null) continue;
+    const deficit = Math.max(0, required - have);
+    if (deficit === 0) continue;
+    const ratio = required > 0 ? Math.min(1, deficit / required) : 0;
+    const penalty = Math.round(ratio * 10);
+    total += penalty;
+    if (!top || ratio > top.ratio) {
+      top = { label, have, need: required, ratio };
+    }
+  }
+  total = Math.min(total, 25);
+  return {
+    penalty: -total,
+    topDeficit: top ? { label: top.label, have: top.have, need: top.need } : null,
+  };
+}
 
 function ratingsHeld(p: ApplicantProfile): Set<string> {
   // CFI is implicit (the app's audience) so we always have it.
@@ -167,11 +215,27 @@ export function matchScore(listing: Listing, p: ApplicantProfile): MatchResult {
     score += 5;
   }
 
+  // 6. Per-class deficit — when the listing names per-class minimums
+  //    (e.g. 50 ME, 25 turbine) and the applicant has logged those
+  //    classes, deduct up to 10 per class proportional to the gap,
+  //    capped at -25 total. Skipped per-class when the applicant
+  //    hasn't filled in that field.
+  const { penalty, topDeficit } = perClassDeficit(listing.hoursBreakdown, p);
+  score += penalty;
+
   // Clamp.
   score = Math.max(0, Math.min(100, Math.round(score)));
 
   // Default reason if none bubbled up.
-  const reason =
+  let reason =
     reasons[0] ?? (score >= 75 ? "good fit" : score >= 50 ? "decent fit" : "stretch role");
+
+  // Per-class deficit override: when the deficit is significant
+  // (penalty ≤ -5), it dominates the picture — surface it as the
+  // reason regardless of which other factor bubbled up first.
+  if (topDeficit && penalty <= -5) {
+    reason = `Short ${topDeficit.need - topDeficit.have} ${topDeficit.label} hours of ${topDeficit.need} required`;
+  }
+
   return { score, tier: tierOf(score), reason };
 }

@@ -1,4 +1,4 @@
-import type { JobCategory } from "../shared/types.ts";
+import type { HoursBreakdown, JobCategory } from "../shared/types.ts";
 
 export type RawListing = {
   externalId: string;
@@ -31,4 +31,5 @@ export type EnrichedListing = RawListing & {
   jobCategory: JobCategory | null;
   hoursRequired: number | null;
   ratingsRequired: string[] | null;
+  hoursBreakdown: HoursBreakdown | null;
 };

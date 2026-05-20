@@ -130,6 +130,9 @@ export async function runBrowserAdapters(adapters: BrowserAdapter[]): Promise<vo
             ratingsRequired: enriched.ratingsRequired
               ? JSON.stringify(enriched.ratingsRequired)
               : null,
+            hoursBreakdown: enriched.hoursBreakdown
+              ? JSON.stringify(enriched.hoursBreakdown)
+              : null,
           })
           .onConflictDoUpdate({
             target: [listings.sourceId, listings.externalId],
@@ -145,6 +148,9 @@ export async function runBrowserAdapters(adapters: BrowserAdapter[]): Promise<vo
               hoursRequired: enriched.hoursRequired,
               ratingsRequired: enriched.ratingsRequired
                 ? JSON.stringify(enriched.ratingsRequired)
+                : null,
+              hoursBreakdown: enriched.hoursBreakdown
+                ? JSON.stringify(enriched.hoursBreakdown)
                 : null,
             },
           });

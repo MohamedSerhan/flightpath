@@ -1845,6 +1845,32 @@ function ListingCard({
           </div>
         )}
 
+        {listing.hoursBreakdown && Object.keys(listing.hoursBreakdown).length > 0 && (
+          <div className="mt-1 flex flex-wrap gap-1">
+            {([
+              ['multiEngine', 'ME'],
+              ['turbine', 'Turbine'],
+              ['tailwheel', 'Tailwheel'],
+              ['complex', 'Complex'],
+              ['instrument', 'Inst.'],
+              ['pic', 'PIC'],
+              ['crossCountry', 'XC'],
+            ] as const).map(([key, label]) => {
+              const value = listing.hoursBreakdown![key];
+              if (value == null) return null;
+              return (
+                <span
+                  key={key}
+                  className="inline-flex items-center gap-1 rounded bg-sky-500/10 px-1.5 py-0.5 text-[10px] font-medium text-sky-600 dark:bg-sky-500/20 dark:text-sky-300"
+                >
+                  <span className="font-semibold">{value}</span>
+                  <span>{label}</span>
+                </span>
+              );
+            })}
+          </div>
+        )}
+
         <div
           className="mt-3 flex items-center gap-1.5 border-t border-ink-100 pt-2 dark:border-ink-800"
           onClick={(e) => e.stopPropagation()}
@@ -2256,6 +2282,39 @@ function ProfileModal({
               </select>
             </Field>
           </div>
+
+          <details className="rounded-lg border border-ink-200 px-3 py-2 dark:border-ink-700">
+            <summary className="cursor-pointer text-sm font-medium text-ink-700 dark:text-ink-200">
+              Hours by class (optional)
+            </summary>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {(
+                [
+                  ["multiEngineHours", "Multi-Engine"],
+                  ["turbineHours", "Turbine"],
+                  ["tailwheelHours", "Tailwheel"],
+                  ["complexHours", "Complex"],
+                  ["instrumentHours", "Instrument"],
+                  ["picHours", "PIC"],
+                  ["crossCountryHours", "Cross-country"],
+                ] as const
+              ).map(([key, label]) => (
+                <Field key={key} label={label}>
+                  <input
+                    value={draft[key]?.toString() ?? ""}
+                    onChange={(e) => {
+                      const v = e.target.value.trim();
+                      update(key, v ? Number(v) : undefined);
+                    }}
+                    type="number"
+                    inputMode="numeric"
+                    min="0"
+                    className={fieldClass}
+                  />
+                </Field>
+              ))}
+            </div>
+          </details>
 
           <div className="rounded-lg border border-ink-100 bg-ink-50 p-3 dark:bg-ink-900 dark:border-ink-800">
             <div className="text-xs font-semibold uppercase tracking-wider text-ink-400">

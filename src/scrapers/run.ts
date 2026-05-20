@@ -52,6 +52,9 @@ async function runOne(adapter: SourceAdapter): Promise<void> {
           ratingsRequired: enriched.ratingsRequired
             ? JSON.stringify(enriched.ratingsRequired)
             : null,
+          hoursBreakdown: enriched.hoursBreakdown
+            ? JSON.stringify(enriched.hoursBreakdown)
+            : null,
         })
         .onConflictDoUpdate({
           target: [listings.sourceId, listings.externalId],
@@ -78,6 +81,9 @@ async function runOne(adapter: SourceAdapter): Promise<void> {
             hoursRequired: enriched.hoursRequired,
             ratingsRequired: enriched.ratingsRequired
               ? JSON.stringify(enriched.ratingsRequired)
+              : null,
+            hoursBreakdown: enriched.hoursBreakdown
+              ? JSON.stringify(enriched.hoursBreakdown)
               : null,
           },
         })

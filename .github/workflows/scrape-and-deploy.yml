@@ -117,6 +117,9 @@ jobs:
       - name: Reclassify categories on cached rows
         run: bun scripts/reclassify-categories.ts
 
+      - name: Re-extract hours-by-class on cached rows
+        run: bun scripts/reextract-hours-breakdown.ts
+
       - name: Scrape HTTP sources
         if: ${{ env.DO_SCRAPE == 'true' }}
         run: bun run scrape

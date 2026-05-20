@@ -1,0 +1,61 @@
+{
+  "planPath": "docs/superpowers/plans/2026-05-20-hours-by-class.md",
+  "tasks": [
+    {
+      "id": 0,
+      "subject": "Task 1: Schema, types, and the HoursBreakdown shape",
+      "status": "pending",
+      "description": "Add the hours_breakdown column, HoursBreakdown type, and the corresponding Listing.hoursBreakdown / EnrichedListing.hoursBreakdown field.\n\n```json:metadata\n{\"files\":[\"src/db/schema.ts\",\"src/shared/types.ts\",\"src/scrapers/types.ts\",\"src/server/routes/listings.ts\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"hours_breakdown column added\",\"HoursBreakdown type exported\",\"Listing.hoursBreakdown field present\",\"EnrichedListing.hoursBreakdown field present\",\"typecheck clean\"]}\n```"
+    },
+    {
+      "id": 1,
+      "subject": "Task 2: Implement extractHoursByClass and wire into enrichListing",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "New extractor function plus integration into the enrich pipeline.\n\n```json:metadata\n{\"files\":[\"src/scrapers/enrich.ts\"],\"verifyCommand\":\"bun -e 'see plan'\",\"acceptanceCriteria\":[\"extractHoursByClass exported\",\"7 classes recognized\",\"Out-of-range numbers dropped\",\"Min selected when multiple matches\",\"enrichListing populates hoursBreakdown\"]}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 3: Wire JSON serialization in runners and API row mapper",
+      "status": "pending",
+      "blockedBy": [1],
+      "description": "Persist hoursBreakdown through runners; deserialize on the API read path.\n\n```json:metadata\n{\"files\":[\"src/scrapers/run.ts\",\"src/scrapers/browser/runner.ts\",\"src/server/routes/listings.ts\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"run.ts persists hoursBreakdown JSON\",\"browser/runner.ts mirrors the same\",\"API row mapper deserializes via safeParseHoursBreakdown\",\"Round-trip test passes\"]}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 4: Backfill script + CI wiring",
+      "status": "pending",
+      "blockedBy": [2],
+      "description": "One-shot script to re-extract hours_breakdown over every row; integrate into deploy workflow.\n\n```json:metadata\n{\"files\":[\"scripts/reextract-hours-breakdown.ts\",\".github/workflows/scrape-and-deploy.yml\"],\"verifyCommand\":\"bun scripts/reextract-hours-breakdown.ts && bun scripts/reextract-hours-breakdown.ts\",\"acceptanceCriteria\":[\"backfill script created\",\"Idempotent\",\"CI workflow runs it after reclassify step\"]}\n```"
+    },
+    {
+      "id": 4,
+      "subject": "Task 5: ApplicantProfile fields + profile modal section",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "Extend ApplicantProfile with 7 per-class hour fields and UI in ProfileModal.\n\n```json:metadata\n{\"files\":[\"src/web/outreach.ts\",\"src/web/App.tsx\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"ApplicantProfile has 7 new fields\",\"ProfileModal has Hours by class section\",\"Values persist across reload\",\"Typecheck clean\"]}\n```"
+    },
+    {
+      "id": 5,
+      "subject": "Task 6: Match score per-class deficit penalty",
+      "status": "pending",
+      "blockedBy": [0, 4],
+      "description": "Deduct up to 10 per class (capped at -25 total) for per-class deficits; top deficit becomes the reason.\n\n```json:metadata\n{\"files\":[\"src/web/match.ts\"],\"verifyCommand\":\"bun -e 'see plan'\",\"acceptanceCriteria\":[\"perClassDeficit helper added\",\"Penalty applied in matchScore\",\"Cap at -25\",\"Skipped when profile undefined\",\"Top deficit appears in reason\"]}\n```"
+    },
+    {
+      "id": 6,
+      "subject": "Task 7: Listing card chip row",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "Render a chip row below hours line on each card, one chip per class present.\n\n```json:metadata\n{\"files\":[\"src/web/App.tsx\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"Chip row renders when hoursBreakdown present\",\"Hidden when null or empty\",\"Labels match spec\",\"Styling matches existing pills\"]}\n```"
+    },
+    {
+      "id": 7,
+      "subject": "Task 8: End-to-end deploy verification",
+      "status": "pending",
+      "blockedBy": [3, 5, 6],
+      "description": "Build, push, confirm deploy and backfill behavior.\n\n```json:metadata\n{\"files\":[],\"verifyCommand\":\"gh run list --limit 1 --branch master\",\"acceptanceCriteria\":[\"Local build clean\",\"Master push succeeds\",\"CI deploy succeeds\",\"Backfill step reports >0 updates\",\"Live site shows chips\"]}\n```"
+    }
+  ],
+  "lastUpdated": "2026-05-20T05:25:00Z"
+}
