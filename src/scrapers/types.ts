@@ -12,6 +12,12 @@ export type RawListing = {
    *  to Date.now(). Default (undefined / true) means postedAt came from
    *  the source. Drives the UI's "Indexed" vs "Posted" copy. */
   postedAtAccurate?: boolean;
+  /** Adapter-provided category hint. When set, `enrichListing` uses it
+   *  as the job category instead of running the title/description
+   *  classifier. Use for adapters whose source already tags each posting
+   *  (e.g. lowtimepilot.com's company map exposes per-company category).
+   *  Leave undefined to let the classifier decide. */
+  categoryHint?: JobCategory | null;
 };
 
 export type SourceAdapter = {
