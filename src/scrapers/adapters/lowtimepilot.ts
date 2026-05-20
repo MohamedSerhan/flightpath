@@ -83,6 +83,28 @@ function pickBatch(companies: ProbeableCompany[], now: number): ProbeableCompany
   return out;
 }
 
+/**
+ * Per-category keyword set. The shared `probeCareerPage` defaults to a
+ * CFI-flavored INSTRUCTOR_RE (matching "flight instructor", "CFI", etc.),
+ * which finds NOTHING on a skydiving or aerial-survey operator's careers
+ * page — those companies don't hire CFIs. We swap in domain-specific
+ * keywords per category so the probe actually fires.
+ *
+ * Each regex is the operator's domain-specific "we hire pilots like
+ * THIS" phrase. The shared HIRING_RE ("now hiring", "we're looking for",
+ * etc.) still gates on whether the page is actively hiring at all.
+ */
+const KEYWORDS_BY_CATEGORY: Partial<Record<JobCategory, RegExp>> = {
+  aerial_survey: /\b(aerial\s+survey\s+pilot|aerial\s+mapping\s+pilot|survey\s+pilot|photogrammetry\s+pilot|lidar\s+pilot|aerial\s+survey|aerial\s+mapping|photogrammetry)\b/i,
+  pipeline_patrol: /\b(pipeline\s+patrol\s+pilot|powerline\s+patrol\s+pilot|patrol\s+pilot|pipeline\s+pilot|powerline\s+pilot|pipeline\s+patrol|powerline\s+patrol)\b/i,
+  skydiving: /\b(jump\s+pilot|skydive\s+pilot|skydiving\s+pilot|drop\s+pilot|parachute\s+pilot|jump\s+ship\s+pilot|skydive|skydiving|jump\s+operation)\b/i,
+  banner_tow: /\b(banner\s+tow\s+pilot|banner\s+pilot|banner[-\s]?tow|banner\s+towing|banner\s+pulling)\b/i,
+  traffic_watch: /\b(traffic\s+watch\s+pilot|traffic\s+pilot|news\s+pilot|news\s+helicopter\s+pilot|ENG\s+pilot|electronic\s+news\s+gathering|traffic\s+watch|news\s+helicopter)\b/i,
+  air_ambulance: /\b(air\s+ambulance\s+pilot|EMS\s+pilot|HEMS\s+pilot|medevac\s+pilot|medivac\s+pilot|helicopter\s+EMS|medical\s+helicopter\s+pilot|air\s+ambulance|HEMS|medevac)\b/i,
+  part135: /\b(charter\s+pilot|part\s*135\s+pilot|on[-\s]?demand\s+pilot|freight\s+pilot|cargo\s+pilot|feeder\s+pilot|charter\s+operations?|on[-\s]?demand\s+freight)\b/i,
+  airline: /\b(first\s+officer|F\/O|airline\s+pilot|regional\s+pilot|cadet\s+program|line\s+pilot|airline\s+careers?|pilot\s+careers?)\b/i,
+};
+
 function titleFor(c: ProbeableCompany): string {
   const label: Record<JobCategory, string> = {
     cfi: "Flight Instructor",
@@ -155,6 +177,12 @@ export const lowtimepilotAdapter: SourceAdapter = {
             sourceId: "lowtimepilot",
             titleTemplate: () => titleFor(company),
             categoryHint: company.category,
+            // Use a domain-specific keyword set per category — the shared
+            // probeCareerPage's default INSTRUCTOR_RE is CFI-flavored and
+            // never matches on a skydiving / aerial-survey careers page.
+            // Fall back to the default for categories we don't override
+            // (currently cfi / cfii / mei / part91 / corporate / other).
+            instructorRe: KEYWORDS_BY_CATEGORY[company.category],
           });
           if (listing) out.push(listing);
         } catch {
