@@ -105,6 +105,22 @@ jobs:
           restore-keys: |
             flightpath-db-
 
+      # FAA reference library PDF cache. Month-bucketed key picks up FAA
+      # revisions monthly without manual intervention; the per-run-id
+      # suffix makes each successful run write its own cache entry.
+      - name: Compute month bucket
+        id: now
+        run: echo "month=$(date +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache FAA PDFs
+        uses: actions/cache@v4
+        with:
+          path: data/learn/_pdfs
+          key: faa-pdfs-${{ steps.now.outputs.month }}-${{ github.run_id }}
+          restore-keys: |
+            faa-pdfs-${{ steps.now.outputs.month }}-
+            faa-pdfs-
+
       - name: Run migrations
         run: bun run db:migrate
 

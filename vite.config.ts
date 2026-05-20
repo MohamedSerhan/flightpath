@@ -9,6 +9,11 @@ export default defineConfig({
   base: process.env.VITE_BASE ?? "/",
   plugins: [react()],
   root: "src/web",
+  // Vite's `publicDir` is resolved relative to `root` by default —
+  // src/web/public — which doesn't exist. Point it at the repo-root
+  // ./public/ so the FAA reference library JSON (and any future
+  // build-time-generated static assets) lands in dist/web/.
+  publicDir: "../../public",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
