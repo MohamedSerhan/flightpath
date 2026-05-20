@@ -2257,6 +2257,39 @@ function ProfileModal({
             </Field>
           </div>
 
+          <details className="rounded-lg border border-ink-200 px-3 py-2 dark:border-ink-700">
+            <summary className="cursor-pointer text-sm font-medium text-ink-700 dark:text-ink-200">
+              Hours by class (optional)
+            </summary>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {(
+                [
+                  ["multiEngineHours", "Multi-Engine"],
+                  ["turbineHours", "Turbine"],
+                  ["tailwheelHours", "Tailwheel"],
+                  ["complexHours", "Complex"],
+                  ["instrumentHours", "Instrument"],
+                  ["picHours", "PIC"],
+                  ["crossCountryHours", "Cross-country"],
+                ] as const
+              ).map(([key, label]) => (
+                <Field key={key} label={label}>
+                  <input
+                    value={draft[key]?.toString() ?? ""}
+                    onChange={(e) => {
+                      const v = e.target.value.trim();
+                      update(key, v ? Number(v) : undefined);
+                    }}
+                    type="number"
+                    inputMode="numeric"
+                    min="0"
+                    className={fieldClass}
+                  />
+                </Field>
+              ))}
+            </div>
+          </details>
+
           <div className="rounded-lg border border-ink-100 bg-ink-50 p-3 dark:bg-ink-900 dark:border-ink-800">
             <div className="text-xs font-semibold uppercase tracking-wider text-ink-400">
               Ratings (CFI is assumed)
