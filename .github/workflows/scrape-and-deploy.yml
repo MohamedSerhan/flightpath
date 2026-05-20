@@ -35,6 +35,10 @@ on:
         description: "Probe every flight school (skip the rotation, ~5min)"
         type: boolean
         default: false
+      lowtimepilot_full:
+        description: "Probe every lowtimepilot company (skip the rotation, ~10min)"
+        type: boolean
+        default: false
 
 # We deploy at most one Pages build at a time. Newer runs cancel
 # stale ones to avoid racing the cache restore.
@@ -81,6 +85,11 @@ jobs:
       # this env var; cron runs leave it unset and use the rotation.
       FLIGHT_SCHOOLS_FULL: >-
         ${{ (github.event_name == 'workflow_dispatch' && inputs.flight_schools_full == true) && '1' || '' }}
+      # Manual one-shot: probe every lowtimepilot company instead of
+      # today's rotation slice. The lowtimepilot adapter reads this env
+      # var; cron runs leave it unset and use the rotation.
+      LOWTIMEPILOT_FULL: >-
+        ${{ (github.event_name == 'workflow_dispatch' && inputs.lowtimepilot_full == true) && '1' || '' }}
     steps:
       - uses: actions/checkout@v4
 
