@@ -497,6 +497,47 @@ export function App() {
           </div>
         </div>
 
+        {/* Always-visible category-group chips. Groups like "Non-CFI" unify
+            the operator buckets (skydiving / banner_tow / aerial_survey /
+            etc.) into a single tab — the headline ask from the user's bro.
+            Per-category chips stay inside the Filters panel for power use. */}
+        <div className="mt-2 flex flex-wrap gap-2">
+          {CATEGORY_GROUPS.map((g) => {
+            const currentSet = new Set(
+              Array.isArray(filter.category)
+                ? filter.category
+                : filter.category
+                  ? [filter.category]
+                  : [],
+            );
+            const selected =
+              g.categories.every((c) => currentSet.has(c)) &&
+              g.categories.length === currentSet.size;
+            return (
+              <button
+                key={g.id}
+                onClick={() =>
+                  update(
+                    "category",
+                    selected
+                      ? undefined
+                      : g.categories.length === 1
+                        ? g.categories[0]
+                        : g.categories,
+                  )
+                }
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                  selected
+                    ? "border-sky-500 bg-sky-500 text-white"
+                    : "border-ink-200 bg-white text-ink-600 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:border-ink-500"
+                }`}
+              >
+                {g.label}
+              </button>
+            );
+          })}
+        </div>
+
         {filterChips.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {filterChips.map((chip) => (
@@ -1374,42 +1415,6 @@ function FilterPanel({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <Label>Category</Label>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {CATEGORY_GROUPS.map((g) => {
-              const currentSet = new Set(
-                Array.isArray(filter.category)
-                  ? filter.category
-                  : filter.category
-                    ? [filter.category]
-                    : [],
-              );
-              const selected =
-                g.categories.every((c) => currentSet.has(c)) &&
-                g.categories.length === currentSet.size;
-              return (
-                <button
-                  key={g.id}
-                  onClick={() =>
-                    set(
-                      "category",
-                      selected
-                        ? undefined
-                        : g.categories.length === 1
-                          ? g.categories[0]
-                          : g.categories,
-                    )
-                  }
-                  className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
-                    selected
-                      ? "border-sky-500 bg-sky-500 text-white"
-                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-400 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-200 dark:hover:border-ink-500"
-                  }`}
-                >
-                  {g.label}
-                </button>
-              );
-            })}
-          </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {CATEGORY_ORDER.map((cat) => {
               const selected = Array.isArray(filter.category)
