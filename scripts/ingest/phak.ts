@@ -56,23 +56,47 @@ async function main() {
   console.log(`[phak] ${pages.length} pages extracted`);
 
   // PHAK chapter sections look like "1-1 Introduction" or "4-2 Forces in Flight"
-  // at the start of a line. Chapter titles are "Chapter N Title" or
-  // "Chapter N — Title". We chunk on either pattern.
-  const headingRegex = /^(?:(Chapter\s+\d+)\b[^\n]*|(\d+[-]\d+)\s+(.+))$/;
+  // at the start of a line. Chapter titles are "Chapter N Title".
+  //
+  // Tightening notes:
+  //   - The section group requires `[A-Z][a-z]` after the number so we don't
+  //     match figure refs like "14-3 — 8" or page refs like "4-2 5" as
+  //     section headings.
+  //   - The dot-leader skipLineRegex (5+ consecutive dots anywhere in a line)
+  //     drops every TOC line. That's a universal indicator for TOC dot-leaders
+  //     and eliminates the entire front-matter TOC noise in one rule.
+  const headingRegex = /^(?:(Chapter\s+\d+)(?:\s+.+)?|(\d+[-]\d+)\s+([A-Z][a-z][^\n]+))$/;
 
   const chunks = chunkByHeading(pages, {
     headingRegex,
     titleFor: (m) => (m[1] ? m[1] : `${m[2]} — ${m[3]}`).trim(),
-    skipLineRegex: /^(?:Pilot's Handbook of Aeronautical Knowledge|FAA-H-8083-25C|\d+-\d+$|Page \d+)$/i,
+    skipLineRegex:
+      /\.{5,}|^(?:Pilot's Handbook of Aeronautical Knowledge|FAA-H-8083-25C|\d+-\d+$|Page \d+)$/i,
   });
 
-  if (chunks.length < 30) {
-    console.error(`[phak] only got ${chunks.length} chunks — heading regex may be wrong`);
+  // Dedupe by chunkId — TOC entries and actual chapter starts can collide
+  // ("Chapter 4" appears in front-matter and at the real chapter start).
+  // Keep the chunk with more body text since that's the real one.
+  // Then drop tiny chunks (≤ 200 chars) — these are heading-match ghosts
+  // where every body line got skipped by the dot-leader filter (TOC pages)
+  // or where the regex caught a stray running-header reference.
+  const byId = new Map<string, (typeof chunks)[number]>();
+  for (const c of chunks) {
+    const existing = byId.get(c.chunkId);
+    if (!existing || c.text.length > existing.text.length) byId.set(c.chunkId, c);
+  }
+  const finalChunks = [...byId.values()].filter((c) => c.text.length > 200);
+
+  // Threshold tuned for chapter-only chunking after oversized-split fans
+  // chapters into sub-chunks. PHAK has 17 chapters; with splitOversized we
+  // expect well over 100 sub-chunks.
+  if (finalChunks.length < 60) {
+    console.error(`[phak] only got ${finalChunks.length} chunks after dedup+filter — heading regex may be wrong`);
     process.exit(1);
   }
 
   await mkdir(OUTPUT_DIR, { recursive: true });
-  const index = chunks.map((c, i) => ({
+  const index = finalChunks.map((c, i) => ({
     chunkId: c.chunkId || `c${i}`,
     title: c.title,
     page: c.page,
@@ -81,7 +105,7 @@ async function main() {
   await writeFile(
     `${OUTPUT_DIR}/chunks.json`,
     JSON.stringify(
-      chunks.map((c, i) => ({
+      finalChunks.map((c, i) => ({
         chunkId: c.chunkId || `c${i}`,
         title: c.title,
         text: c.text,
@@ -90,7 +114,7 @@ async function main() {
       2,
     ),
   );
-  console.log(`[phak] wrote ${chunks.length} chunks → ${OUTPUT_DIR}/`);
+  console.log(`[phak] wrote ${finalChunks.length} chunks → ${OUTPUT_DIR}/`);
 }
 
 main().catch((err) => {

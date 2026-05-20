@@ -1,303 +1,13 @@
 [
   {
-    "chunkId": "task-a-pilot-qualifications-2",
-    "title": "Task A. Pilot Qualifications ......................................................................................................................... 2",
-    "page": 5
-  },
-  {
-    "chunkId": "task-b-airworthiness-requirements-2",
-    "title": "Task B. Airworthiness Requirements .......................................................................................................... 2",
-    "page": 5
-  },
-  {
-    "chunkId": "task-c-weather-information-3",
-    "title": "Task C. Weather Information ...................................................................................................................... 3",
-    "page": 5
-  },
-  {
-    "chunkId": "task-d-cross-country-flight-planning-4",
-    "title": "Task D. Cross-Country Flight Planning ....................................................................................................... 4",
-    "page": 5
-  },
-  {
-    "chunkId": "task-e-national-airspace-system-5",
-    "title": "Task E. National Airspace System .............................................................................................................. 5",
-    "page": 5
-  },
-  {
-    "chunkId": "task-f-performance-and-limitations-6",
-    "title": "Task F. Performance and Limitations .......................................................................................................... 6",
-    "page": 5
-  },
-  {
-    "chunkId": "task-g-operation-of-systems-7",
-    "title": "Task G. Operation of Systems .................................................................................................................... 7",
-    "page": 5
-  },
-  {
-    "chunkId": "task-h-human-factors-8",
-    "title": "Task H. Human Factors .............................................................................................................................. 8",
-    "page": 5
-  },
-  {
     "chunkId": "task-i-water-and-seaplane-characteristics-seaplane-bases-maritime-rules-and-aids",
     "title": "Task I. Water and Seaplane Characteristics, Seaplane Bases, Maritime Rules, and Aids to Marine",
-    "page": 5
-  },
-  {
-    "chunkId": "task-a-preflight-assessment-11",
-    "title": "Task A. Preflight Assessment ................................................................................................................... 11",
-    "page": 5
-  },
-  {
-    "chunkId": "task-b-flight-deck-management-11",
-    "title": "Task B. Flight Deck Management ............................................................................................................. 11",
-    "page": 5
-  },
-  {
-    "chunkId": "task-c-engine-starting-12",
-    "title": "Task C. Engine Starting ............................................................................................................................ 12",
-    "page": 5
-  },
-  {
-    "chunkId": "task-d-taxiing-asel-amel-12",
-    "title": "Task D. Taxiing (ASEL, AMEL) ................................................................................................................. 12",
-    "page": 5
-  },
-  {
-    "chunkId": "task-e-taxiing-and-sailing-ases-ames-14",
-    "title": "Task E. Taxiing and Sailing (ASES, AMES) .............................................................................................. 14",
-    "page": 5
-  },
-  {
-    "chunkId": "task-f-before-takeoff-check-15",
-    "title": "Task F. Before Takeoff Check ................................................................................................................... 15",
-    "page": 5
-  },
-  {
-    "chunkId": "task-a-communications-light-signals-and-runway-lighting-systems-16",
-    "title": "Task A. Communications, Light Signals, and Runway Lighting Systems ................................................. 16",
-    "page": 5
-  },
-  {
-    "chunkId": "task-b-traffic-patterns-16",
-    "title": "Task B. Traffic Patterns ............................................................................................................................. 16",
-    "page": 5
-  },
-  {
-    "chunkId": "task-a-normal-takeoff-and-climb-18",
-    "title": "Task A. Normal Takeoff and Climb ............................................................................................................ 18",
-    "page": 5
-  },
-  {
-    "chunkId": "task-b-normal-approach-and-landing-19",
-    "title": "Task B. Normal Approach and Landing .................................................................................................... 19",
-    "page": 5
-  },
-  {
-    "chunkId": "task-c-soft-field-takeoff-and-climb-asel-20",
-    "title": "Task C. Soft-Field Takeoff and Climb (ASEL) ........................................................................................... 20",
-    "page": 5
-  },
-  {
-    "chunkId": "task-d-soft-field-approach-and-landing-asel-22",
-    "title": "Task D. Soft-Field Approach and Landing (ASEL) .................................................................................... 22",
-    "page": 5
-  },
-  {
-    "chunkId": "task-e-short-field-takeoff-and-maximum-performance-climb-asel-amel-23",
-    "title": "Task E. Short-Field Takeoff and Maximum Performance Climb (ASEL, AMEL) ....................................... 23",
-    "page": 5
-  },
-  {
-    "chunkId": "task-f-short-field-approach-and-landing-asel-amel-24",
-    "title": "Task F. Short-Field Approach and Landing (ASEL, AMEL) ....................................................................... 24",
-    "page": 5
-  },
-  {
-    "chunkId": "task-g-confined-area-takeoff-and-maximum-performance-climb-ases-ames-26",
-    "title": "Task G. Confined Area Takeoff and Maximum Performance Climb (ASES, AMES) ................................. 26",
-    "page": 5
-  },
-  {
-    "chunkId": "task-h-confined-area-approach-and-landing-ases-ames-27",
-    "title": "Task H. Confined Area Approach and Landing (ASES, AMES) ................................................................ 27",
-    "page": 5
-  },
-  {
-    "chunkId": "task-i-glassy-water-takeoff-and-climb-ases-ames-28",
-    "title": "Task I. Glassy Water Takeoff and Climb (ASES, AMES) .......................................................................... 28",
-    "page": 5
-  },
-  {
-    "chunkId": "task-j-glassy-water-approach-and-landing-ases-ames-30",
-    "title": "Task J. Glassy Water Approach and Landing (ASES, AMES) .................................................................. 30",
-    "page": 5
-  },
-  {
-    "chunkId": "task-k-rough-water-takeoff-and-climb-ases-ames-31",
-    "title": "Task K. Rough Water Takeoff and Climb (ASES, AMES) ......................................................................... 31",
-    "page": 5
-  },
-  {
-    "chunkId": "task-l-rough-water-approach-and-landing-ases-ames-32",
-    "title": "Task L. Rough Water Approach and Landing (ASES, AMES) .................................................................. 32",
-    "page": 6
-  },
-  {
-    "chunkId": "task-m-power-off-180-accuracy-approach-and-landing-asel-ases-33",
-    "title": "Task M. Power-Off 180° Accuracy Approach and Landing (ASEL, ASES) ............................................... 33",
-    "page": 6
-  },
-  {
-    "chunkId": "task-n-go-around-rejected-landing-34",
-    "title": "Task N. Go-Around/Rejected Landing ...................................................................................................... 34",
-    "page": 6
-  },
-  {
-    "chunkId": "task-a-steep-turns-36",
-    "title": "Task A. Steep Turns .................................................................................................................................. 36",
-    "page": 6
-  },
-  {
-    "chunkId": "task-b-steep-spiral-asel-ases-36",
-    "title": "Task B. Steep Spiral (ASEL, ASES) ......................................................................................................... 36",
-    "page": 6
-  },
-  {
-    "chunkId": "task-c-chandelles-asel-ases-37",
-    "title": "Task C. Chandelles (ASEL, ASES) ........................................................................................................... 37",
-    "page": 6
-  },
-  {
-    "chunkId": "task-d-lazy-eights-asel-ases-38",
-    "title": "Task D. Lazy Eights (ASEL, ASES) .......................................................................................................... 38",
-    "page": 6
-  },
-  {
-    "chunkId": "task-e-eights-on-pylons-asel-ases-39",
-    "title": "Task E. Eights on Pylons (ASEL, ASES) .................................................................................................. 39",
-    "page": 6
-  },
-  {
-    "chunkId": "task-a-pilotage-and-dead-reckoning-41",
-    "title": "Task A. Pilotage and Dead Reckoning ..................................................................................................... 41",
-    "page": 6
-  },
-  {
-    "chunkId": "task-b-navigation-systems-and-radar-services-42",
-    "title": "Task B. Navigation Systems and Radar Services .................................................................................... 42",
-    "page": 6
-  },
-  {
-    "chunkId": "task-c-diversion-42",
-    "title": "Task C. Diversion ...................................................................................................................................... 42",
-    "page": 6
-  },
-  {
-    "chunkId": "task-d-lost-procedures-43",
-    "title": "Task D. Lost Procedures .......................................................................................................................... 43",
-    "page": 6
-  },
-  {
-    "chunkId": "task-a-maneuvering-during-slow-flight-45",
-    "title": "Task A. Maneuvering During Slow Flight .................................................................................................. 45",
-    "page": 6
-  },
-  {
-    "chunkId": "task-b-power-off-stalls-45",
-    "title": "Task B. Power-Off Stalls ........................................................................................................................... 45",
-    "page": 6
-  },
-  {
-    "chunkId": "task-c-power-on-stalls-47",
-    "title": "Task C. Power-On Stalls ........................................................................................................................... 47",
-    "page": 6
-  },
-  {
-    "chunkId": "task-d-accelerated-stalls-48",
-    "title": "Task D. Accelerated Stalls ........................................................................................................................ 48",
-    "page": 6
-  },
-  {
-    "chunkId": "task-e-spin-awareness-49",
-    "title": "Task E. Spin Awareness ........................................................................................................................... 49",
-    "page": 6
-  },
-  {
-    "chunkId": "task-a-supplemental-oxygen-50",
-    "title": "Task A. Supplemental Oxygen .................................................................................................................. 50",
-    "page": 6
-  },
-  {
-    "chunkId": "task-b-pressurization-50",
-    "title": "Task B. Pressurization .............................................................................................................................. 50",
-    "page": 6
-  },
-  {
-    "chunkId": "task-a-emergency-descent-52",
-    "title": "Task A. Emergency Descent ..................................................................................................................... 52",
-    "page": 6
-  },
-  {
-    "chunkId": "task-b-emergency-approach-and-landing-simulated-asel-ases-52",
-    "title": "Task B. Emergency Approach and Landing (Simulated) (ASEL, ASES) .................................................. 52",
-    "page": 6
-  },
-  {
-    "chunkId": "task-c-systems-and-equipment-malfunctions-53",
-    "title": "Task C. Systems and Equipment Malfunctions ........................................................................................ 53",
-    "page": 6
-  },
-  {
-    "chunkId": "task-d-emergency-equipment-and-survival-gear-54",
-    "title": "Task D. Emergency Equipment and Survival Gear .................................................................................. 54",
-    "page": 6
-  },
-  {
-    "chunkId": "task-e-engine-failure-during-takeoff-before-v-simulated-amel-ames-55",
-    "title": "Task E. Engine Failure During Takeoff Before V (Simulated) (AMEL, AMES) ....................................... 55",
-    "page": 6
-  },
-  {
-    "chunkId": "task-f-engine-failure-after-liftoff-simulated-amel-ames-56",
-    "title": "Task F. Engine Failure After Liftoff (Simulated) (AMEL, AMES) ............................................................... 56",
-    "page": 6
-  },
-  {
-    "chunkId": "task-g-approach-and-landing-with-an-inoperative-engine-simulated-amel-ames-57",
-    "title": "Task G. Approach and Landing with an Inoperative Engine (Simulated)(AMEL, AMES) ......................... 57",
-    "page": 6
-  },
-  {
-    "chunkId": "task-a-maneuvering-with-one-engine-inoperative-amel-ames-59",
-    "title": "Task A. Maneuvering with One Engine Inoperative (AMEL, AMES) ......................................................... 59",
-    "page": 6
-  },
-  {
-    "chunkId": "task-b-v-demonstration-amel-ames-60",
-    "title": "Task B. V Demonstration (AMEL, AMES) .............................................................................................. 60",
-    "page": 6
+    "page": 16
   },
   {
     "chunkId": "task-c-one-engine-inoperative-simulated-solely-by-reference-to-instruments-durin",
-    "title": "Task C. One Engine Inoperative (Simulated) (solely by Reference to Instruments) During Straight-",
-    "page": 6
-  },
-  {
-    "chunkId": "task-d-instrument-approach-and-landing-with-an-inoperative-engine-simulated-amel",
-    "title": "Task D. Instrument Approach and Landing with an Inoperative Engine (Simulated) (AMEL, AMES) ....... 62",
-    "page": 7
-  },
-  {
-    "chunkId": "task-a-after-landing-parking-and-securing-asel-amel-64",
-    "title": "Task A. After Landing, Parking, and Securing (ASEL, AMEL) .................................................................. 64",
-    "page": 7
-  },
-  {
-    "chunkId": "task-b-seaplane-post-landing-procedures-ases-ames-64",
-    "title": "Task B. Seaplane Post-Landing Procedures (ASES, AMES) ................................................................... 64",
-    "page": 7
+    "title": "Task C. One Engine Inoperative (Simulated) (solely by Reference to Instruments) During Straight-and-",
+    "page": 68
   },
   {
     "chunkId": "task-a-pilot-qualifications",
@@ -338,11 +48,6 @@
     "chunkId": "task-h-human-factors",
     "title": "Task H. Human Factors",
     "page": 15
-  },
-  {
-    "chunkId": "task-i-water-and-seaplane-characteristics-seaplane-bases-maritime-rules-and-aids",
-    "title": "Task I. Water and Seaplane Characteristics, Seaplane Bases, Maritime Rules, and Aids to Marine",
-    "page": 16
   },
   {
     "chunkId": "task-a-preflight-assessment",
@@ -580,11 +285,6 @@
     "page": 67
   },
   {
-    "chunkId": "task-c-one-engine-inoperative-simulated-solely-by-reference-to-instruments-durin",
-    "title": "Task C. One Engine Inoperative (Simulated) (solely by Reference to Instruments) During Straight-and-",
-    "page": 68
-  },
-  {
     "chunkId": "task-d-instrument-approach-and-landing-with-an-inoperative-engine-simulated-amel",
     "title": "Task D. Instrument Approach and Landing with an Inoperative Engine (Simulated) (AMEL, AMES)",
     "page": 69
@@ -595,8 +295,18 @@
     "page": 71
   },
   {
-    "chunkId": "task-b-seaplane-post-landing-procedures-ases-ames",
-    "title": "Task B. Seaplane Post-Landing Procedures (ASES, AMES)",
+    "chunkId": "task-b-seaplane-post-landing-procedures-ases-ames-pt1",
+    "title": "Task B. Seaplane Post-Landing Procedures (ASES, AMES) (part 1 of 3)",
+    "page": 71
+  },
+  {
+    "chunkId": "task-b-seaplane-post-landing-procedures-ases-ames-pt2",
+    "title": "Task B. Seaplane Post-Landing Procedures (ASES, AMES) (part 2 of 3)",
+    "page": 71
+  },
+  {
+    "chunkId": "task-b-seaplane-post-landing-procedures-ases-ames-pt3",
+    "title": "Task B. Seaplane Post-Landing Procedures (ASES, AMES) (part 3 of 3)",
     "page": 71
   },
   {
@@ -607,82 +317,12 @@
   {
     "chunkId": "ix-emergency-operations",
     "title": "IX. Emergency Operations",
-    "page": 81
-  },
-  {
-    "chunkId": "x-multiengine-operations",
-    "title": "X. Multiengine Operations",
-    "page": 81
-  },
-  {
-    "chunkId": "iv-takeoffs-landings-and-go-arounds",
-    "title": "IV. Takeoffs, Landings, and Go-Arounds",
-    "page": 85
-  },
-  {
-    "chunkId": "task-m-power-off-180-accuracy-approach-and-landing-asel-ases",
-    "title": "Task M. Power-Off 180° Accuracy Approach and Landing (ASEL, ASES)",
-    "page": 85
+    "page": 86
   },
   {
     "chunkId": "v-performance-and-ground-reference-maneuvers",
     "title": "V. Performance and Ground Reference Maneuvers",
     "page": 85
-  },
-  {
-    "chunkId": "vii-slow-flight-and-stalls",
-    "title": "VII. Slow Flight and Stalls",
-    "page": 85
-  },
-  {
-    "chunkId": "task-a-maneuvering-during-slow-flight",
-    "title": "Task A. Maneuvering During Slow Flight",
-    "page": 85
-  },
-  {
-    "chunkId": "task-b-power-off-stalls",
-    "title": "Task B. Power-Off Stalls",
-    "page": 85
-  },
-  {
-    "chunkId": "task-c-power-on-stalls",
-    "title": "Task C. Power-On Stalls",
-    "page": 85
-  },
-  {
-    "chunkId": "task-d-accelerated-stalls",
-    "title": "Task D. Accelerated Stalls",
-    "page": 85
-  },
-  {
-    "chunkId": "ix-emergency-operations",
-    "title": "IX. Emergency Operations",
-    "page": 86
-  },
-  {
-    "chunkId": "task-e-engine-failure-during-takeoff-before-v-simulated-airplane-multiengine-lan",
-    "title": "Task E. Engine Failure During Takeoff Before V (Simulated) [Airplane, Multiengine Land (AMEL); Airplane Multiengine",
-    "page": 86
-  },
-  {
-    "chunkId": "task-f-engine-failure-after-liftoff-simulated-amel-ames",
-    "title": "Task F. Engine Failure After Liftoff (Simulated) (AMEL, AMES)",
-    "page": 86
-  },
-  {
-    "chunkId": "x-multiengine-operations",
-    "title": "X. Multiengine Operations",
-    "page": 86
-  },
-  {
-    "chunkId": "task-b-v-demonstration-amel-ames",
-    "title": "Task B. V Demonstration (AMEL, AMES)",
-    "page": 86
-  },
-  {
-    "chunkId": "task-c-one-engine-inoperative-simulated-solely-by-reference-to-instruments-durin",
-    "title": "Task C. One Engine Inoperative (Simulated) (solely by Reference to Instruments) During Straight-and-Level Flight and",
-    "page": 86
   },
   {
     "chunkId": "task-d-instrument-approach-and-landing-with-an-inoperative-engine-simulated-sole",

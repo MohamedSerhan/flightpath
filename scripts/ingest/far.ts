@@ -116,12 +116,19 @@ async function main() {
     console.log(`[far] Part ${p.part}: produced ${partChunks.length} chunks`);
   }
 
-  if (allChunks.length < 50) {
-    console.error(`[far] only got ${allChunks.length} chunks — heading regex or downloads may be off`);
+  // Drop tiny chunks — § heading matches inside running headers / TOC
+  // entries leave near-empty ghosts behind. Real sections always have
+  // substantive regulatory text.
+  const finalChunks = allChunks.filter((c) => c.text.length > 200);
+  const dropped = allChunks.length - finalChunks.length;
+  if (dropped > 0) console.log(`[far] dropped ${dropped} tiny/empty chunks`);
+
+  if (finalChunks.length < 50) {
+    console.error(`[far] only got ${finalChunks.length} chunks after filter — heading regex or downloads may be off`);
     process.exit(1);
   }
 
-  const index = allChunks.map((c, i) => ({
+  const index = finalChunks.map((c, i) => ({
     chunkId: c.chunkId || `c${i}`,
     title: c.title,
     page: c.page,
@@ -130,7 +137,7 @@ async function main() {
   await writeFile(
     `${OUTPUT_DIR}/chunks.json`,
     JSON.stringify(
-      allChunks.map((c, i) => ({
+      finalChunks.map((c, i) => ({
         chunkId: c.chunkId || `c${i}`,
         title: c.title,
         text: c.text,
@@ -139,7 +146,7 @@ async function main() {
       2,
     ),
   );
-  console.log(`[far] wrote ${allChunks.length} chunks → ${OUTPUT_DIR}/`);
+  console.log(`[far] wrote ${finalChunks.length} chunks → ${OUTPUT_DIR}/`);
 }
 
 main().catch((err) => {
