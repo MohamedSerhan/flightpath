@@ -53,24 +53,35 @@ async function main() {
   // ACS headings — most common shapes are:
   //   "I. Preflight Preparation"  (Area of Operation, Roman numeral + period)
   //   "Task A. Pilot Qualifications"
-  // Match either.
+  // Match either. Drop lines containing dot-leaders to avoid TOC entries
+  // like "Task A. Pilot Qualifications .......... 2" polluting chunk titles.
   const headingRegex =
-    /^(?:([IVX]+\.\s+[A-Z][^\n]+)|(Task\s+[A-Z]\.\s+[^\n]+))$/;
+    /^(?:([IVX]+\.\s+[A-Z][^\n]+)|(Task\s+[A-Z]\.\s+[A-Z][^\n]+))$/;
 
   const chunks = chunkByHeading(pages, {
     headingRegex,
     titleFor: (m) => (m[1] ?? m[2]).trim(),
     skipLineRegex:
-      /^(?:Commercial Pilot — Airplane|Commercial Pilot - Airplane|FAA-S-ACS-7B|Page \d+|Airman Certification Standards|U\.?S\.? Department of Transportation)$/i,
+      /\.{5,}|^(?:Commercial Pilot — Airplane|Commercial Pilot - Airplane|FAA-S-ACS-7B|Page \d+|Airman Certification Standards|U\.?S\.? Department of Transportation)$/i,
   });
 
-  if (chunks.length < 10) {
-    console.error(`[commercial-acs] only got ${chunks.length} chunks — heading regex may be wrong`);
+  // Dedupe by chunkId — TOC entries and body Tasks can collide on the same
+  // slug. Keep the longer-bodied chunk. Then drop tiny chunks (≤ 200 chars)
+  // — heading-match ghosts from running headers or partial-page captures.
+  const byId = new Map<string, (typeof chunks)[number]>();
+  for (const c of chunks) {
+    const existing = byId.get(c.chunkId);
+    if (!existing || c.text.length > existing.text.length) byId.set(c.chunkId, c);
+  }
+  const finalChunks = [...byId.values()].filter((c) => c.text.length > 200);
+
+  if (finalChunks.length < 10) {
+    console.error(`[commercial-acs] only got ${finalChunks.length} chunks after dedup+filter — heading regex may be wrong`);
     process.exit(1);
   }
 
   await mkdir(OUTPUT_DIR, { recursive: true });
-  const index = chunks.map((c, i) => ({
+  const index = finalChunks.map((c, i) => ({
     chunkId: c.chunkId || `c${i}`,
     title: c.title,
     page: c.page,
@@ -79,7 +90,7 @@ async function main() {
   await writeFile(
     `${OUTPUT_DIR}/chunks.json`,
     JSON.stringify(
-      chunks.map((c, i) => ({
+      finalChunks.map((c, i) => ({
         chunkId: c.chunkId || `c${i}`,
         title: c.title,
         text: c.text,
@@ -88,7 +99,7 @@ async function main() {
       2,
     ),
   );
-  console.log(`[commercial-acs] wrote ${chunks.length} chunks → ${OUTPUT_DIR}/`);
+  console.log(`[commercial-acs] wrote ${finalChunks.length} chunks → ${OUTPUT_DIR}/`);
 }
 
 main().catch((err) => {
