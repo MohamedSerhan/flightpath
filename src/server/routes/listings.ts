@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { and, desc, eq, gte, inArray, lte, like, or, sql } from "drizzle-orm";
 import { db } from "../../db/client.ts";
 import { listings } from "../../db/schema.ts";
-import type { Listing } from "../../shared/types.ts";
+import type { HoursBreakdown, Listing } from "../../shared/types.ts";
 
 export const listingsRoute = new Hono();
 
@@ -24,7 +24,7 @@ function rowToListing(r: typeof listings.$inferSelect): Listing {
     jobCategory: r.jobCategory as Listing["jobCategory"],
     hoursRequired: r.hoursRequired,
     ratingsRequired: r.ratingsRequired ? safeParseRatings(r.ratingsRequired) : null,
-    hoursBreakdown: null,
+    hoursBreakdown: r.hoursBreakdown ? safeParseHoursBreakdown(r.hoursBreakdown) : null,
   };
 }
 
@@ -32,6 +32,15 @@ function safeParseRatings(s: string): string[] | null {
   try {
     const v = JSON.parse(s);
     return Array.isArray(v) ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+function safeParseHoursBreakdown(s: string): HoursBreakdown | null {
+  try {
+    const v = JSON.parse(s);
+    return v && typeof v === "object" && !Array.isArray(v) ? (v as HoursBreakdown) : null;
   } catch {
     return null;
   }
