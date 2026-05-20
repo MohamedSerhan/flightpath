@@ -13,3 +13,6 @@ dist/
 .idea/
 bun.lockb
 
+# FAA PDF cache for the learn-surface ingest (re-downloaded by CI).
+data/learn/_pdfs/
+
