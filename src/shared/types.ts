@@ -1,3 +1,13 @@
+export type HoursBreakdown = {
+  multiEngine?: number;
+  turbine?: number;
+  tailwheel?: number;
+  complex?: number;
+  instrument?: number;
+  pic?: number;
+  crossCountry?: number;
+};
+
 export type Listing = {
   id: number;
   sourceId: string;
@@ -19,6 +29,7 @@ export type Listing = {
   jobCategory: JobCategory | null;
   hoursRequired: number | null;
   ratingsRequired: string[] | null;
+  hoursBreakdown: HoursBreakdown | null;
   rawTitle: string;
 };
 

@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS listings (
   job_category TEXT,
   hours_required INTEGER,
   ratings_required TEXT,
+  hours_breakdown TEXT,
   enriched_at INTEGER,
   is_closed INTEGER NOT NULL DEFAULT 0
 );
@@ -58,6 +59,13 @@ if (!colNames.has("posted_at_accurate")) {
   // scrapes will overwrite the flag correctly via upsert.
   sqlite.exec("ALTER TABLE listings ADD COLUMN posted_at_accurate INTEGER NOT NULL DEFAULT 1");
   console.log("migrate: added posted_at_accurate column");
+}
+if (!colNames.has("hours_breakdown")) {
+  // JSON-encoded per-class hour minimums (multi / turbine / tailwheel /
+  // complex / instrument / PIC / cross-country). Populated by the
+  // enricher; null for pre-existing rows until they're re-enriched.
+  sqlite.exec("ALTER TABLE listings ADD COLUMN hours_breakdown TEXT");
+  console.log("migrate: added hours_breakdown column");
 }
 
 // Retroactively hide listings from sources we've removed. Idempotent —

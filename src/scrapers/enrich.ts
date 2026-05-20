@@ -214,5 +214,6 @@ export function enrichListing(raw: RawListing): EnrichedListing {
     jobCategory: category,
     hoursRequired: extractHoursRequired(`${raw.title}\n${raw.description ?? ""}`),
     ratingsRequired: extractRatings(`${raw.title}\n${raw.description ?? ""}`),
+    hoursBreakdown: null,
   };
 }

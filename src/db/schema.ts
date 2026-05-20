@@ -18,6 +18,7 @@ export const listings = sqliteTable(
     jobCategory: text("job_category"),
     hoursRequired: integer("hours_required"),
     ratingsRequired: text("ratings_required"),
+    hoursBreakdown: text("hours_breakdown"),
     enrichedAt: integer("enriched_at"),
     /** 1 = postedAt came from the source. 0 = adapter had no real date and
      *  fell back to "first time we saw it". Several aggregators (AvJobs,

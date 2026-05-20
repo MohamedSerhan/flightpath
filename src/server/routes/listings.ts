@@ -24,6 +24,7 @@ function rowToListing(r: typeof listings.$inferSelect): Listing {
     jobCategory: r.jobCategory as Listing["jobCategory"],
     hoursRequired: r.hoursRequired,
     ratingsRequired: r.ratingsRequired ? safeParseRatings(r.ratingsRequired) : null,
+    hoursBreakdown: null,
   };
 }
 
