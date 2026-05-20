@@ -1,0 +1,82 @@
+{
+  "planPath": "docs/superpowers/plans/2026-05-20-faa-reference-library.md",
+  "tasks": [
+    {
+      "id": 0,
+      "subject": "Task 1: pdfjs-dist + shared extractor and chunker",
+      "status": "pending",
+      "description": "Install pdfjs-dist and create build-time helpers for PDF text extraction and heading-based chunking.\n\n```json:metadata\n{\"files\":[\"package.json\",\"scripts/ingest/_pdf-extract.ts\",\"scripts/ingest/_chunker.ts\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"pdfjs-dist installed\",\"extractPdfText helper works\",\"chunkByHeading helper works\"]}\n```"
+    },
+    {
+      "id": 1,
+      "subject": "Task 2: PHAK ingest script",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "Download PHAK PDF and write public/data/learn/phak/{index,chunks}.json.\n\n```json:metadata\n{\"files\":[\"scripts/ingest/phak.ts\",\"public/data/learn/phak/index.json\",\"public/data/learn/phak/chunks.json\",\".gitignore\"],\"verifyCommand\":\"bun scripts/ingest/phak.ts\",\"acceptanceCriteria\":[\"PDF downloaded and cached\",\"TOC json written\",\"Chunks json written\",\"≥30 chunks\"]}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 3: Commercial Pilot ACS ingest script",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "Download Commercial ACS PDF and write public/data/learn/commercial-acs/{index,chunks}.json.\n\n```json:metadata\n{\"files\":[\"scripts/ingest/commercial-acs.ts\",\"public/data/learn/commercial-acs/index.json\",\"public/data/learn/commercial-acs/chunks.json\"],\"verifyCommand\":\"bun scripts/ingest/commercial-acs.ts\",\"acceptanceCriteria\":[\"PDF downloaded\",\"TOC + chunks written\",\"≥10 chunks\"]}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 4: FAR ingest script",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "Download FAR Parts 61/91/119/135/141, concatenate, chunk by section.\n\n```json:metadata\n{\"files\":[\"scripts/ingest/far.ts\",\"public/data/learn/far/index.json\",\"public/data/learn/far/chunks.json\"],\"verifyCommand\":\"bun scripts/ingest/far.ts\",\"acceptanceCriteria\":[\"At least 4 of 5 Parts downloaded\",\"TOC + chunks written\",\"≥50 chunks\"]}\n```"
+    },
+    {
+      "id": 4,
+      "subject": "Task 5: Orchestrator + search index",
+      "status": "pending",
+      "blockedBy": [1, 2, 3],
+      "description": "Single entry-point that runs all three ingest scripts and builds the cross-doc search-index.json.\n\n```json:metadata\n{\"files\":[\"scripts/ingest-faa-docs.ts\",\"public/data/learn/search-index.json\"],\"verifyCommand\":\"bun scripts/ingest-faa-docs.ts\",\"acceptanceCriteria\":[\"Orchestrator runs all 3 ingests\",\"Search index built\",\"≥80 entries\",\"Three docIds represented\"]}\n```"
+    },
+    {
+      "id": 5,
+      "subject": "Task 6: package.json + CI cache for PDFs",
+      "status": "pending",
+      "blockedBy": [4],
+      "description": "Wire build:learn into npm scripts and add a GitHub Actions cache for data/learn/_pdfs/.\n\n```json:metadata\n{\"files\":[\"package.json\",\".github/workflows/scrape-and-deploy.yml\"],\"verifyCommand\":\"bun run build:static\",\"acceptanceCriteria\":[\"build:learn script added\",\"build:static invokes it\",\"CI caches PDFs\"]}\n```"
+    },
+    {
+      "id": 6,
+      "subject": "Task 7: /learn route data layer + types",
+      "status": "pending",
+      "blockedBy": [4],
+      "description": "Typed lazy fetchers for index, chunks, and search-index JSON.\n\n```json:metadata\n{\"files\":[\"src/web/learn/types.ts\",\"src/web/learn/data.ts\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"Types exported\",\"Fetchers cached in-memory\",\"BASE_URL-aware paths\"]}\n```"
+    },
+    {
+      "id": 7,
+      "subject": "Task 8: /learn UI shell + TOC + reader",
+      "status": "pending",
+      "blockedBy": [6],
+      "description": "Three components: LearnApp, TocList, ChunkReader. Hash params drive state.\n\n```json:metadata\n{\"files\":[\"src/web/learn/LearnApp.tsx\",\"src/web/learn/TocList.tsx\",\"src/web/learn/ChunkReader.tsx\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"3 components compile\",\"Doc selector switches docs\",\"Prev/Next nav works\"]}\n```"
+    },
+    {
+      "id": 8,
+      "subject": "Task 9: /learn UI search bar",
+      "status": "pending",
+      "blockedBy": [7],
+      "description": "Debounced cross-doc substring search.\n\n```json:metadata\n{\"files\":[\"src/web/learn/SearchBar.tsx\",\"src/web/learn/LearnApp.tsx\"],\"verifyCommand\":\"bunx tsc --noEmit\",\"acceptanceCriteria\":[\"Debounced input\",\"Substring match\",\"Click result navigates\"]}\n```"
+    },
+    {
+      "id": 9,
+      "subject": "Task 10: Route detection + nav link + Pages 404 fix",
+      "status": "pending",
+      "blockedBy": [7],
+      "description": "Wire /learn into App.tsx and duplicate index.html for GitHub Pages.\n\n```json:metadata\n{\"files\":[\"src/web/App.tsx\",\"package.json\"],\"verifyCommand\":\"bun run build:static && ls dist/web/learn/index.html\",\"acceptanceCriteria\":[\"Route detection works\",\"Header link present\",\"learn/index.html created\"]}\n```"
+    },
+    {
+      "id": 10,
+      "subject": "Task 11: End-to-end deploy verification",
+      "status": "pending",
+      "blockedBy": [5, 8, 9],
+      "description": "Local build clean, merge + push, CI deploy succeeds, live /learn renders.\n\n```json:metadata\n{\"files\":[],\"verifyCommand\":\"gh run list --branch master --limit 1\",\"acceptanceCriteria\":[\"Local build clean\",\"Merged + pushed\",\"CI succeeds\",\"Live /learn renders\",\"Search works\"]}\n```"
+    }
+  ],
+  "lastUpdated": "2026-05-20T07:00:00Z"
+}
