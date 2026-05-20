@@ -1,4 +1,4 @@
-import type { JobCategory } from "../shared/types.ts";
+import type { HoursBreakdown, JobCategory } from "../shared/types.ts";
 import type { EnrichedListing, RawListing } from "./types.ts";
 
 const US_STATES: Record<string, string> = {
@@ -179,6 +179,39 @@ export function extractHoursRequired(description: string | null | undefined): nu
   return Math.min(...found);
 }
 
+// Per-class hour patterns. Each entry's regex captures the number first,
+// then matches the class noun within a short trailing window. The
+// captures look for `\b\d{2,5}\b` so we don't fire on stray digits in
+// e.g. "Cessna 172" or "Boeing 737". The 10..15000 range filter on the
+// captured number suppresses obvious nonsense.
+const HOURS_BY_CLASS_PATTERNS: Array<[keyof HoursBreakdown, RegExp]> = [
+  ["multiEngine", /\b(\d{2,5})\s+(?:hours?\s+(?:of\s+)?)?(?:multi[-\s]?engine|\bME\b|\bAMEL\b)/gi],
+  ["turbine", /\b(\d{2,5})\s+(?:hours?\s+(?:of\s+)?)?(?:turbine|turboprop|\bjet\b)/gi],
+  ["tailwheel", /\b(\d{2,5})\s+(?:hours?\s+(?:of\s+)?)?tail[-\s]?wheel/gi],
+  ["complex", /\b(\d{2,5})\s+(?:hours?\s+(?:of\s+)?)?complex/gi],
+  // PIC ordered before instrument so HoursBreakdown emits its keys in
+  // ratings-table order (PIC, then instrument) when both are present.
+  ["pic", /\b(\d{2,5})\s+(?:hours?\s+(?:of\s+)?)?\bPIC\b/g],
+  ["instrument", /\b(\d{2,5})\s+(?:hours?\s+(?:of\s+)?)?(?:instrument|\bIFR\b|\bIMC\b|\bactual\b)/gi],
+  ["crossCountry", /\b(\d{2,5})\s+(?:hours?\s+(?:of\s+)?)?(?:cross[-\s]?country|\bx[-\s]?country\b|\bXC\b)/gi],
+];
+
+export function extractHoursByClass(text: string | null | undefined): HoursBreakdown | null {
+  if (!text) return null;
+  const out: HoursBreakdown = {};
+  for (const [key, re] of HOURS_BY_CLASS_PATTERNS) {
+    re.lastIndex = 0;
+    const found: number[] = [];
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(text)) !== null) {
+      const n = parseInt(m[1], 10);
+      if (n >= 10 && n <= 15000) found.push(n);
+    }
+    if (found.length > 0) out[key] = Math.min(...found);
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
 const RATING_TOKENS: Array<[RegExp, string]> = [
   [/\bATP\b/i, "ATP"],
   [/\bCFII\b|instrument instructor/i, "CFII"],
@@ -208,12 +241,13 @@ export function enrichListing(raw: RawListing): EnrichedListing {
   // (e.g. a "Pilot Wanted — XYZ Skydiving" posting would otherwise
   // fall back to "other" if the body doesn't contain "skydive").
   const category = raw.categoryHint ?? classifyCategory(raw.title, raw.description, raw.employer);
+  const fullText = `${raw.title}\n${raw.description ?? ""}`;
   return {
     ...raw,
     state: extractState(raw.location),
     jobCategory: category,
-    hoursRequired: extractHoursRequired(`${raw.title}\n${raw.description ?? ""}`),
-    ratingsRequired: extractRatings(`${raw.title}\n${raw.description ?? ""}`),
-    hoursBreakdown: null,
+    hoursRequired: extractHoursRequired(fullText),
+    ratingsRequired: extractRatings(fullText),
+    hoursBreakdown: extractHoursByClass(fullText),
   };
 }
