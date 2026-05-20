@@ -34,9 +34,26 @@ export function tierOf(score: number): MatchTier {
 }
 
 /** Roughly which categories the applicant should focus on. CFI cohort
- *  defaults; downstream UI can tweak via the profile if needed. */
-const PREFERRED_CATEGORIES = new Set(["cfi", "cfii", "mei", "part91"]);
-const STRETCH_CATEGORIES = new Set(["part135", "corporate"]);
+ *  defaults; downstream UI can tweak via the profile if needed.
+ *
+ *  Non-CFI part-91-adjacent operations (skydiving, banner_tow, aerial_survey,
+ *  pipeline_patrol, traffic_watch) are included as preferred because they're
+ *  the time-build paths a low-time CFI is likely to consider — the same
+ *  reason the old lumped `part91` bucket sat here. air_ambulance stays out
+ *  because it typically requires higher minimums (commercial + 1000+ hours
+ *  + instrument current). */
+const PREFERRED_CATEGORIES = new Set([
+  "cfi",
+  "cfii",
+  "mei",
+  "part91",
+  "skydiving",
+  "banner_tow",
+  "aerial_survey",
+  "pipeline_patrol",
+  "traffic_watch",
+]);
+const STRETCH_CATEGORIES = new Set(["part135", "corporate", "air_ambulance"]);
 const OUT_OF_REACH = new Set(["airline"]);
 
 function ratingsHeld(p: ApplicantProfile): Set<string> {
